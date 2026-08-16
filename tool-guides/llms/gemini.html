@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>Gemini Tool Guide | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from m1l1.html. Do not re-derive.
+   Guide-only additions are marked at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #2980b9;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout--verify  { background: var(--c-verify-bg);  border-color: var(--c-verify-bd);  color: var(--c-verify-tx); }
+.callout--try     { background: var(--c-try-bg);     border-color: var(--c-try-bd);     color: var(--c-try-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h3 { margin: 0; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* --- guide-only: currency stamp --- */
+.stamp { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-4) 0; }
+.stamp p { margin: 0; }
+
+/* --- print: this guide has no export artifact, so print the whole page legibly --- */
+@media print {
+  body { font-size: 11pt; }
+  .jumpnav, .totop { display: none; }
+  details { border: 0; }
+  details > *:not(summary) { display: block !important; padding: 0; }
+  summary { list-style: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Tool Guide</p>
+    <h1>Google Gemini</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#what">What this is</a></li>
+      <li><a href="#access">Getting access</a></li>
+      <li><a href="#interface">The interface</a></li>
+      <li><a href="#workflow">Core workflow</a></li>
+      <li><a href="#limits">Free-tier limits</a></li>
+      <li><a href="#privacy">Privacy &amp; data</a></li>
+      <li><a href="#weaknesses">Known weaknesses</a></li>
+      <li><a href="#deeper">Go deeper</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <div class="stamp">
+    <p><strong>Accurate as of August 2026.</strong> AI tools change faster than a semester does. If what you see on screen doesn't match this guide, trust the screen &mdash; and tell your instructor so it can be fixed. Noticing that gap is itself an AI-literacy skill.</p>
+  </div>
+
+  <section id="what" aria-labelledby="what-h">
+    <div class="section-head">
+      <h2 id="what-h">What This Tool Is</h2>
+    </div>
+    <p>Gemini is Google's conversational AI assistant, and it's the <strong>baseline tool for CSC 141</strong> &mdash; the one every student already has, free, through their college Google Workspace account. Demonstrations use it, walkthroughs match it, and any activity that doesn't say otherwise assumes it.</p>
+    <p>Baseline means floor, not ceiling. Gemini isn't here because it's "the best" &mdash; it's here because everyone has it, which is what lets a step-by-step instruction mean the same thing to the whole class. Once you're comfortable, use whatever suits the task. Forming your own view about which tool fits which job is a good chunk of what this course is for.</p>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>The same account also includes <strong>NotebookLM</strong>, a separate Google tool for working with documents you upload. It gets its own guide later in the course.</p>
+    </div>
+  </section>
+
+  <section id="access" aria-labelledby="access-h">
+    <div class="section-head">
+      <h2 id="access-h">Getting Access</h2>
+      <p class="sub">Five minutes. This is the one thing you need working before anything else in the course.</p>
+    </div>
+
+    <ol>
+      <li><strong>Sign in to your college email.</strong> Go to the college Gmail login and sign in with your <code>@student.mendocino.edu</code> address. (Note the <code>student.</code> part &mdash; <code>@mendocino.edu</code> without it is the staff and faculty domain.) If you're already signed in on this device, skip to step 3.</li>
+      <li><strong>Open Gemini.</strong> Go directly to <code>gemini.google.com</code> in a new tab, or use the Gemini entry point inside Gmail. Because you're signed into your college Google account, it should load without a separate signup.</li>
+      <li><strong>Confirm you're on the right account.</strong> Check the account avatar in the top-right corner and make sure it shows your <code>@student.mendocino.edu</code> address, not a personal Gmail.</li>
+      <li><strong>Test it.</strong> Type <code>Say hello</code> and press Enter. If you get a response, you're set.</li>
+    </ol>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>Step 3 is the one people get wrong.</strong> Landing in Gemini on a personal Google account still works, so nothing obviously breaks &mdash; but you'll hit the personal free-tier limits instead of the college ones, and your coursework ends up mixed into a personal account. If Gemini ever asks you to pay, check the avatar first. That's almost always the reason.</p>
+    </div>
+
+    <details>
+      <summary>It still won't work &mdash; now what?</summary>
+      <ul>
+        <li>Re-check step 3. Wrong-account is the most common cause by a wide margin.</li>
+        <li>Try <code>gemini.google.com</code> directly rather than the Gmail entry point.</li>
+        <li>Still stuck? Contact the college IT help desk and tell them you need Gemini access for CSC 141.</li>
+        <li><strong>While you're waiting, use Microsoft Copilot instead</strong> &mdash; <code>copilot.microsoft.com</code>, signing in with the same <code>@student.mendocino.edu</code> address. It's also college-provided (web only), and every activity in this course can be completed in it. Don't let an access problem stall your week-1 work.</li>
+      </ul>
+    </details>
+  </section>
+
+  <section id="interface" aria-labelledby="interface-h">
+    <div class="section-head">
+      <h2 id="interface-h">The Interface</h2>
+      <p class="sub">What you're looking at when it loads.</p>
+    </div>
+
+    <p>Gemini opens on a mostly-empty screen with a text box. That's deliberate &mdash; almost everything happens by typing into that box.</p>
+
+    <div class="table-scroll">
+      <table>
+        <caption>The parts you'll actually use</caption>
+        <thead><tr><th scope="col">What</th><th scope="col">Where</th><th scope="col">What it does</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Prompt box</th><td>Bottom centre</td><td>Where you type. Enter sends; Shift+Enter makes a new line without sending.</td></tr>
+          <tr><th scope="row">Conversation thread</th><td>Fills the middle</td><td>Your messages and its replies, oldest at top. Scroll up to re-read.</td></tr>
+          <tr><th scope="row">New chat</th><td>Top of the side panel</td><td>Starts a fresh conversation with no memory of the last one.</td></tr>
+          <tr><th scope="row">Chat history</th><td>Side panel</td><td>Your past conversations. Click one to reopen it.</td></tr>
+          <tr><th scope="row">Attach / upload</th><td>Next to the prompt box</td><td>Add a file or image and ask questions about it.</td></tr>
+          <tr><th scope="row">Account avatar</th><td>Top right</td><td>Shows which account you're on. Check it if anything seems off.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>Google reorganises this interface fairly often, and menu positions change more than the features do. If a control isn't where this guide says, look for the same <em>word</em> somewhere nearby &mdash; it has usually just moved.</p>
+    </div>
+  </section>
+
+  <section id="workflow" aria-labelledby="workflow-h">
+    <div class="section-head">
+      <h2 id="workflow-h">Core Workflow</h2>
+      <p class="sub">Three short exercises. About 12 minutes total, and you'll have used everything this course needs.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>1. Ask, then follow up</h3>
+        <span class="badge">5 minutes</span>
+      </div>
+      <p><strong>Your task:</strong> see that a conversation carries context from one message to the next.</p>
+      <ol>
+        <li>Type this and send it:
+          <div class="prompt">
+            <pre id="p1">Explain what a community college is to someone who has never heard of one.</pre>
+            <button type="button" class="btn btn--secondary" id="p1-copy" data-copies="p1">Copy this prompt</button>
+            <span id="p1-copy-status" role="status" aria-live="polite"></span>
+          </div>
+        </li>
+        <li>When it answers, send just this &mdash; nothing else:
+          <div class="prompt">
+            <pre id="p2">Now say that again in half as many words.</pre>
+            <button type="button" class="btn btn--secondary" id="p2-copy" data-copies="p2">Copy this prompt</button>
+            <span id="p2-copy-status" role="status" aria-live="polite"></span>
+          </div>
+        </li>
+      </ol>
+      <p>Notice that you never repeated the topic. It knew what "that" referred to, because everything in one conversation stays in view.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>2. Attach something</h3>
+        <span class="badge">5 minutes</span>
+      </div>
+      <p><strong>Your task:</strong> ask a question about a file rather than about the world.</p>
+      <ol>
+        <li>Find any document or image on your computer &mdash; a syllabus, a photo, an assignment sheet. Nothing personal or sensitive.</li>
+        <li>Use the attach control next to the prompt box to upload it.</li>
+        <li>Ask something specific about it, for example: <em>"What are the three most important dates in this document?"</em></li>
+      </ol>
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p>Never upload anything containing your student ID, your grades, another student's work, or anyone's personal information. This holds for every AI tool, not just this one.</p>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>3. Start clean</h3>
+        <span class="badge">2 minutes</span>
+      </div>
+      <p><strong>Your task:</strong> learn when to abandon a conversation.</p>
+      <p>Click <strong>New chat</strong> and ask your follow-up question from exercise 1 again &mdash; <em>"Now say that again in half as many words."</em> It won't know what you mean, because a new chat starts with nothing.</p>
+      <p>That's the useful lesson: <strong>when a long conversation starts drifting or giving worse answers, start a new one.</strong> Long threads accumulate everything you've said, including your wrong turns, and the tool keeps trying to stay consistent with all of it.</p>
+    </div>
+  </section>
+
+  <section id="limits" aria-labelledby="limits-h">
+    <div class="section-head">
+      <h2 id="limits-h">Free-Tier Limits</h2>
+      <p class="sub">What your college account gets you.</p>
+    </div>
+
+    <p>Your college Workspace account gives you Gemini at no cost. What that includes &mdash; which model version, how many messages, how large an upload &mdash; depends on how the college has configured the account, and Google changes these terms regularly.</p>
+
+    <div class="callout callout--verify">
+      <span class="label">Verify</span>
+      <p><strong>Check this one yourself rather than trusting a number printed here.</strong> Any specific limit written into a course guide is wrong within a term or two. Open Gemini's own help pages while signed in on your college account &mdash; that view reflects your actual entitlements, which a guide can't. If you hit a wall mid-assignment, that's worth telling your instructor about, because it affects everyone in the class.</p>
+    </div>
+
+    <p>Practically, for this course: nothing we ask you to do comes close to a usage ceiling. The activities are short, and none of them require uploading large files.</p>
+  </section>
+
+  <section id="privacy" aria-labelledby="privacy-h">
+    <div class="section-head">
+      <h2 id="privacy-h">Privacy &amp; Data Handling</h2>
+      <p class="sub">Worth reading properly. This is course content, not fine print.</p>
+    </div>
+
+    <p>Students on a college account often assume "the school gave it to me, so it's private." Those are two different things, and the gap between them is genuinely worth understanding &mdash; not just here, but for every institutional tool you'll ever use.</p>
+
+    <p>Three separate questions, which have three different answers:</p>
+    <ol>
+      <li><strong>Is your conversation used to train Google's models?</strong> Consumer accounts and education Workspace accounts are treated differently, and the education terms are generally more restrictive.</li>
+      <li><strong>Can the college see your conversations?</strong> A Workspace administrator's visibility into an education account is not the same as a private account's, and it's a fair thing to ask about.</li>
+      <li><strong>How long is anything kept?</strong> Gemini has activity and history controls; where they live and what they default to changes over time.</li>
+    </ol>
+
+    <div class="callout callout--verify">
+      <span class="label">Verify</span>
+      <p><strong>Look these up rather than taking anyone's word &mdash; including this guide's.</strong> Sign in on your college account, open Gemini's privacy and activity settings, and read what it actually says about <em>your</em> account. If you want the institutional answer to question 2, ask the college IT help desk directly; that's a reasonable question and they can answer it authoritatively. Practising this &mdash; going to the source instead of trusting a summary &mdash; is a skill this whole course is built around.</p>
+    </div>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p>Regardless of what the settings say: <strong>never enter your student ID, your grades, other students' work, or anyone's personal information</strong> into Gemini or any other AI tool. This rule doesn't depend on the privacy policy, and it doesn't change when the policy does.</p>
+    </div>
+  </section>
+
+  <section id="weaknesses" aria-labelledby="weaknesses-h">
+    <div class="section-head">
+      <h2 id="weaknesses-h">Known Weaknesses</h2>
+      <p class="sub">The failure modes you'll actually run into this semester.</p>
+    </div>
+
+    <p>Every section above tells you what this tool does. This one tells you where it falls over &mdash; which matters more, because these are the failures that cost people marks and credibility.</p>
+
+    <ul>
+      <li><strong>It is confidently wrong.</strong> Incorrect answers arrive in exactly the same assured tone as correct ones. There is no wobble in its voice when it doesn't know something, so you cannot use confidence as a signal.</li>
+      <li><strong>It invents sources.</strong> Ask for citations and you may get references formatted perfectly &mdash; author, title, year, journal &mdash; for work that does not exist. Module 3 looks at this closely, because it's the failure most likely to damage your academic work.</li>
+      <li><strong>It isn't consistent.</strong> The same prompt twice can produce meaningfully different answers. If you're relying on something it told you, check it; don't assume you'd get the same reply again.</li>
+      <li><strong>Its knowledge has an edge.</strong> There's a point past which it wasn't trained on anything. It may or may not look something up for you, and it doesn't always make clear which it did.</li>
+      <li><strong>It agrees with you too readily.</strong> Push back on a correct answer and it will often fold and "correct" itself into being wrong. Disagreement from you isn't evidence, and it shouldn't be treated as such &mdash; but it frequently is.</li>
+    </ul>
+
+    <div class="callout callout--try">
+      <span class="label">Try this</span>
+      <p>Ask Gemini a factual question you already know the answer to, then tell it &mdash; confidently and incorrectly &mdash; that it's wrong. Watch what it does. It's a two-minute exercise and it will change how you read every answer it gives you afterwards.</p>
+    </div>
+  </section>
+
+  <section id="deeper" aria-labelledby="deeper-h">
+    <div class="section-head">
+      <h2 id="deeper-h">Where To Go Deeper</h2>
+    </div>
+    <p>This guide covers the interface. The concepts behind it live in the lessons:</p>
+    <ul>
+      <li><strong>What AI, machine learning, and deep learning actually are</strong> &mdash; Module 1, Lesson 2</li>
+      <li><strong>How generative AI works, and how to write a good prompt</strong> &mdash; Module 2</li>
+      <li><strong>Research use, verifying sources, and why the citation problem happens</strong> &mdash; Module 3, Lesson 1</li>
+      <li><strong>Bias, privacy, and data protection</strong> &mdash; Module 1, Lessons 4&ndash;5, and Module 4</li>
+    </ul>
+    <p>For the product itself, Google publishes its own Gemini help documentation &mdash; search for "Gemini Help" while signed in on your college account so you get the pages that match your version.</p>
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Tool Guide: Gemini &middot; Accurate as of August 2026</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l1.html ===== */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
