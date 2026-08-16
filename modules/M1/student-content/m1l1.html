@@ -6,1115 +6,621 @@
 <meta name="color-scheme" content="only light">
 <title>M1L1 — AI Tool Onboarding | CSC 141: AI Literacy</title>
 <style>
-/* ===== RESET & BASE ===== */
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK  (v1, established 2026-08-16)
+   This block is the copy-paste source for every other lesson SPA
+   in this course. Copy it verbatim; do not re-derive it per page.
+   ============================================================ */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --color-bg: #ffffff;
-  --color-text: #1a1a1a;
-  --color-primary: #1a5276;
-  --color-primary-dark: #0e3a56;
-  --color-accent: #2980b9;
-  --color-border: #bdc3c7;
-  --color-light-bg: #f4f6f7;
-  --color-success-bg: #d5f5e3;
-  --color-success-text: #1e8449;
-  --color-error-bg: #fadbd8;
-  --color-error-text: #c0392b;
-  --color-warning-bg: #fdebd0;
-  --color-warning-text: #7e5109;
-  --color-info-bg: #d6eaf8;
-  --color-info-text: #1a5276;
-  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
-  --max-content-width: 72ch;
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
+  color-scheme: only light;
+
+  --c-bg:            #ffffff;
+  --c-text:          #1a1a1a;
+  --c-text-muted:    #4a4a4a;
+  --c-primary:       #1a5276;   /* 7.5:1 on white — safe for text */
+  --c-primary-dark:  #0e3a56;
+  --c-ui:            #2980b9;   /* UI/large text only (3:1) — never body text */
+  --c-border:        #b0b8bd;
+  --c-surface:       #f4f6f7;
+
+  --c-note-bg:       #d6eaf8;  --c-note-bd:  #1a5276;  --c-note-tx:  #14304a;
+  --c-caution-bg:    #fdebd0;  --c-caution-bd:#b9770e; --c-caution-tx:#6b4708;
+  --c-ok-bg:         #d5f5e3;  --c-ok-tx:    #145a32;
+  --c-no-bg:         #fadbd8;  --c-no-tx:    #922b21;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --measure: 68ch;      /* prose only — NEVER on a section/wrapper */
+  --page-max: 1200px;
+
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
 }
 
-html {
-  font-size: 100%;
-  scroll-behavior: smooth;
-}
-
+html { font-size: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
 body {
-  font-family: var(--font-stack);
+  font-family: var(--font);
+  color: var(--c-text);
+  background: var(--c-bg);
   line-height: 1.6;
-  color: var(--color-text);
-  background: var(--color-bg);
-  max-width: 100%;
-  overflow-x: hidden;
+  font-size: 1rem;
 }
 
-/* ===== FOCUS INDICATORS ===== */
-:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-}
+/* --- text measure: prose elements ONLY (STANDARDS.md) --- */
+p, li, blockquote, dd { max-width: var(--measure); }
 
-/* ===== COMPACT HEADER BANNER ===== */
-header[role="banner"] {
-  background: var(--color-primary);
-  color: #ffffff;
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: 0.9rem;
-}
-header[role="banner"] .banner-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm) var(--spacing-md);
-  align-items: baseline;
-}
-header[role="banner"] h1 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin: 0;
-  flex: 1 1 auto;
-}
-header[role="banner"] .banner-meta {
-  font-size: 0.85rem;
-  opacity: 0.9;
-}
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem;    margin-top: var(--s-4); }
+p  { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+strong { font-weight: 700; }
 
-/* ===== IN-PAGE NAVIGATION / TOC ===== */
-nav[aria-label="Page navigation"] {
-  background: var(--color-light-bg);
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--spacing-sm) var(--spacing-md);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-nav[aria-label="Page navigation"] .toc-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-nav[aria-label="Page navigation"] .toc-label {
-  font-weight: 600;
-  font-size: 0.85rem;
-  margin-bottom: var(--spacing-xs);
-  display: block;
-}
-nav[aria-label="Page navigation"] ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs) var(--spacing-md);
-  padding: 0;
-}
-nav[aria-label="Page navigation"] a {
-  color: var(--color-primary);
-  text-decoration: underline;
-  font-size: 0.85rem;
-  text-underline-offset: 2px;
-}
-nav[aria-label="Page navigation"] a:hover,
-nav[aria-label="Page navigation"] a:focus-visible {
-  color: var(--color-accent);
-}
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
 
-/* ===== MAIN CONTENT ===== */
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-lg) var(--spacing-md);
-}
-main > section {
-  max-width: var(--max-content-width);
-  margin-bottom: var(--spacing-xl);
-}
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
 
-/* ===== HEADING HIERARCHY ===== */
-h2 {
-  font-size: 1.5rem;
-  color: var(--color-primary);
-  margin-bottom: var(--spacing-md);
-  padding-bottom: var(--spacing-xs);
-  border-bottom: 2px solid var(--color-primary);
+/* --- compact banner (no hero) --- */
+.banner {
+  background: var(--c-primary);
+  color: #fff;
+  padding: var(--s-3) var(--s-4);
 }
-h3 {
-  font-size: 1.2rem;
-  color: var(--color-primary-dark);
-  margin-top: var(--spacing-lg);
-  margin-bottom: var(--spacing-sm);
+.banner .eyebrow {
+  font-size: .8rem; letter-spacing: .06em; text-transform: uppercase;
+  opacity: .95; margin: 0;
 }
-h4 {
-  font-size: 1.05rem;
-  color: var(--color-text);
-  margin-top: var(--spacing-md);
-  margin-bottom: var(--spacing-xs);
-}
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
 
-/* ===== PARAGRAPHS & LISTS ===== */
-p { margin-bottom: var(--spacing-md); }
-ul, ol {
-  margin-bottom: var(--spacing-md);
-  padding-left: var(--spacing-lg);
-}
-li { margin-bottom: var(--spacing-xs); }
+/* --- layout --- */
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main  { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
 
-/* ===== CALLOUT BOXES ===== */
+/* --- in-page jump nav --- */
+.jumpnav {
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-border);
+  padding: var(--s-2) 0;
+}
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+/* --- section header row --- */
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+/* --- callouts: exactly four approved types --- */
 .callout {
-  border-left: 4px solid var(--color-accent);
-  background: var(--color-info-bg);
-  color: var(--color-info-text);
-  padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  border-radius: 0 4px 4px 0;
+  border-left: 5px solid;
+  padding: var(--s-3);
+  margin: var(--s-4) 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
 }
-.callout.warning {
-  border-left-color: #f39c12;
-  background: var(--color-warning-bg);
-  color: var(--color-warning-text);
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child  { margin-bottom: 0; }
+.callout .label {
+  display: block; font-weight: 700; font-size: .8rem;
+  letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1);
 }
-.callout strong {
-  display: block;
-  margin-bottom: var(--spacing-xs);
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout--note a, .callout--caution a { color: inherit; }
+
+/* --- tables --- */
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+/* --- hands-on activity block --- */
+.activity {
+  border: 2px solid var(--c-primary);
+  border-radius: var(--radius);
+  padding: var(--s-4);
+  margin: var(--s-4) 0;
+  background: var(--c-bg);
+}
+.activity > :first-child { margin-top: 0; }
+.activity-meta {
+  display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3);
+  align-items: baseline; margin-bottom: var(--s-2);
+}
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge {
+  display: inline-block; background: var(--c-primary); color: #fff;
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+  padding: .15rem .5rem; border-radius: 999px; white-space: nowrap;
+}
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+/* --- copyable prompt block (text stays selectable without JS) --- */
+.prompt { margin: var(--s-3) 0; }
+.prompt pre {
+  font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word;
+  background: var(--c-surface); border: 1px solid var(--c-border);
+  border-radius: var(--radius); padding: var(--s-3);
+}
+.btn {
+  font: inherit; font-weight: 600; cursor: pointer;
+  background: var(--c-primary); color: #fff;
+  border: 2px solid var(--c-primary); border-radius: var(--radius);
+  padding: .5rem 1rem; margin-top: var(--s-2);
+}
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+/* --- knowledge check widget --- */
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+/* --- textarea --- */
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"] {
+  font: inherit; width: 100%; max-width: var(--measure);
+  border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-2);
+  background: #fff; color: var(--c-text);
+}
+textarea { min-height: 12rem; resize: vertical; }
+
+/* --- export panel --- */
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+/* --- accordion --- */
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+/* --- back to top / footer --- */
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 
-/* ===== ACCORDION PATTERN ===== */
-details.accordion {
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  margin-bottom: var(--spacing-sm);
+/* --- responsive --- */
+@media (max-width: 40rem) {
+  .wrap { padding: 0 var(--s-3); }
+  h1 { font-size: 1.35rem; }
+  .activity, .kc, .export-panel { padding: var(--s-3); }
 }
-details.accordion summary {
-  padding: var(--spacing-md);
-  cursor: pointer;
-  font-weight: 600;
-  background: var(--color-light-bg);
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-details.accordion summary::-webkit-details-marker { display: none; }
-details.accordion summary::before {
-  content: "▸";
-  display: inline-block;
-  transition: transform 0.15s ease;
-  font-size: 1.1rem;
-  flex-shrink: 0;
-}
-details.accordion[open] summary::before {
-  transform: rotate(90deg);
-}
-details.accordion summary:hover,
-details.accordion summary:focus-visible {
-  background: #e8ecf0;
-}
-details.accordion .accordion-body {
-  padding: var(--spacing-md);
-  border-top: 1px solid var(--color-border);
-}
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
 
-/* ===== SVG DIAGRAMS ===== */
-.diagram-container {
-  margin: var(--spacing-md) 0;
-  text-align: center;
-}
-.diagram-container svg {
-  max-width: 100%;
-  height: auto;
-}
-.screenshot-desc {
-  background: var(--color-light-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  padding: var(--spacing-md);
-  margin-top: var(--spacing-sm);
-  font-size: 0.9rem;
-}
-.screenshot-desc strong {
-  display: block;
-  margin-bottom: var(--spacing-xs);
-}
-
-/* ===== TOOLS COMPARISON TABLE ===== */
-.tools-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: var(--spacing-md);
-  font-size: 0.95rem;
-}
-.tools-table th,
-.tools-table td {
-  border: 1px solid var(--color-border);
-  padding: var(--spacing-sm) var(--spacing-md);
-  text-align: left;
-  vertical-align: top;
-}
-.tools-table th {
-  background: var(--color-primary);
-  color: #ffffff;
-  font-weight: 600;
-}
-.tools-table tr:nth-child(even) td {
-  background: var(--color-light-bg);
-}
-
-/* ===== TOOLS CARD GRID (visual rendering) ===== */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-}
-.tool-card {
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  padding: var(--spacing-md);
-  background: var(--color-bg);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-.tool-card h4 {
-  margin-top: 0;
-  color: var(--color-primary);
-  font-size: 1rem;
-}
-.tool-card .tool-url {
-  font-size: 0.85rem;
-  color: var(--color-accent);
-  word-break: break-all;
-  margin-bottom: var(--spacing-xs);
-}
-.tool-card .tool-desc {
-  font-size: 0.9rem;
-  color: var(--color-text);
-}
-
-/* ===== KNOWLEDGE CHECK WIDGET ===== */
-.knowledge-check {
-  border: 2px solid var(--color-accent);
-  border-radius: 6px;
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-  background: #fafcff;
-}
-.knowledge-check h3 {
-  color: var(--color-primary);
-  margin-top: 0;
-}
-.knowledge-check .kc-question {
-  font-weight: 600;
-  margin-bottom: var(--spacing-md);
-}
-.knowledge-check fieldset {
-  border: none;
-  padding: 0;
-  margin: 0 0 var(--spacing-md) 0;
-}
-.knowledge-check legend {
-  font-weight: 600;
-  margin-bottom: var(--spacing-sm);
-}
-.knowledge-check label {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-xs) 0;
-  cursor: pointer;
-}
-.knowledge-check input[type="radio"] {
-  margin-top: 3px;
-  flex-shrink: 0;
-}
-.knowledge-check button {
-  background: var(--color-primary);
-  color: #ffffff;
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: 4px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  font-weight: 600;
-}
-.knowledge-check button:hover {
-  background: var(--color-primary-dark);
-}
-.knowledge-check .kc-feedback {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-md);
-  border-radius: 4px;
-  display: none;
-}
-.knowledge-check .kc-feedback.correct {
-  background: var(--color-success-bg);
-  color: var(--color-success-text);
-  border-left: 4px solid var(--color-success-text);
-  display: block;
-}
-.knowledge-check .kc-feedback.incorrect {
-  background: var(--color-error-bg);
-  color: var(--color-error-text);
-  border-left: 4px solid var(--color-error-text);
-  display: block;
-}
-
-/* ===== TEXTAREA & EXPORT PANEL (M1L1-A2) ===== */
-.activity-textarea {
-  width: 100%;
-  min-height: 200px;
-  padding: var(--spacing-md);
-  border: 2px solid var(--color-border);
-  border-radius: 4px;
-  font-family: var(--font-stack);
-  font-size: 1rem;
-  line-height: 1.6;
-  resize: vertical;
-}
-.activity-textarea:focus {
-  border-color: var(--color-accent);
-}
-.btn-primary {
-  background: var(--color-primary);
-  color: #ffffff;
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-lg);
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  margin-top: var(--spacing-sm);
-}
-.btn-primary:hover { background: var(--color-primary-dark); }
-
-.export-panel {
-  border: 2px solid var(--color-primary);
-  border-radius: 6px;
-  padding: var(--spacing-lg);
-  margin-top: var(--spacing-lg);
-  background: #ffffff;
-}
-.export-panel .export-header {
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-.export-panel .export-header h4 {
-  color: var(--color-primary);
-  margin: 0;
-}
-.export-panel .student-name-field {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-  flex-wrap: wrap;
-}
-.export-panel .student-name-field label {
-  font-weight: 600;
-  min-width: 80px;
-}
-.export-panel .student-name-field input {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: 1px solid var(--color-border);
-  border-radius: 3px;
-  font-size: 1rem;
-  flex: 1 1 200px;
-}
-.export-panel .export-list {
-  margin-bottom: var(--spacing-md);
-}
-.export-panel .export-list ol {
-  padding-left: var(--spacing-lg);
-}
-.export-panel .export-list ol li {
-  margin-bottom: var(--spacing-xs);
-}
-
-/* ===== BACK TO TOP ===== */
-.back-to-top {
-  position: fixed;
-  bottom: var(--spacing-lg);
-  right: var(--spacing-lg);
-  background: var(--color-primary);
-  color: #ffffff;
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  z-index: 200;
-}
-.back-to-top.visible {
-  display: flex;
-}
-.back-to-top:hover { background: var(--color-primary-dark); }
-
-/* ===== FOOTER ===== */
-footer[role="contentinfo"] {
-  border-top: 1px solid var(--color-border);
-  padding: var(--spacing-md);
-  text-align: center;
-  font-size: 0.85rem;
-  color: #555;
-  max-width: 1200px;
-  margin: var(--spacing-xl) auto 0;
-}
-
-/* ===== PRINT STYLESHEET ===== */
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT
+   Per M1L1 spec: the export artifact is the M1L1-A2 10-Things
+   panel ONLY, not the whole lesson. (Punch-list item 1.)
+   ============================================================ */
 @media print {
-  /* Hide interactive elements */
-  nav[aria-label="Page navigation"],
-  .back-to-top,
-  .knowledge-check button,
-  .btn-primary,
-  .no-print {
-    display: none !important;
+  body { background: #fff; font-size: 12pt; }
+  body * { visibility: hidden; }
+  #export-panel, #export-panel * { visibility: visible; }
+  #export-panel {
+    position: absolute; left: 0; top: 0; width: 100%;
+    border: 0; padding: 0; margin: 0;
   }
-
-  /* Expand all accordions for complete export */
-  details.accordion {
-    open: all;
-  }
-  details.accordion[open],
-  details.accordion:not([open]) {
-    display: block;
-  }
-  details.accordion .accordion-body {
-    display: block !important;
-  }
-  details.accordion summary::before {
-    content: "▾" !important;
-  }
-
-  /* Ensure knowledge check feedback is visible */
-  .knowledge-check .kc-feedback {
-    display: block !important;
-  }
-
-  /* Print header/footer */
-  @page {
-    margin: 2cm;
-    @top-center {
-      content: "CSC 141: AI Literacy — M1L1: AI Tool Onboarding";
-      font-size: 10pt;
-      font-weight: bold;
-    }
-    @bottom-center {
-      content: "Mendocino College • Page " counter(page) " of " counter(pages);
-      font-size: 9pt;
-    }
-  }
-
-  body {
-    color: #000;
-    background: #fff;
-  }
-
-  header[role="banner"] {
-    background: none;
-    color: #000;
-    border-bottom: 2px solid #000;
-  }
-
-  main > section {
-    page-break-inside: avoid;
-  }
-
-  .export-panel {
-    border: 1px solid #000;
-  }
-}
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
-@media (max-width: 600px) {
-  header[role="banner"] .banner-inner {
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
-  header[role="banner"] h1 { font-size: 1rem; }
-  nav[aria-label="Page navigation"] ul {
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
-  .tools-grid {
-    grid-template-columns: 1fr;
-  }
-  main { padding: var(--spacing-md) var(--spacing-sm); }
-}
-
-@media (min-width: 2560px) {
-  html { font-size: 120%; }
-  :root { --max-content-width: 80ch; }
-}
-
-@media (min-width: 3840px) {
-  html { font-size: 140%; }
-  :root { --max-content-width: 85ch; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== COMPACT HEADER BANNER ===== -->
-<header role="banner">
-  <div class="banner-inner">
-    <h1>CSC 141: AI Literacy — M1L1: AI Tool Onboarding</h1>
-    <span class="banner-meta">Module 1 • Lesson 1</span>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Module 1 &middot; Lesson 1</p>
+    <h1>AI Tool Onboarding</h1>
   </div>
 </header>
 
-<!-- ===== IN-PAGE NAVIGATION / TOC ===== -->
-<nav aria-label="Page navigation">
-  <div class="toc-inner">
-    <span class="toc-label">On this page:</span>
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
     <ul>
-      <li><a href="#welcome">Welcome</a></li>
-      <li><a href="#gemini-setup">Gemini Setup</a></li>
-      <li><a href="#ai-tools">AI Tools Overview</a></li>
-      <li><a href="#expectations">What to Expect</a></li>
-      <li><a href="#activity-a1">Activity M1L1-A1</a></li>
-      <li><a href="#activity-a2">Activity M1L1-A2</a></li>
-      <li><a href="#discussion-primer">Discussion Primer</a></li>
-      <li><a href="#knowledge-checks">Knowledge Checks</a></li>
+      <li><a href="#step1">1. Get into Gemini</a></li>
+      <li><a href="#step2">2. Your tools</a></li>
+      <li><a href="#step3">3. What to expect</a></li>
+      <li><a href="#a1">Practice: compare tools</a></li>
+      <li><a href="#a2">Your 10 Things list</a></li>
+      <li><a href="#primer">Session 1 discussion</a></li>
+      <li><a href="#checks">Check yourself</a></li>
     </ul>
   </div>
 </nav>
 
-<!-- ===== MAIN CONTENT ===== -->
-<main role="main">
+<main class="wrap" id="top">
 
-  <!-- WELCOME SECTION -->
-  <section id="welcome" aria-labelledby="welcome-heading">
-    <h2 id="welcome-heading">Welcome — Let's Get You Set Up with AI Tools</h2>
-    <p>Hi! Before we dive into how AI works, you need access to a few tools. This lesson walks you through getting set up with <strong>Gemini</strong> (your primary tool for this course, accessed through your college Google account) and a couple of other free AI tools so you can start comparing how different systems respond.</p>
-    <p>Don't worry — no coding, no downloads, and no software to install. Everything runs in your browser.</p>
+  <section aria-labelledby="welcome">
+    <h2 id="welcome" class="visually-hidden">Welcome</h2>
+    <p>Hi! Before we dive into how AI works, you need access to a few tools. This lesson gets you set up with <strong>Gemini</strong> and introduces the other free AI tools you can use in this course, so you can start comparing how different systems respond.</p>
+    <p>Don't worry &mdash; no coding, no downloads, and no software to install. Everything runs in your browser.</p>
   </section>
 
-  <!-- GEMINI SETUP — ACCORDION STEPS -->
-  <section id="gemini-setup" aria-labelledby="gemini-heading">
-    <h2 id="gemini-heading">Step 1: Access Gemini Through Your College Google Account</h2>
-    <p>Your college email comes with a Google Workspace account that includes access to <strong>Google Gemini</strong> at no extra cost. Here's how to get started:</p>
-
-    <!-- Diagram 1 — Gemini access flowchart (inline SVG) -->
-    <div class="diagram-container" role="img" aria-label="Gemini access flowchart: four numbered steps showing College Gmail login, Navigate to Gemini, Verify college account, and Test with Say hello prompt.">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" width="720" height="180" aria-hidden="true">
-        <!-- Step 1 -->
-        <rect x="10" y="10" width="160" height="160" rx="8" fill="#d6eaf8" stroke="#2980b9" stroke-width="2"/>
-        <text x="90" y="35" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a5276">Step 1</text>
-        <!-- Email icon -->
-        <rect x="60" y="50" width="60" height="45" rx="4" fill="#2980b9"/>
-        <polygon points="60,50 90,75 120,50" fill="#fff"/>
-        <text x="90" y="120" text-anchor="middle" font-size="11" fill="#1a5276">College Gmail</text>
-        <text x="90" y="135" text-anchor="middle" font-size="11" fill="#1a5276">login</text>
-        <text x="90" y="158" text-anchor="middle" font-size="10" fill="#555">@student.mendocino.edu</text>
-        <!-- Arrow -->
-        <line x1="180" y1="90" x2="200" y2="90" stroke="#1a5276" stroke-width="2" marker-end="url(#arrowhead)"/>
-        <!-- Step 2 -->
-        <rect x="200" y="10" width="160" height="160" rx="8" fill="#d6eaf8" stroke="#2980b9" stroke-width="2"/>
-        <text x="280" y="35" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a5276">Step 2</text>
-        <!-- Browser icon -->
-        <rect x="250" y="50" width="60" height="45" rx="4" fill="#2980b9"/>
-        <circle cx="280" cy="72" r="12" fill="none" stroke="#fff" stroke-width="3"/>
-        <line x1="280" y1="60" x2="280" y2="84" stroke="#fff" stroke-width="2"/>
-        <line x1="268" y1="72" x2="292" y2="72" stroke="#fff" stroke-width="2"/>
-        <text x="280" y="120" text-anchor="middle" font-size="11" fill="#1a5276">Navigate to</text>
-        <text x="280" y="135" text-anchor="middle" font-size="11" fill="#1a5276">gemini.google.com</text>
-        <text x="280" y="158" text-anchor="middle" font-size="10" fill="#555">or click icon in Gmail</text>
-        <!-- Arrow -->
-        <line x1="360" y1="90" x2="380" y2="90" stroke="#1a5276" stroke-width="2"/>
-        <!-- Step 3 -->
-        <rect x="380" y="10" width="160" height="160" rx="8" fill="#d6eaf8" stroke="#2980b9" stroke-width="2"/>
-        <text x="460" y="35" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a5276">Step 3</text>
-        <!-- Checkmark icon -->
-        <circle cx="460" cy="72" r="22" fill="#2980b9"/>
-        <polyline points="445,72 455,82 478,60" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-        <text x="460" y="120" text-anchor="middle" font-size="11" fill="#1a5276">Verify college</text>
-        <text x="460" y="135" text-anchor="middle" font-size="11" fill="#1a5276">account selected</text>
-        <text x="460" y="158" text-anchor="middle" font-size="10" fill="#555">@student.mendocino.edu</text>
-        <!-- Arrow -->
-        <line x1="540" y1="90" x2="560" y2="90" stroke="#1a5276" stroke-width="2"/>
-        <!-- Step 4 -->
-        <rect x="560" y="10" width="150" height="160" rx="8" fill="#d5f5e3" stroke="#27ae60" stroke-width="2"/>
-        <text x="635" y="35" text-anchor="middle" font-size="14" font-weight="bold" fill="#1e8449">Step 4</text>
-        <!-- Chat bubble icon -->
-        <ellipse cx="635" cy="65" rx="25" ry="18" fill="#27ae60"/>
-        <polygon points="620,80 625,90 635,80" fill="#27ae60"/>
-        <text x="635" y="70" text-anchor="middle" font-size="9" fill="#fff">Say hello</text>
-        <text x="635" y="120" text-anchor="middle" font-size="11" fill="#1e8449">Test with</text>
-        <text x="635" y="135" text-anchor="middle" font-size="11" fill="#1e8449">"Say hello"</text>
-        <text x="635" y="158" text-anchor="middle" font-size="10" fill="#555">Get a response ✓</text>
-        <!-- Arrowhead marker -->
-        <defs>
-          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#1a5276"/>
-          </marker>
-        </defs>
-      </svg>
+  <!-- ===================== STEP 1 ===================== -->
+  <section id="step1" aria-labelledby="step1-h">
+    <div class="section-head">
+      <h2 id="step1-h">Step 1: Get Into Gemini Today</h2>
+      <p class="sub">Five minutes. Do this before anything else.</p>
     </div>
 
-    <!-- Accordion Step 1 -->
-    <details class="accordion">
-      <summary>Step 1 — Open your college email</summary>
-      <div class="accordion-body">
-        <p>Go to the college's Gmail login page and sign in with your student credentials (your <code>@student.mendocino.edu</code> email address). If you've already logged into Gmail on this device, skip to step 3.</p>
-        <div class="screenshot-desc" role="img" aria-label="Screenshot description: Gmail login page showing the email input field with @student.mendocino.edu highlighted.">
-          <strong>Screenshot 1 — Gmail Login Page</strong>
-          The Gmail sign-in screen displays a centered card with the Google logo at top, an email input field pre-focused and ready for entry, and a "Next" button below. The email field is highlighted to show where you enter your <code>@student.mendocino.edu</code> address.
-        </div>
-      </div>
-    </details>
+    <p>Your college email comes with a Google Workspace account that includes <strong>Google Gemini</strong> at no extra cost. Gemini is your <strong>baseline tool</strong> for this course &mdash; you already have it, everyone in the class has it, and it's what demonstrations and walkthroughs use.</p>
 
-    <!-- Accordion Step 2 -->
-    <details class="accordion">
-      <summary>Step 2 — Navigate to Gemini</summary>
-      <div class="accordion-body">
-        <p>Once you're in Gmail, look for the Gemini icon — it appears as a multicolored diamond shape in the lower-right corner of the Gmail window, or you can go directly to <code>gemini.google.com</code> in a new tab. Because you're signed into your college Google account, Gemini should load automatically.</p>
-        <div class="screenshot-desc" role="img" aria-label="Screenshot description: Gmail interface with the Gemini icon circled in the lower-right corner.">
-          <strong>Screenshot 2 — Finding the Gemini Icon</strong>
-          The Gmail interface is shown with the standard inbox layout. In the lower-right corner of the window, a multicolored diamond-shaped icon (the Gemini button) is circled in red to draw attention. Clicking this icon opens the Gemini chat panel directly within Gmail.
-        </div>
-      </div>
-    </details>
+    <p><strong>The short version:</strong> go to <code>gemini.google.com</code>, sign in with your <code>@student.mendocino.edu</code> address, and type <code>Say hello</code>. If you get a response, you're set.</p>
 
-    <!-- Accordion Step 3 -->
-    <details class="accordion">
-      <summary>Step 3 — Verify you're in</summary>
-      <div class="accordion-body">
-        <p>You should see a welcome screen with a text input field that says something like "Ask me anything" or "Type a message." If you see a prompt asking you to choose an account, make sure your college email is selected.</p>
-        <div class="screenshot-desc" role="img" aria-label="Screenshot description: Gemini welcome screen with the text input field visible and ready for typing.">
-          <strong>Screenshot 3 — Gemini Welcome Screen</strong>
-          The Gemini interface loads with a clean, centered layout. A large text input field dominates the center of the page, displaying placeholder text "Ask me anything." Above it, the Gemini logo is visible. In the top-right corner, your college account email (<code>@student.mendocino.edu</code>) is displayed, confirming you are signed in with the correct account.
-        </div>
-      </div>
-    </details>
+    <p><strong>Full walkthrough with screenshots &rarr; <a href="../../../tool-guides/llms/gemini.html" target="_blank" rel="noopener">Gemini tool guide</a></strong> (opens in a new tab), including what to do when it doesn't work. Every tool listed below has a guide like it.</p>
 
-    <!-- Accordion Step 4 -->
-    <details class="accordion">
-      <summary>Step 4 — Test it</summary>
-      <div class="accordion-body">
-        <p>Type <code>Say hello</code> and press Enter. If you get a response, you're all set.</p>
-        <div class="screenshot-desc" role="img" aria-label="Screenshot description: A sample Gemini conversation showing the user prompt Say hello and a friendly response from Gemini.">
-          <strong>Screenshot 4 — Testing Gemini</strong>
-          A sample Gemini conversation is shown. The user's message "Say hello" appears in a dark bubble on the right side. Below it, Gemini's response appears in a light bubble on the left, reading something like "Hello! How can I help you today?" This confirms the connection is working properly.
-        </div>
-      </div>
-    </details>
-
-    <div class="callout warning">
-      <strong>Troubleshooting:</strong>
-      If Gemini doesn't appear or asks for a paid subscription, try accessing it from <code>gemini.google.com</code> directly while signed into your college account. If you still can't access Gemini through your college email, contact the college IT help desk and mention that you need Gemini access for CSC 141. As a backup, you can use the free version of ChatGPT (at <code>chatgpt.com</code>) for this course's activities.
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p>If Gemini asks you to pay, you're almost certainly signed in on a personal Google account rather than your college one &mdash; check the account avatar in the top-right corner. If you're still stuck, use <strong>Microsoft Copilot</strong> instead (<code>copilot.microsoft.com</code>, sign in with the same <code>@student.mendocino.edu</code> address). It's also college-provided, and every activity in this course can be done in it. Contact the IT help desk when you get a chance, but don't let an access problem block your week-1 work.</p>
     </div>
   </section>
 
-  <!-- AI TOOLS OVERVIEW -->
-  <section id="ai-tools" aria-labelledby="tools-heading">
-    <h2 id="tools-heading">Step 2: Orientation to Free AI Tools You'll Use in This Course</h2>
-    <p>Throughout this class, you'll work with at least <strong>three</strong> AI tools so you can compare how they differ. Here's the lineup:</p>
-
-    <!-- Diagram 2 — AI tools comparison table as cards -->
-    <div class="tools-grid" role="list" aria-label="AI tools comparison grid">
-      <div class="tool-card" role="listitem">
-        <h4>Gemini (Google)</h4>
-        <p class="tool-url">gemini.google.com</p>
-        <p class="tool-desc">Your anchor tool — accessed through your college Google account. Used in most activities.</p>
-      </div>
-      <div class="tool-card" role="listitem">
-        <h4>ChatGPT (OpenAI)</h4>
-        <p class="tool-url">chatgpt.com</p>
-        <p class="tool-desc">Free tier, create a free account. Widely available; good for comparison.</p>
-      </div>
-      <div class="tool-card" role="listitem">
-        <h4>Claude (Anthropic)</h4>
-        <p class="tool-url">claude.ai</p>
-        <p class="tool-desc">Free tier, create a free account. Different approach to responses; useful for comparing outputs.</p>
-      </div>
-      <div class="tool-card" role="listitem">
-        <h4>Grok (xAI)</h4>
-        <p class="tool-url">Available through X (Twitter) platform</p>
-        <p class="tool-desc">Free tier. Another perspective on how AI systems are designed.</p>
-      </div>
-      <div class="tool-card" role="listitem">
-        <h4>Copilot (Microsoft)</h4>
-        <p class="tool-url">copilot.microsoft.com</p>
-        <p class="tool-desc">Sign in with your <code>@student.mendocino.edu</code> email to activate your free Microsoft 365 student tier (web only). Included with your student account at no cost.</p>
-      </div>
+  <!-- ===================== STEP 2 ===================== -->
+  <section id="step2" aria-labelledby="step2-h">
+    <div class="section-head">
+      <h2 id="step2-h">Step 2: Gemini Is Your Baseline &mdash; Everything Else Is Your Call</h2>
+      <p class="sub">How tool choice works for the rest of the semester.</p>
     </div>
 
-    <!-- Also provide the table for screen readers / print -->
-    <table class="tools-table" aria-label="AI tools comparison table">
-      <caption style="display:none;">AI tools available for this course</caption>
-      <thead>
-        <tr>
-          <th scope="col">Tool</th>
-          <th scope="col">How to access</th>
-          <th scope="col">Why it's in this course</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Gemini</strong> (Google)</td>
-          <td><code>gemini.google.com</code> through your college Google account</td>
-          <td>Your anchor tool — used in most activities</td>
-        </tr>
-        <tr>
-          <td><strong>ChatGPT</strong> (OpenAI)</td>
-          <td><code>chatgpt.com</code> — free tier, create a free account</td>
-          <td>Widely available; good for comparison</td>
-        </tr>
-        <tr>
-          <td><strong>Claude</strong> (Anthropic)</td>
-          <td><code>claude.ai</code> — free tier, create a free account</td>
-          <td>Different approach to responses; useful for comparing outputs</td>
-        </tr>
-        <tr>
-          <td><strong>Grok</strong> (xAI)</td>
-          <td>Available through X (Twitter) platform — free tier</td>
-          <td>Another perspective on how AI systems are designed</td>
-        </tr>
-        <tr>
-          <td><strong>Copilot</strong> (Microsoft)</td>
-          <td><code>copilot.microsoft.com</code> — sign in with your <code>@student.mendocino.edu</code> email to activate your free Microsoft 365 student tier (web only)</td>
-          <td>Included with your student account at no cost</td>
-        </tr>
-      </tbody>
-    </table>
+    <p><strong>Here's the deal.</strong> Gemini is the one tool the course can assume everyone has, so it's the <strong>baseline</strong>: demonstrations use it, screenshots match it, and any activity that doesn't say otherwise assumes it. That common starting point is what makes step-by-step instructions actually work for a class where nobody needs prior experience.</p>
 
-    <p>You'll use <strong>Gemini plus any two other tools of your choice</strong> from the list above (or another free-tier tool you prefer). The point is to see how different AI systems handle the same task — and that comparison will become a key skill in this course.</p>
+    <p><strong>Past that baseline, the choice is yours.</strong> Once you're comfortable, use whatever tool you like &mdash; unless an activity specifically directs you to one, in which case it will say so and tell you why. Several assignments ask you to run the same task through more than one tool and compare; those keep Gemini as the shared starting point so the class has something in common to talk about, and let you pick the rest. <strong>You will never need an account outside the college to finish this course.</strong></p>
 
-    <div class="callout">
-      <strong>Important:</strong> All tools in this course are browser-based. You never need to download or install anything. We'll stick to free tiers so cost is not a barrier.
+    <p><strong>Nothing in this course requires you to pay for anything.</strong> <strong>Claude</strong> and <strong>Microsoft Copilot</strong> show up as alternates where comparing them teaches something.</p>
+
+    <div class="table-scroll">
+      <table>
+        <caption>College-provided &mdash; free with your student login, nothing to sign up for</caption>
+        <thead>
+          <tr><th scope="col">Tool</th><th scope="col">Guide</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Gemini (Google) &mdash; <em>your baseline</em></th>
+            <td><a href="../../../tool-guides/llms/gemini.html" target="_blank" rel="noopener">Gemini guide</a></td>
+          </tr>
+          <tr>
+            <th scope="row">Microsoft Copilot</th>
+            <td>Copilot guide &mdash; coming soon. Web only; sign in with your student address.</td>
+          </tr>
+          <tr>
+            <th scope="row">NotebookLM (Google)</th>
+            <td>Introduced later in the course.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <caption>Your own free account &mdash; not provided by the college, so you'd be signing up under that company's own terms with a personal email</caption>
+        <thead>
+          <tr><th scope="col">Tool</th><th scope="col">Guide</th><th scope="col">Note</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">ChatGPT (OpenAI)</th><td>Guide coming soon</td><td>The most widely used; good comparison point.</td></tr>
+          <tr><th scope="row">Claude (Anthropic)</th><td>Guide coming soon</td><td>Demonstrated as an alternate.</td></tr>
+          <tr><th scope="row">Perplexity</th><td>Guide coming soon</td><td>Built to search first and show its sources up front. Handy when you want to see where an answer came from.</td></tr>
+          <tr><th scope="row">Grok (xAI)</th><td>Guide coming soon</td><td></td></tr>
+          <tr><th scope="row">DeepSeek</th><td>Guide coming soon</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Each guide covers setup, the interface, what the free tier gets you, what the tool does with your data, and what it's bad at. They're reference material &mdash; read them when you need them, not now.</p>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p>If you use a tool the college doesn't provide, you're agreeing to that company's terms yourself. Never put your student ID, your grades, another student's work, or anyone's personal information into any AI tool &mdash; but be especially careful with the ones on the second list.</p>
+    </div>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>Every tool here runs in your browser. You never need to download or install anything, and we stay on free tiers throughout so cost is never a barrier.</p>
     </div>
   </section>
 
-  <!-- WHAT TO EXPECT -->
-  <section id="expectations" aria-labelledby="expect-heading">
-    <h2 id="expect-heading">Step 3: What to Expect When You Talk to AI</h2>
-    <p>Before you start generating prompts, here are three things to keep in mind:</p>
+  <!-- ===================== STEP 3 ===================== -->
+  <section id="step3" aria-labelledby="step3-h">
+    <div class="section-head">
+      <h2 id="step3-h">Step 3: What to Expect When You Talk to AI</h2>
+      <p class="sub">Three things to keep in mind before you start.</p>
+    </div>
     <ol>
       <li><strong>AI tools are conversation partners, not search engines.</strong> You talk to them in natural language. The more specific and clear your request (called a "prompt"), the better the response.</li>
-      <li><strong>Different tools give different answers.</strong> Two AI systems asked the same question may produce very different results — in quality, tone, accuracy, and length. That's not a bug; it's a feature of how these systems work, and you'll learn why later in this module.</li>
-      <li><strong>AI can be wrong.</strong> Every AI system makes mistakes — sometimes small, sometimes significant. Part of being AI-literate is learning to check and verify what the tool gives you. We'll cover that skill throughout this course.</li>
+      <li><strong>Different tools give different answers.</strong> Two AI systems asked the same question may produce very different results &mdash; in quality, tone, accuracy, and length. That's not a bug; it's a feature of how these systems work, and you'll learn why later in this module.</li>
+      <li><strong>AI can be wrong.</strong> Every AI system makes mistakes &mdash; sometimes small, sometimes significant. Part of being AI-literate is learning to check and verify what the tool gives you. We'll cover that skill throughout this course.</li>
     </ol>
   </section>
 
-  <!-- ACTIVITY M1L1-A1 -->
-  <section id="activity-a1" aria-labelledby="a1-heading">
-    <h2 id="a1-heading">Your First Practice: Compare Three Tools (Activity M1L1-A1)</h2>
-    <p>Now let's put the tools side by side. Follow these steps:</p>
-
-    <h4>Step-by-step instructions:</h4>
-    <ol>
-      <li>Open <strong>Gemini</strong> in one browser tab and <strong>two other AI tools</strong> of your choice in separate tabs.</li>
-      <li>In each tool, type this exact prompt: <code>List three ways AI is used in everyday life that most people don't realize.</code></li>
-      <li>Read the three responses. Notice differences:
-        <ul>
-          <li>Did they give the same examples?</li>
-          <li>Which response was easiest to understand?</li>
-          <li>Did any response include something surprising or unexpected?</li>
-        </ul>
-      </li>
-      <li>Jot down 2–3 brief notes about what you noticed. These are for your own reflection — no submission required for this activity.</li>
-    </ol>
-
-    <p>This is an ungraded practice activity designed to get you comfortable with the tools and start noticing how AI systems differ. You'll build on this comparison skill throughout the course.</p>
-  </section>
-
-  <!-- ACTIVITY M1L1-A2 — 10 THINGS BASELINE LIST -->
-  <section id="activity-a2" aria-labelledby="a2-heading">
-    <h2 id="a2-heading">Your "10 Things" Baseline List (Activity M1L1-A2)</h2>
-
-    <div class="callout">
-      <strong>Note:</strong> This activity is completed <strong>live during Session 1</strong> (your first Monday Zoom meeting), not here in the SPA. The text below is the handout you'll see on screen during that session.
-    </div>
-
-    <h3>Instructions for Session 1</h3>
-    <p><em>(Read aloud by instructor / displayed on screen)</em></p>
-    <p>Before we've taught you anything about AI, I want you to make a quick list. This is your <strong>baseline</strong> — a snapshot of what you think AI can do right now, before any instruction.</p>
-
-    <blockquote style="border-left: 4px solid var(--color-primary); padding-left: var(--spacing-md); margin-bottom: var(--spacing-md); font-size: 1.05rem;">
-      <strong>Write down 10 things AI can help you do in your daily life.</strong>
-    </blockquote>
-
-    <p>Keep it fast and honest. Don't research. Don't overthink it. Just write what comes to mind. These can be big or small, serious or silly. Examples of the <em>kind</em> of thing (not answers — your own ideas): "help me write emails," "recommend movies," "translate text."</p>
-    <p>You have about 5–7 minutes for this. Go!</p>
-
-    <hr style="margin: var(--spacing-xl) 0; border: none; border-top: 1px solid var(--color-border);">
-
-    <h3 id="post-session-heading">After Session 1 — Upload your list to the SPA</h3>
-    <p>When you return to this page after Session 1, type or paste your 10-item list into the text area below and save it. This becomes your <strong>portfolio baseline artifact</strong> — you'll revisit and revise it in Module 6, so keep it safe. The SPA will format it for export.</p>
-
-    <div class="callout">
-      <strong>Export artifact:</strong> After saving your list in the SPA, use "Save as PDF" to download a copy. This is your portfolio baseline artifact (credit/no-credit). You will not submit this to a Canvas assignment — it lives in your personal portfolio and will be compared with your revised version at the end of the course.
-    </div>
-
-    <!-- Text input for M1L1-A2 -->
-    <form id="baseline-form" aria-labelledby="post-session-heading" novalidate>
-      <label for="baseline-list" style="display: block; font-weight: 600; margin-bottom: var(--spacing-sm);">
-        Enter your 10 things AI can help you do:
-      </label>
-      <textarea
-        id="baseline-list"
-        class="activity-textarea"
-        rows="12"
-        placeholder="1. (first thing)&#10;2. (second thing)&#10;3.&#10;4.&#10;5.&#10;6.&#10;7.&#10;8.&#10;9.&#10;10. (tenth thing)"
-        aria-describedby="baseline-help"
-      ></textarea>
-      <span id="baseline-help" style="display: block; font-size: 0.85rem; color: #555; margin-bottom: var(--spacing-sm);">
-        Enter one item per line, or number them 1–10. The export will format these as a numbered list.
-      </span>
-      <button type="button" class="btn-primary" id="save-baseline-btn" aria-describedby="baseline-help">Save My List</button>
-    </form>
-
-    <!-- Export Panel (hidden until saved) -->
-    <div class="export-panel" id="export-panel" style="display: none;" aria-live="polite">
-      <div class="export-header">
-        <h4>CSC 141: AI Literacy — M1 Portfolio Baseline</h4>
-        <p style="font-size: 0.9rem; color: #555; margin-top: var(--spacing-xs);">Module 1 — Lesson 1: AI Tool Onboarding</p>
+  <!-- ===================== ACTIVITY M1L1-A1 ===================== -->
+  <section id="a1" aria-labelledby="a1-h">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2 id="a1-h">Your First Practice: Compare Three Tools</h2>
+        <span class="badge">About 15 minutes</span>
+        <span class="badge badge--quiet">Activity M1L1-A1 &middot; ungraded</span>
       </div>
 
-      <div class="student-name-field">
-        <label for="student-name">Student Name:</label>
-        <input type="text" id="student-name" placeholder="Enter your full name" aria-label="Student name for export">
-      </div>
+      <p>Now let's put the tools side by side.</p>
 
-      <p style="font-size: 0.9rem; color: #555;" id="export-date"></p>
+      <ol>
+        <li>Open <strong>Gemini</strong> plus <strong>two other AI tools of your choice</strong> from the lists above, in separate browser tabs.</li>
+        <li>In each tool, type this exact prompt:
+          <div class="prompt">
+            <pre id="a1-prompt">List three ways AI is used in everyday life that most people don't realize.</pre>
+            <button type="button" class="btn btn--secondary" id="a1-copy" data-copies="a1-prompt">Copy this prompt</button>
+            <span id="a1-copy-status" role="status" aria-live="polite"></span>
+          </div>
+        </li>
+        <li>Read the three responses. Notice differences:
+          <ul>
+            <li>Did they give the same examples?</li>
+            <li>Which response was easiest to understand?</li>
+            <li>Did any response include something surprising or unexpected?</li>
+          </ul>
+        </li>
+        <li>Jot down 2&ndash;3 brief notes about what you noticed. These are for your own reflection &mdash; no submission required for this activity.</li>
+      </ol>
 
-      <div class="export-list" id="export-list">
-        <!-- Populated by JS -->
-      </div>
-
-      <button type="button" class="btn-primary no-print" id="print-btn" aria-label="Save this baseline list as a PDF">Save as PDF</button>
+      <p>This is an ungraded practice activity designed to get you comfortable with the tools and start noticing how AI systems differ. You'll build on this comparison skill throughout the course.</p>
     </div>
   </section>
 
-  <!-- DISCUSSION PRIMER -->
-  <section id="discussion-primer" aria-labelledby="discussion-heading">
-    <h2 id="discussion-heading">Discussion Primer for Session 1</h2>
+  <!-- ===================== ACTIVITY M1L1-A2 ===================== -->
+  <section id="a2" aria-labelledby="a2-h">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2 id="a2-h">Your &ldquo;10 Things&rdquo; Baseline List</h2>
+        <span class="badge">About 10 minutes</span>
+        <span class="badge badge--quiet">Activity M1L1-A2 &middot; portfolio baseline</span>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p>This activity is completed <strong>live during Session 1</strong> (your first Monday Zoom meeting), not here in the SPA. The text below is the handout you'll see on screen during that session.</p>
+      </div>
+
+      <h3>Instructions for Session 1</h3>
+      <p>Before we've taught you anything about AI, I want you to make a quick list. This is your <strong>baseline</strong> &mdash; a snapshot of what you think AI can do right now, before any instruction.</p>
+      <p><strong>Write down 10 things AI can help you do in your daily life.</strong></p>
+      <p>Keep it fast and honest. Don't research. Don't overthink it. Just write what comes to mind. These can be big or small, serious or silly. Examples of the <em>kind</em> of thing (not answers &mdash; your own ideas): "help me write emails," "recommend movies," "translate text."</p>
+      <p>You have about 5&ndash;7 minutes for this. Go!</p>
+
+      <h3>After Session 1 &mdash; enter your list here</h3>
+      <p>When you return to this page after Session 1, type or paste your 10-item list into the box below and save it. This becomes your <strong>portfolio baseline artifact</strong> &mdash; you'll revisit and revise it in Module 6, so keep it safe.</p>
+
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p>This page does not remember anything. If you reload or close the tab, your list is gone. Save your PDF as soon as you've entered it.</p>
+      </div>
+
+      <form id="tenthings-form">
+        <p>
+          <label class="field" for="student-name">Your name (appears on the PDF)</label>
+          <input type="text" id="student-name" name="student-name" autocomplete="name">
+        </p>
+        <p>
+          <label class="field" for="tenthings">Your 10 things &mdash; one per line</label>
+          <textarea id="tenthings" name="tenthings"
+            placeholder="1. help me write emails&#10;2. recommend movies&#10;3. ..."
+            aria-describedby="tenthings-help"></textarea>
+        </p>
+        <p id="tenthings-help" class="sub">Put each item on its own line. Numbering is optional &mdash; we'll number them for you.</p>
+        <button type="submit" class="btn">Save my list</button>
+        <span id="save-status" role="status" aria-live="polite"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; Module 1, Portfolio Baseline Artifact</p>
+        </div>
+        <div class="export-meta">
+          <span><strong>Name:</strong> <span id="out-name">&nbsp;</span></span>
+          <span><strong>Date:</strong> <span id="out-date"></span></span>
+        </div>
+        <h3>10 Things AI Can Help Me Do in My Daily Life</h3>
+        <ol id="out-list"></ol>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print sub">"Save as PDF" prints this panel only &mdash; not the whole lesson. In the print dialog, choose "Save as PDF" as the destination.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DISCUSSION PRIMER ===================== -->
+  <section id="primer" aria-labelledby="primer-h">
+    <div class="section-head">
+      <h2 id="primer-h">Discussion Primer for Session 1</h2>
+    </div>
     <p>During Session 1, after you draft your 10-things list, we'll have an unprimed discussion around this question:</p>
-
-    <blockquote style="border-left: 4px solid var(--color-primary); padding-left: var(--spacing-md); margin-bottom: var(--spacing-md); font-size: 1.05rem; font-style: italic;">
-      "What real-world applications of AI surprise you most?"
+    <blockquote class="callout callout--note">
+      <span class="label">Discussion question</span>
+      <p><strong>"What real-world applications of AI surprise you most?"</strong></p>
     </blockquote>
-
-    <p>You'll share items from your just-written list. No preparation needed — your list IS the preparation.</p>
+    <p>You'll share items from your just-written list. No preparation needed &mdash; your list <em>is</em> the preparation.</p>
   </section>
 
-  <!-- KNOWLEDGE CHECKS -->
-  <section id="knowledge-checks" aria-labelledby="kc-heading">
-    <h2 id="kc-heading">Knowledge Checks</h2>
-    <p>Test your understanding of this lesson's content. These are ungraded self-checks — you get immediate feedback, but no score is recorded.</p>
-
-    <!-- Knowledge Check 1 -->
-    <div class="knowledge-check" role="region" aria-labelledby="kc1-question">
-      <h3 id="kc1-label">Knowledge Check 1</h3>
-      <p class="kc-question" id="kc1-question">Which AI tool is your primary (anchor) tool for this course?</p>
-      <fieldset>
-        <legend style="display: none;">Select your answer for Knowledge Check 1</legend>
-        <div>
-          <label><input type="radio" name="kc1" value="gemini"> Gemini (accessed through your college Google account)</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc1" value="chatgpt"> ChatGPT</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc1" value="claude"> Claude</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc1" value="copilot"> Copilot</label>
-        </div>
-      </fieldset>
-      <button type="button" class="kc-check-btn" data-kc="kc1" data-correct="gemini">Check My Answer</button>
-      <div class="kc-feedback" id="kc1-feedback" aria-live="polite"></div>
+  <!-- ===================== KNOWLEDGE CHECKS ===================== -->
+  <section id="checks" aria-labelledby="checks-h">
+    <div class="section-head">
+      <h2 id="checks-h">Check Yourself</h2>
+      <p class="sub">Three quick questions. Nothing is scored or recorded &mdash; these are just for you.</p>
     </div>
 
-    <!-- Knowledge Check 2 -->
-    <div class="knowledge-check" role="region" aria-labelledby="kc2-question">
-      <h3 id="kc2-label">Knowledge Check 2</h3>
-      <p class="kc-question" id="kc2-question">True or false: You need to download and install software to use the AI tools in this course.</p>
+    <div class="kc" data-kc data-answer="a">
       <fieldset>
-        <legend style="display: none;">Select your answer for Knowledge Check 2</legend>
-        <div>
-          <label><input type="radio" name="kc2" value="true"> True</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc2" value="false"> False</label>
-        </div>
+        <legend>1. Which AI tools does the college provide free with your student login?</legend>
+        <label class="opt"><input type="radio" name="kc1" value="a"> Gemini and Microsoft Copilot</label>
+        <label class="opt"><input type="radio" name="kc1" value="b"> ChatGPT and Claude</label>
+        <label class="opt"><input type="radio" name="kc1" value="c"> All AI tools are free with a student login</label>
+        <label class="opt"><input type="radio" name="kc1" value="d"> None &mdash; every AI tool in this course requires a personal account</label>
       </fieldset>
-      <button type="button" class="kc-check-btn" data-kc="kc2" data-correct="false">Check My Answer</button>
-      <div class="kc-feedback" id="kc2-feedback" aria-live="polite"></div>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Right. Gemini and Copilot both work with your <code>@student.mendocino.edu</code> login at no cost. Everything else on the list needs a personal account under that company's own terms &mdash; which is fine, just know what you're signing up for.</p></template>
+      <template data-no><p>Gemini and Microsoft Copilot are the two the college provides &mdash; both work with your <code>@student.mendocino.edu</code> address. The others (ChatGPT, Claude, Perplexity, Grok, DeepSeek) have free tiers, but you'd be creating a personal account with that company.</p></template>
     </div>
 
-    <!-- Knowledge Check 3 -->
-    <div class="knowledge-check" role="region" aria-labelledby="kc3-question">
-      <h3 id="kc3-label">Knowledge Check 3</h3>
-      <p class="kc-question" id="kc3-question">How many AI tools will you compare in most activities this semester?</p>
+    <div class="kc" data-kc data-answer="false">
       <fieldset>
-        <legend style="display: none;">Select your answer for Knowledge Check 3</legend>
-        <div>
-          <label><input type="radio" name="kc3" value="one"> One (just Gemini)</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc3" value="two"> Two (Gemini and one other)</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc3" value="three"> At least three (Gemini plus any two other tools of your choice)</label>
-        </div>
-        <div>
-          <label><input type="radio" name="kc3" value="five"> All five tools listed above</label>
-        </div>
+        <legend>2. True or false: You need to download and install software to use the AI tools in this course.</legend>
+        <label class="opt"><input type="radio" name="kc2" value="true"> True</label>
+        <label class="opt"><input type="radio" name="kc2" value="false"> False</label>
       </fieldset>
-      <button type="button" class="kc-check-btn" data-kc="kc3" data-correct="three">Check My Answer</button>
-      <div class="kc-feedback" id="kc3-feedback" aria-live="polite"></div>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Correct! All tools in this course run entirely in your browser &mdash; no downloads or installations needed.</p></template>
+      <template data-no><p>Actually, all of the AI tools we use are browser-based. You never need to install anything.</p></template>
     </div>
+
+    <div class="kc" data-kc data-answer="b">
+      <fieldset>
+        <legend>3. Gemini is this course's baseline tool. What does that mean for the tools you use?</legend>
+        <label class="opt"><input type="radio" name="kc3" value="a"> You must use Gemini for every activity and may not use anything else</label>
+        <label class="opt"><input type="radio" name="kc3" value="b"> Gemini is the shared starting point everyone has; beyond that you choose, unless an activity directs a specific tool</label>
+        <label class="opt"><input type="radio" name="kc3" value="c"> Gemini is just a suggestion &mdash; no activity will ever name a particular tool</label>
+        <label class="opt"><input type="radio" name="kc3" value="d"> You must use a different tool than the instructor uses</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Right. Gemini is the common floor &mdash; everyone has it, so demonstrations and instructions match your screen. Past that, use what you like. A few activities do name a specific tool, and those will tell you which and why.</p></template>
+      <template data-no><p>Gemini is the baseline, not a cage and not merely a suggestion. Everyone has it, so it's what walkthroughs assume &mdash; but you're free to work in something else once you're comfortable. The exception: a few activities name a specific tool for a reason, and they say so plainly.</p></template>
+    </div>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
   </section>
 
 </main>
 
-<!-- ===== FOOTER ===== -->
-<footer role="contentinfo">
-  <p>CSC 141: AI Literacy — Module 1, Lesson 1 — Mendocino College</p>
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 1, Lesson 1</p>
+  </div>
 </footer>
 
-<!-- ===== BACK TO TOP BUTTON ===== -->
-<button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
-
-<!-- ===== JAVASCRIPT ===== -->
 <script>
-(function() {
+/* ===== SHARED COMPONENT SCRIPT (v1) — copy verbatim into other lessons ===== */
+(function () {
   "use strict";
 
-  // ===== KNOWLEDGE CHECK FEEDBACK DATA =====
-  var feedback = {
-    kc1: {
-      correct: "That's right — Gemini is your anchor tool, and you'll use it in most activities throughout the course.",
-      incorrect: "The answer is Gemini. You'll access it through your college Google account at gemini.google.com."
-    },
-    kc2: {
-      correct: "Correct! All tools in this course run entirely in your browser — no downloads or installations needed.",
-      incorrect: "Actually, all of the AI tools we use are browser-based. You never need to install anything."
-    },
-    kc3: {
-      correct: "Exactly — Gemini is required, and you pick two more from the free-tier options listed above. Comparing tools is a core skill in this course.",
-      incorrect: "You'll work with at least three tools: Gemini (required) plus any two other free-tier tools you choose from the list."
-    }
-  };
-
-  // ===== KNOWLEDGE CHECK BUTTON HANDLERS =====
-  var kcButtons = document.querySelectorAll(".kc-check-btn");
-  for (var i = 0; i < kcButtons.length; i++) {
-    kcButtons[i].addEventListener("click", function() {
-      var kcName = this.getAttribute("data-kc");
-      var correctVal = this.getAttribute("data-correct");
-      var radios = document.getElementsByName(kcName);
-      var selected = null;
-      for (var j = 0; j < radios.length; j++) {
-        if (radios[j].checked) {
-          selected = radios[j].value;
-          break;
-        }
-      }
-      if (!selected) {
-        // No selection — prompt user
-        var fbEl = document.getElementById(kcName + "-feedback");
-        fbEl.textContent = "Please select an answer before checking.";
-        fbEl.className = "kc-feedback incorrect";
-        return;
-      }
-      var fbEl = document.getElementById(kcName + "-feedback");
-      if (selected === correctVal) {
-        fbEl.textContent = feedback[kcName].correct;
-        fbEl.className = "kc-feedback correct";
+  /* --- copy-to-clipboard, with graceful degradation --- */
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
       } else {
-        fbEl.textContent = feedback[kcName].incorrect;
-        fbEl.className = "kc-feedback incorrect";
+        done("Copying isn't available here — select the text above and copy it manually.");
       }
     });
-  }
-
-  // ===== M1L1-A2: SAVE BASELINE LIST =====
-  var saveBtn = document.getElementById("save-baseline-btn");
-  var exportPanel = document.getElementById("export-panel");
-  var exportList = document.getElementById("export-list");
-  var exportDate = document.getElementById("export-date");
-
-  if (saveBtn) {
-    saveBtn.addEventListener("click", function() {
-      var textarea = document.getElementById("baseline-list");
-      var rawText = textarea.value.trim();
-      if (!rawText) {
-        alert("Please enter your 10-item list before saving.");
-        return;
-      }
-
-      // Parse lines into items
-      var lines = rawText.split("\n").map(function(l) { return l.trim(); }).filter(function(l) { return l.length > 0; });
-
-      // Build numbered list HTML
-      var html = "<ol>";
-      for (var i = 0; i < lines.length; i++) {
-        // Strip leading numbers if present (e.g. "1. item" -> "item")
-        var cleaned = lines[i].replace(/^\d+[\.\)]\s*/, "");
-        html += "<li>" + escapeHtml(cleaned) + "</li>";
-      }
-      html += "</ol>";
-      exportList.innerHTML = html;
-
-      // Set date
-      var now = new Date();
-      var y = now.getFullYear();
-      var m = String(now.getMonth() + 1).padStart(2, "0");
-      var d = String(now.getDate()).padStart(2, "0");
-      exportDate.textContent = "Date: " + y + "-" + m + "-" + d;
-
-      // Show panel
-      exportPanel.style.display = "block";
-
-      // Scroll to panel
-      exportPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
-
-  // ===== PRINT BUTTON =====
-  var printBtn = document.getElementById("print-btn");
-  if (printBtn) {
-    printBtn.addEventListener("click", function() {
-      window.print();
-    });
-  }
-
-  // ===== BACK TO TOP BUTTON =====
-  var backToTop = document.getElementById("back-to-top");
-  window.addEventListener("scroll", function() {
-    if (window.scrollY > 400) {
-      backToTop.classList.add("visible");
-    } else {
-      backToTop.classList.remove("visible");
-    }
-  }, { passive: true });
-
-  backToTop.addEventListener("click", function() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  // ===== UTILITY: Escape HTML =====
-  function escapeHtml(text) {
-    var div = document.createElement("div");
-    div.appendChild(document.createTextNode(text));
-    return div.innerHTML;
+  /* --- knowledge checks: client-side only, nothing stored or reported --- */
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) {
+        out.classList.add("no");
+        out.innerHTML = "<p>Choose an answer first.</p>";
+        return;
+      }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* --- 10 Things: format into the export panel. Nothing is persisted. --- */
+  var form = document.getElementById("tenthings-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var raw = document.getElementById("tenthings").value;
+      var items = raw.split("\n")
+        .map(function (l) { return l.replace(/^\s*\d+[.)]\s*/, "").trim(); })
+        .filter(function (l) { return l.length > 0; });
+
+      var status = document.getElementById("save-status");
+      if (items.length === 0) {
+        status.textContent = " Enter at least one item before saving.";
+        return;
+      }
+
+      var list = document.getElementById("out-list");
+      list.textContent = "";
+      items.forEach(function (t) {
+        var li = document.createElement("li");
+        li.textContent = t;
+        list.appendChild(li);
+      });
+
+      var name = document.getElementById("student-name").value.trim();
+      document.getElementById("out-name").textContent = name || "—";
+      document.getElementById("out-date").textContent =
+        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
+      var panel = document.getElementById("export-panel");
+      panel.hidden = false;
+      status.textContent = " Saved below — now use “Save as PDF.”";
+      panel.scrollIntoView({ block: "start" });
+    });
   }
 
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
 })();
 </script>
-
 </body>
 </html>
