@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>Your Data and Your Account | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from m1l1.html. Do not re-derive.
+   Guide-only additions are marked at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #2980b9;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout--verify  { background: var(--c-verify-bg);  border-color: var(--c-verify-bd);  color: var(--c-verify-tx); }
+.callout--try     { background: var(--c-try-bg);     border-color: var(--c-try-bd);     color: var(--c-try-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h3 { margin: 0; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* --- guide-only: currency stamp --- */
+.stamp { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-4) 0; }
+.stamp p { margin: 0; }
+
+/* --- print: this guide has no export artifact, so print the whole page legibly --- */
+@media print {
+  body { font-size: 11pt; }
+  .jumpnav, .totop { display: none; }
+  details { border: 0; }
+  details > *:not(summary) { display: block !important; padding: 0; }
+  summary { list-style: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+}
+
+/* --- data-privacy page additions (this page only) --- */
+.cell-note { font-size: .85rem; color: var(--c-text-muted); margin: var(--s-1) 0 0; }
+.cell-note em { font-style: italic; }
+sup a { font-size: .75em; }
+ol.sources > li { margin-bottom: var(--s-3); }
+.table-scroll:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+@media print {
+  /* The comparison table is the page; give it the full sheet. */
+  @page { size: landscape; }
+  .table-scroll { overflow: visible; }
+  table { font-size: 9pt; }
+  .cell-note { font-size: 8.5pt; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Tool Guides</p>
+    <h1>Your Data and Your Account</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#point">The point</a></li>
+      <li><a href="#table">The comparison table</a></li>
+      <li><a href="#distinctions">What the table doesn&rsquo;t say</a></li>
+      <li><a href="#sources">Sources and dates</a></li>
+      <li><a href="#deeper">Where to go deeper</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <div class="stamp">
+    <p><strong>Accurate as of August 2026.</strong> AI tools change faster than a semester does. If what you see on screen doesn&rsquo;t match this guide, trust the screen &mdash; and tell your instructor so it can be fixed. Noticing that gap is itself an AI-literacy skill.</p>
+  </div>
+
+  <section id="point" aria-labelledby="point-h">
+    <div class="section-head">
+      <h2 id="point-h">The One-Sentence Version</h2>
+    </div>
+    <p><strong>The protections you get depend on the account you sign in with, not on which AI tool you picked.</strong> The same company can treat the same conversation two completely different ways depending on whether you signed in with <code>@student.mendocino.edu</code> or with a personal address you made up.</p>
+    <p>The college has agreements with Google and Microsoft that a personal account simply isn&rsquo;t covered by. This page shows what each tool does with your data. Every claim here is sourced and dated, because all of it changes.</p>
+  </section>
+
+  <section id="table" aria-labelledby="table-h">
+    <div class="section-head">
+      <h2 id="table-h">The Comparison Table</h2>
+      <p class="sub">College-provided tools first &mdash; the order is itself the message. Numbers in the cells point to the source and date in <a href="#sources">Section 4</a>.</p>
+    </div>
+
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Comparison table of six tool rows and five columns. If the table is wider than the screen, scroll it horizontally.">
+      <table>
+        <caption>What each tool does with your data &mdash; the protections follow the account you sign in with, not the tool you pick</caption>
+        <thead>
+          <tr>
+            <th scope="col">Tool</th>
+            <th scope="col">Account you use</th>
+            <th scope="col">Used to train the vendor&rsquo;s models?</th>
+            <th scope="col">Who else can see it</th>
+            <th scope="col">Retention</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Gemini</th>
+            <td>College Google Workspace for Education (<code>@student.mendocino.edu</code>)</td>
+            <td>
+              <strong>No</strong><sup><a href="#src-google-training" aria-label="Source 2: Google (training), checked 2026-08-19">2</a></sup>
+              <p class="cell-note"><em>Pending confirmation:</em> Google&rsquo;s default for Higher Education is ON, but it&rsquo;s an admin-configurable setting. The college&rsquo;s own Workspace tenant configuration is unconfirmed &mdash; the protection follows the college&rsquo;s configuration, not the vendor&rsquo;s default.</p>
+            </td>
+            <td>Not reviewed by Google<sup><a href="#src-google-admin" aria-label="Source 1: Google (administrator access), checked 2026-08-19">1</a></sup>. <strong>The college can:</strong> Vault lets an administrator search your prompts and responses by user and date, and export them<sup><a href="#src-google-admin" aria-label="Source 1: Google (administrator access), checked 2026-08-19">1</a></sup>.</td>
+            <td>Per the college&rsquo;s Vault retention rules and your activity settings<sup><a href="#src-google-admin" aria-label="Source 1: Google (administrator access), checked 2026-08-19">1</a></sup></td>
+          </tr>
+          <tr>
+            <th scope="row">NotebookLM</th>
+            <td>Same college account (<strong>18+</strong>, where Gemini is 13+)</td>
+            <td>
+              <strong>No</strong><sup><a href="#src-google-training" aria-label="Source 2: Google (training), checked 2026-08-19">2</a></sup>
+              <p class="cell-note"><em>Pending confirmation:</em> same Core Service commitment as Gemini &mdash; the college&rsquo;s tenant configuration is unconfirmed (see the Gemini row).</p>
+            </td>
+            <td>Same as Gemini</td>
+            <td>Same as Gemini</td>
+          </tr>
+          <tr>
+            <th scope="row">Microsoft Copilot</th>
+            <td>
+              College M365 student tier (<code>@student.mendocino.edu</code>, web only)
+              <p class="cell-note"><em>Pending confirmation:</em> access last confirmed with college IT 2026-07-14; reconfirmation pending before Fall 2026.</p>
+            </td>
+            <td><strong>No</strong><sup><a href="#src-microsoft" aria-label="Source 3: Microsoft, checked 2026-08-19">3</a></sup> &mdash; not used to train the foundation models</td>
+            <td><strong>Logged and stored in the college&rsquo;s Microsoft 365 tenant</strong><sup><a href="#src-microsoft" aria-label="Source 3: Microsoft, checked 2026-08-19">3</a></sup>, reachable via administrator audit and eDiscovery</td>
+            <td>College retention policy<sup><a href="#src-microsoft" aria-label="Source 3: Microsoft, checked 2026-08-19">3</a></sup></td>
+          </tr>
+          <tr>
+            <th scope="row">ChatGPT</th>
+            <td>Personal account, OpenAI&rsquo;s terms</td>
+            <td><strong>Yes, by default</strong><sup><a href="#src-openai" aria-label="Source 4: OpenAI, checked 2026-08-19">4</a></sup> &mdash; until you turn it off</td>
+            <td>OpenAI, per its own policy<sup><a href="#src-openai" aria-label="Source 4: OpenAI, checked 2026-08-19">4</a></sup>. No college agreement applies</td>
+            <td>
+              Not published by the vendor &mdash; the retention window for deleted and Temporary Chat is not stated in OpenAI&rsquo;s model-training article (check OpenAI&rsquo;s Data Controls FAQ).
+              <p class="cell-note">Temporary Chat is excluded from history, memory and training<sup><a href="#src-openai" aria-label="Source 4: OpenAI, checked 2026-08-19">4</a></sup>.</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Claude</th>
+            <td>Personal account, Anthropic&rsquo;s terms</td>
+            <td><strong>No, unless you opt in</strong><sup><a href="#src-anthropic" aria-label="Source 5: Anthropic, checked 2026-08-19">5</a></sup></td>
+            <td>Anthropic, per its own policy<sup><a href="#src-anthropic" aria-label="Source 5: Anthropic, checked 2026-08-19">5</a></sup>. No college agreement applies</td>
+            <td>30 days if you decline; 5 years for new/resumed chats if you opt in<sup><a href="#src-anthropic" aria-label="Source 5: Anthropic, checked 2026-08-19">5</a></sup></td>
+          </tr>
+          <tr>
+            <th scope="row">Grok, DeepSeek, Perplexity, others</th>
+            <td>Personal account, each vendor&rsquo;s own terms</td>
+            <td><strong>Varies &mdash; read before you sign up</strong></td>
+            <td>Varies. No college agreement applies</td>
+            <td>Varies</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="distinctions" aria-labelledby="distinctions-h">
+    <div class="section-head">
+      <h2 id="distinctions-h">What the Table Doesn&rsquo;t Say</h2>
+    </div>
+    <p>These are the distinctions students collapse, and getting them apart is most of the value of the page.</p>
+
+    <h3>&ldquo;Not used for training&rdquo; is not &ldquo;nobody can see it&rdquo; &mdash; and there are two different admins</h3>
+    <p>This is the distinction the whole page turns on. Google and Microsoft commit that their own staff don&rsquo;t review this data and that it doesn&rsquo;t train their models<sup><a href="#src-google-training" aria-label="Source 2: Google (training), checked 2026-08-19">2</a></sup><sup><a href="#src-microsoft" aria-label="Source 3: Microsoft, checked 2026-08-19">3</a></sup>. For Google, that commitment is the documented Higher Education default &mdash; the college&rsquo;s own tenant configuration is still unconfirmed (see the Gemini row in the table). <strong>Your college&rsquo;s administrators are a separate party with separate powers</strong>, and on both college tools those powers are real and documented: Microsoft logs prompts and responses in the college&rsquo;s own M365 tenant, reachable via administrator audit and eDiscovery; Google Vault lets a Workspace administrator search Gemini prompts and responses by user and date and export them. All of it is true at once. <strong>The vendor stepping back is not the institution stepping back</strong>, and students hear &ldquo;protected&rdquo; and assume both.</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This is not a scandal &mdash; it&rsquo;s how institutional accounts work everywhere, and it&rsquo;s usually <em>why</em> the protections exist at all. The accurate version is narrower and more useful: <strong>an identifiable party with a documented process can retrieve it if there&rsquo;s a reason to.</strong></p>
+    </div>
+
+    <h3>&ldquo;The college gave it to me&rdquo; is not &ldquo;it&rsquo;s private&rdquo;</h3>
+    <p>An institutional account means an institution is party to it. That&rsquo;s often <em>better</em> than a personal account &mdash; there&rsquo;s an agreement, and someone accountable &mdash; but it is a different thing from privacy, and the difference is worth being deliberate about.</p>
+
+    <h3>A setting is not a property</h3>
+    <p>Whether a tool trains on your inputs is, in several of these products, a toggle &mdash; and its default varies by vendor and changes over time. It isn&rsquo;t a fact about &ldquo;AI.&rdquo; It&rsquo;s a fact about one company&rsquo;s current configuration. Module 1, Lesson 5 (M1L5) goes into why that distinction matters.</p>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>The rule that doesn&rsquo;t depend on any of the above:</strong> never enter your student ID, your grades, other students&rsquo; work, or anyone&rsquo;s personal information into any AI tool. This rule doesn&rsquo;t change when a policy changes, and it applies identically on a college account and a personal one.</p>
+    </div>
+  </section>
+
+  <section id="sources" aria-labelledby="sources-h">
+    <div class="section-head">
+      <h2 id="sources-h">Sources and Dates</h2>
+      <p class="sub">Every source behind the table, each with the date it was checked. All entries verified 2026-08-19.</p>
+    </div>
+
+    <div class="callout callout--verify">
+      <span class="label">Verify</span>
+      <p>Every claim on this page has a source and a date next to it, and you should check them at the named source. A page about who to trust with your data that asked you to trust it without evidence would be a poor advertisement for the course.</p>
+    </div>
+
+    <ol class="sources">
+      <li id="src-google-admin">
+        <p><strong>Google (administrator access)</strong> &mdash; checked 2026-08-19. Google Vault covers Gemini app conversations for Education customers as of <strong>2025-05-09</strong>: admins can &ldquo;search prompts and responses with a number of filters, such as user and date&rdquo; and &ldquo;export conversations in an XML format&hellip; via the UI or API.&rdquo; Aggregate usage is visible under <strong>Generative AI &rarr; Gemini Reports</strong>. Note the boundary: Vault covers the <strong>Gemini app</strong>, not in-app Workspace features like Help me write, for which &ldquo;no prompts or responses are retained.&rdquo; <em>(Source: Google Workspace Updates.)</em></p>
+      </li>
+      <li id="src-google-training">
+        <p><strong>Google (training)</strong> &mdash; checked 2026-08-19. Gemini app and NotebookLM became <strong>Core Services</strong> for Google Workspace for Education on <strong>2025-04-03</strong>, bringing them under the Workspace for Education terms with enterprise-grade data protection: &ldquo;their data is not human reviewed or used to train AI models.&rdquo; Enabled <strong>ON by default for Higher Education</strong> customers (for Mendocino specifically, the college&rsquo;s own tenant configuration is unconfirmed &mdash; see the Gemini row in Section 2). Gemini app is available for ages 13+; <strong>NotebookLM requires 18+.</strong> <em>(Sources: Google Workspace Updates blog; Google Workspace Admin Help &mdash; Gemini for Google Workspace FAQ &mdash; Education.)</em></p>
+      </li>
+      <li id="src-microsoft">
+        <p><strong>Microsoft</strong> &mdash; checked 2026-08-19. &ldquo;Prompts and responses aren&rsquo;t used to train the underlying foundation models&rdquo; on work/school accounts; enterprise data protection is indicated by a <strong>green shield next to New Chat</strong>; prompts and responses are <strong>logged and stored in Exchange</strong> within the tenant under its retention policies, with administrator audit logging and eDiscovery. <em>(Source: Microsoft Learn &mdash; Microsoft 365 Copilot Chat Privacy and Protections.)</em></p>
+      </li>
+      <li id="src-openai">
+        <p><strong>OpenAI</strong> &mdash; checked 2026-08-19. &ldquo;When you use our services for individuals such as ChatGPT and Codex, we may use your content to train our models&rdquo;; opt out via Data Controls or the privacy portal&rsquo;s &ldquo;do not train on my content&rdquo;; Temporary Chat &ldquo;won&rsquo;t appear in history, use or create memories, or be used to train our models.&rdquo; <em>(Source: OpenAI Help Center &mdash; How your data is used to improve model performance.)</em></p>
+      </li>
+      <li id="src-anthropic">
+        <p><strong>Anthropic</strong> &mdash; checked 2026-08-19. Training is opt-in via an in-app prompt, set in Privacy Settings; <strong>30-day</strong> retention if declined, <strong>five years</strong> for new or resumed chats if allowed; rollout from <strong>2025-08-28</strong>, existing-user deadline <strong>2025-10-08</strong>. <em>(Source: Anthropic &mdash; Updates to Consumer Terms and Privacy Policy.)</em></p>
+      </li>
+    </ol>
+  </section>
+
+  <section id="deeper" aria-labelledby="deeper-h">
+    <div class="section-head">
+      <h2 id="deeper-h">Where to Go Deeper</h2>
+    </div>
+    <ul>
+      <li><strong>Module 1, Lesson 5 (M1L5)</strong> &mdash; the lesson that owns privacy as a concept. &ldquo;This page tells you what these tools do. M1L5 is where we work out how to think about it.&rdquo;</li>
+      <li><strong>The individual tool guides</strong> &mdash; for each tool&rsquo;s own privacy section: <a href="gemini.html" target="_blank" rel="noopener">Gemini</a> &middot; Copilot &middot; ChatGPT &middot; Claude</li>
+      <li><strong>Each vendor&rsquo;s own policy pages</strong> &mdash; the documents named in <a href="#sources">Section 4</a>: Google Workspace Updates, Google Workspace Admin Help, Microsoft Learn, OpenAI Help Center, and Anthropic&rsquo;s consumer terms and privacy policy update.</li>
+      <li><strong>The course hub</strong> &mdash; <a href="../../index.html" target="_blank" rel="noopener">back to the CSC 141 course home</a>.</li>
+    </ul>
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Tool Guides: Your Data and Your Account &middot; Accurate as of August 2026</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l1.html ===== */
+(function () {
+  "use strict";
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
