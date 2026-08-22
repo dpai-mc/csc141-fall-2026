@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>Microsoft Copilot | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from data-privacy.html (most recently approved
+   guide). Do not re-derive. --c-ui carries the corrected #1d6690
+   (6.26:1), not the retired #2980b9.
+   Guide-only additions are marked at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  /* --c-try-* omitted: this page uses no "Try this" callout. */
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout--verify  { background: var(--c-verify-bg);  border-color: var(--c-verify-bd);  color: var(--c-verify-tx); }
+/* .callout--try omitted: not used on this page. */
+.callout a { color: inherit; }
+
+/* Table rules from the shared block omitted: this page has no table. */
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h3 { margin: 0; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .92rem; background: var(--c-surface); border: 1px solid var(--c-border); border-left: 4px solid var(--c-ui); border-radius: var(--radius); padding: var(--s-3); white-space: pre-wrap; word-break: break-word; }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-2) var(--s-3); margin: var(--s-3) 0; background: var(--c-bg); }
+details > summary { cursor: pointer; font-weight: 700; color: var(--c-primary-dark); padding: var(--s-1) 0; }
+details[open] > summary { border-bottom: 1px solid var(--c-border); margin-bottom: var(--s-2); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* --- guide-only: currency stamp --- */
+.stamp { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-4) 0; }
+.stamp p { margin: 0; }
+
+/* --- print: this guide has no export artifact, so print the whole page legibly --- */
+@media print {
+  body { font-size: 11pt; }
+  .jumpnav, .totop { display: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+}
+
+/* --- copilot page additions (this page only) --- */
+
+/* Figures: screenshots are the one asset type outside this file. */
+figure { margin: var(--s-4) 0; }
+figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--c-border); border-radius: var(--radius); }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+
+/* Section 6 "Data posture at a glance" — a real definition list, not styled divs. */
+.posture { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.posture > h3 { margin-top: 0; }
+.posture dl { margin: var(--s-3) 0 0; }
+.posture dt { font-weight: 700; color: var(--c-primary-dark); margin-top: var(--s-3); }
+.posture dt:first-of-type { margin-top: 0; }
+.posture dd { margin: var(--s-1) 0 0; }
+.posture dd .src { display: block; font-size: .85rem; color: var(--c-text-muted); font-style: italic; margin-top: var(--s-1); }
+
+.pending { font-size: .9rem; color: var(--c-text-muted); }
+
+@media print {
+  /* Accordions must never hide content from a printed page. */
+  details { border: none; padding: 0; }
+  details > summary { list-style: none; }
+  .posture, .activity { break-inside: avoid; }
+  figure { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Tool Guides</p>
+    <h1>Microsoft Copilot</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">1. What this tool is</a></li>
+      <li><a href="#s2">2. Getting access</a></li>
+      <li><a href="#s3">3. The interface</a></li>
+      <li><a href="#s4">4. Core workflow</a></li>
+      <li><a href="#s5">5. Free-tier limits</a></li>
+      <li><a href="#s6">6. Privacy &amp; data handling</a></li>
+      <li><a href="#s7">7. Known weaknesses</a></li>
+      <li><a href="#s8">8. Where to go deeper</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <div class="callout callout--verify">
+    <span class="label">Verify</span>
+    <p><strong>Accurate as of August 2026.</strong> AI tools change faster than a semester does. If what you see on screen doesn&rsquo;t match this guide, trust the screen &mdash; and tell your instructor so it can be fixed. Noticing that gap is itself an AI-literacy skill.</p>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <section id="s1" aria-labelledby="s1-h">
+    <div class="section-head">
+      <h2 id="s1-h">1. What This Tool Is</h2>
+      <p class="sub">What Copilot is, and the two jobs it does in this course.</p>
+    </div>
+
+    <p>Microsoft Copilot is Microsoft&rsquo;s conversational AI assistant. For CSC 141 it fills two specific roles:</p>
+
+    <ol>
+      <li><strong>The second college-provided tool.</strong> Along with Gemini and NotebookLM, it&rsquo;s available to every student at no cost through the college &mdash; no personal account, no credit card, no vendor terms of your own to agree to.</li>
+      <li><strong>The fallback if Gemini won&rsquo;t let you in.</strong> Every activity in this course can be completed in Copilot. If you&rsquo;re locked out of Gemini in week 1, come here, get working, and sort out the Gemini problem in parallel.</li>
+    </ol>
+
+    <p>Gemini remains the course baseline &mdash; walkthroughs and screenshots in lessons match Gemini&rsquo;s screen. Copilot is a fully supported alternative, not a downgrade.</p>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section id="s2" aria-labelledby="s2-h">
+    <div class="section-head">
+      <h2 id="s2-h">2. Getting Access</h2>
+      <p class="sub">Signing in with your college address, and what to do if it doesn&rsquo;t work.</p>
+    </div>
+
+    <p>Three facts to get exactly right before you start:</p>
+
+    <ul>
+      <li>Your student email domain is <code>@student.mendocino.edu</code>. <strong>Not</strong> <code>@mendocino.edu</code> &mdash; that&rsquo;s staff and faculty.</li>
+      <li>You get the <strong>free Microsoft 365 student tier</strong> by signing in with that address.</li>
+      <li><strong>Web only.</strong> There is no Microsoft 365 desktop/app connection on this tier.</li>
+    </ul>
+
+    <p class="pending"><em>Pending confirmation:</em> college Copilot access was last confirmed with college IT on 2026-07-14; reconfirmation is pending before Fall 2026.</p>
+
+    <details open>
+      <summary>Step by step: signing in to Copilot</summary>
+
+      <ol>
+        <li>
+          <p><strong>Go to Copilot on the web.</strong> Open <code>copilot.microsoft.com</code> in a browser tab.</p>
+          <figure>
+            <img src="images/copilot-04-home.png"
+                 alt="The Copilot home screen with the input field visible.">
+            <figcaption>The Copilot home screen, with the input field visible.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Sign in with your college address.</strong> Use your full <code>@student.mendocino.edu</code> address and your college password &mdash; the same credentials as your student email.</p>
+          <figure>
+            <img src="images/copilot-01-signin.png"
+                 alt="The Copilot sign-in screen with the @student.mendocino.edu address entered.">
+            <figcaption>Sign in with the full college address, not a personal Microsoft account.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Check for the shield.</strong> Look along the top of the interface, next to the New Chat control, for the <strong>green shield icon</strong>. That icon is Microsoft&rsquo;s own indicator that <em>enterprise data protection</em> is switched on for your session &mdash; which is what <a href="#s6">Section 6</a> is about. If you don&rsquo;t see it, you&rsquo;re probably signed in on a personal Microsoft account rather than your college one.</p>
+          <figure>
+            <img src="images/copilot-02-shield.png"
+                 alt="The top of the interface with the green shield next to New Chat, circled.">
+            <figcaption>Look for the green shield &mdash; it confirms enterprise data protection is on.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Confirm the account.</strong> Open the account menu and verify it shows your <code>@student.mendocino.edu</code> address. Same failure as in Gemini: a personal account still <em>works</em>, but you get consumer terms instead of the college&rsquo;s, and your coursework lands in a personal account.</p>
+          <figure>
+            <img src="images/copilot-03-account-check.png"
+                 alt="The account menu expanded, showing the college address selected.">
+            <figcaption>The account menu should show your college address.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Test it.</strong> Type <code>Say hello</code> and press Enter. If you get a response, you&rsquo;re set.</p>
+          <figure>
+            <img src="images/copilot-05-test.png"
+                 alt="A &ldquo;Say hello&rdquo; exchange showing a response.">
+            <figcaption>A response means you&rsquo;re in and working.</figcaption>
+          </figure>
+        </li>
+      </ol>
+    </details>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>If Copilot won&rsquo;t load or asks you to pay:</strong></p>
+      <ul>
+        <li>Re-check steps 3 and 4 &mdash; wrong-account is the most common cause, same as with Gemini.</li>
+        <li>Sign out of any personal Microsoft account in that browser first, or use a private/incognito window, then sign in fresh with the college address.</li>
+        <li>Still stuck? Contact the college IT help desk and say you need Microsoft Copilot access for CSC 141.</li>
+        <li><strong>While you&rsquo;re waiting, use <a href="gemini.html" target="_blank" rel="noopener">Gemini</a></strong> &mdash; it&rsquo;s also college-provided and it&rsquo;s the course baseline. If <em>both</em> are blocked, tell your instructor; this is an access problem the course has to solve for you, not something you should be fixing with a personal account at an outside company.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section id="s3" aria-labelledby="s3-h">
+    <div class="section-head">
+      <h2 id="s3-h">3. The Interface</h2>
+      <p class="sub">What to look for on screen &mdash; described so it still helps you after Microsoft moves things.</p>
+    </div>
+
+    <p>Microsoft reorganizes this interface often, so this tour describes <em>what to look for</em> rather than exactly where on the screen it sits. If something has moved, look for the same thing somewhere else on the page before assuming it&rsquo;s gone.</p>
+
+    <details>
+      <summary>Interface tour &mdash; six things worth finding</summary>
+
+      <h3>The prompt input box</h3>
+      <p>The single text field where you type what you want. Everything you do with Copilot starts here.</p>
+      <figure>
+        <img src="images/copilot-06-input.png"
+             alt="The Copilot prompt input box, the text field where a question is typed.">
+        <figcaption>The prompt input box.</figcaption>
+      </figure>
+
+      <h3>The green shield indicator, and where it sits</h3>
+      <p>Along the top of the interface, next to the New Chat control. It is Microsoft&rsquo;s own signal that enterprise data protection is applied to your session. Its presence or absence is a fact about your <em>account</em>, not about the question you asked.</p>
+      <figure>
+        <img src="images/copilot-07-shield-location.png"
+             alt="The green shield indicator along the top of the Copilot interface, next to the New Chat control.">
+        <figcaption>The green shield sits along the top of the interface, next to New Chat.</figcaption>
+      </figure>
+
+      <h3>The conversation thread</h3>
+      <p>Your prompts and Copilot&rsquo;s responses in sequence. Everything above the current message is context the tool can still refer to.</p>
+      <figure>
+        <img src="images/copilot-08-thread.png"
+             alt="A Copilot conversation thread showing prompts and responses in sequence.">
+        <figcaption>The conversation thread.</figcaption>
+      </figure>
+
+      <h3>Starting a new chat vs. continuing one</h3>
+      <p>The New Chat control opens an empty thread with no memory of the previous one. Continuing in the current thread keeps the context.</p>
+      <figure>
+        <img src="images/copilot-09-new-chat.png"
+             alt="The New Chat control in Copilot, used to start an empty conversation thread.">
+        <figcaption>New Chat starts an empty thread.</figcaption>
+      </figure>
+
+      <h3>Chat history</h3>
+      <p>Previous conversations, reachable again later. Worth knowing about before you assume a thread is gone.</p>
+      <figure>
+        <img src="images/copilot-10-history.png"
+             alt="The Copilot chat history list showing previous conversations.">
+        <figcaption>Chat history holds previous conversations.</figcaption>
+      </figure>
+
+      <h3>Attaching a file or image</h3>
+      <p>An attach control near the input box lets you add a document or image and then ask questions about it.</p>
+      <figure>
+        <img src="images/copilot-11-attach.png"
+             alt="The attach control near the Copilot input box, used to add a file or image to a prompt.">
+        <figcaption>Attaching a file or image to a prompt.</figcaption>
+      </figure>
+    </details>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section id="s4" aria-labelledby="s4-h">
+    <div class="section-head">
+      <h2 id="s4-h">4. Core Workflow</h2>
+      <p class="sub">Three short activities that exercise the interface. The same three appear in every tool guide, in the same order.</p>
+    </div>
+
+    <p>These prompts exist to make the buttons do something so you can see what happens. Writing <em>good</em> prompts is a separate skill, taught in Module 2, Lessons 3 and 4 (M2L3&ndash;M2L4).</p>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Activity 1 &mdash; Ask and follow up</h3>
+        <span class="badge">5 min</span>
+      </div>
+      <p><strong>Task: ask one question, then ask a second question that only makes sense if the first one is remembered.</strong></p>
+      <ol>
+        <li>Open a new chat and paste the first prompt.</li>
+        <li>Read the response.</li>
+        <li>In the <em>same</em> thread, paste the follow-up. Don&rsquo;t repeat the topic &mdash; the point is to see whether the thread carries it.</li>
+      </ol>
+      <div class="prompt">
+        <p class="sub" id="p1a-label">First prompt:</p>
+        <pre data-copies aria-labelledby="p1a-label">Explain what a community college transfer agreement is, in about four sentences.</pre>
+      </div>
+      <div class="prompt">
+        <p class="sub" id="p1b-label">Follow-up, in the same thread:</p>
+        <pre data-copies aria-labelledby="p1b-label">Now say that again for someone who has never heard the word "articulation."</pre>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Activity 2 &mdash; Attach something</h3>
+        <span class="badge">5 min</span>
+      </div>
+      <p><strong>Task: upload a document or image and ask a question about it.</strong></p>
+      <ol>
+        <li>Find a file you already have &mdash; a syllabus, a handout, a photo of a printed page. Nothing personal: no student ID, no grades, nobody else&rsquo;s work.</li>
+        <li>Use the attach control near the input box to add it.</li>
+        <li>Paste the prompt below and send it.</li>
+      </ol>
+      <div class="prompt">
+        <p class="sub" id="p2-label">Prompt:</p>
+        <pre data-copies aria-labelledby="p2-label">Summarize this document in five bullet points, then list anything in it you are unsure about.</pre>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Activity 3 &mdash; Start clean</h3>
+        <span class="badge">2 min</span>
+      </div>
+      <p><strong>Task: notice the difference between continuing a thread and starting a new one.</strong></p>
+      <ol>
+        <li>Still in the thread from Activity 2, paste the prompt below. The answer will probably still be coloured by the document you attached.</li>
+        <li>Now click New Chat and paste the same prompt into the empty thread.</li>
+        <li>Compare. A long thread carries everything in it &mdash; useful when that&rsquo;s what you want, and a source of drift when it isn&rsquo;t. When you change topic, start clean.</li>
+      </ol>
+      <div class="prompt">
+        <p class="sub" id="p3-label">Prompt (run it twice &mdash; old thread, then new chat):</p>
+        <pre data-copies aria-labelledby="p3-label">What are three good ways to take notes during a lecture?</pre>
+      </div>
+    </div>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+  <!-- ============ SECTION 5 ============ -->
+  <section id="s5" aria-labelledby="s5-h">
+    <div class="section-head">
+      <h2 id="s5-h">5. Free-Tier Limits</h2>
+      <p class="sub">What the college tier is &mdash; and what this guide can&rsquo;t yet tell you.</p>
+    </div>
+
+    <div class="stamp">
+      <p><strong>This section is accurate as of August 2026</strong>, and it is the fastest-staling section in the guide. Check it against your own screen before relying on it.</p>
+    </div>
+
+    <p>The college tier provides <strong>standard generative AI access, not the paid products.</strong> It is not Copilot Pro, and it is not the licensed Microsoft 365 Copilot that runs inside Word, Excel, Outlook and Teams.</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>Don&rsquo;t expect Copilot to appear inside your desktop Office apps.</strong> That is a different, licensed product with a similar name. What you have is web access at <code>copilot.microsoft.com</code>, signed in with your college address.</p>
+    </div>
+
+    <h3>Message caps, upload limits, and image generation</h3>
+    <p><strong>This guide does not publish numbers for these yet.</strong> Any message or usage caps, file upload size and type limits, image-generation limits, and what resets and how often &mdash; all of it needs to be confirmed against Microsoft&rsquo;s own documentation and a live college login before it appears here.</p>
+    <p>Third-party &ldquo;2026 Copilot limits&rdquo; pages state confident numbers that contradict each other and cite nothing, and Microsoft&rsquo;s student and consumer offers are frequently confused with each other &mdash; there are separate promotional offers for Microsoft 365 Personal, GitHub Copilot for students, and Copilot Pro trials, and <strong>none of those are what this course means.</strong> An unsourced figure is exactly the habit this course exists to break, so this section says what is unknown rather than publishing a plausible number.</p>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+  <!-- ============ SECTION 6 ============ -->
+  <section id="s6" aria-labelledby="s6-h">
+    <div class="section-head">
+      <h2 id="s6-h">6. Privacy &amp; Data Handling</h2>
+      <p class="sub">What Microsoft does with what you type, what the college can see, and how to check both yourself.</p>
+    </div>
+
+    <div class="posture">
+      <h3>Data posture at a glance</h3>
+      <dl>
+        <dt>Account</dt>
+        <dd>
+          College-provided M365 student tier (<code>@student.mendocino.edu</code>, web only).
+          <span class="src">Pending confirmation: access last confirmed with college IT 2026-07-14; reconfirmation pending before Fall 2026.</span>
+        </dd>
+
+        <dt>Training on your inputs</dt>
+        <dd>
+          <strong>No.</strong> Not used to train Microsoft&rsquo;s foundation models on a work or school account.
+          <span class="src">Microsoft Learn, verified 2026-08-19</span>
+        </dd>
+
+        <dt>Who else can see it</dt>
+        <dd>
+          The college. Prompts and responses are logged in the college&rsquo;s Microsoft 365 tenant, reachable via administrator audit logging and eDiscovery.
+          <span class="src">Microsoft Learn, verified 2026-08-19</span>
+        </dd>
+
+        <dt>Retention</dt>
+        <dd>
+          The college&rsquo;s own Microsoft 365 retention policy.
+          <span class="src">Microsoft Learn, verified 2026-08-19</span>
+        </dd>
+      </dl>
+    </div>
+
+    <h3>The detail</h3>
+
+    <ul>
+      <li><strong>Prompts and responses are not used to train Microsoft&rsquo;s foundation models</strong> when you&rsquo;re signed in with a work or school account. Microsoft&rsquo;s own wording: <em>&ldquo;Prompts and responses aren&rsquo;t used to train the underlying foundation models.&rdquo;</em> (<a href="https://learn.microsoft.com/en-us/copilot/privacy-and-protections" target="_blank" rel="noopener" aria-label="Microsoft Learn, Microsoft 365 Copilot Chat Privacy and Protections, verified 2026-08-19">Microsoft Learn, <em>Microsoft 365 Copilot Chat Privacy and Protections</em></a> &mdash; verified 2026-08-19.)</li>
+      <li><strong>The green shield is the indicator.</strong> Microsoft: Copilot Chat <em>&ldquo;makes it clear that enterprise data protection is applied by featuring a green shield along the top of the user interface next to the New Chat button.&rdquo;</em> No shield means you&rsquo;re not covered &mdash; check it, don&rsquo;t assume it.</li>
+      <li><strong>But your prompts and responses are logged and stored</strong> inside the college&rsquo;s Microsoft 365 tenant (in Exchange), under the college&rsquo;s retention policies, and are reachable through administrator audit logging and eDiscovery. Not-used-for-training and not-visible-to-anyone are two different things.</li>
+    </ul>
+
+    <div class="callout callout--verify">
+      <span class="label">Verify</span>
+      <p><strong>The in-product check.</strong> Don&rsquo;t take this guide&rsquo;s word for the shield. Look for it on your own screen, and check it again if you ever sign in from a different browser or device. Copilot is unusual in showing you its protection status directly; most tools make you go and read a settings page.</p>
+    </div>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>The standing rule, whatever tool you&rsquo;re using:</strong> never enter your student ID, grades, other students&rsquo; work, or anyone&rsquo;s personal information.</p>
+    </div>
+
+    <ul>
+      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; how this compares to the other tools in the course.</li>
+      <li><strong>Module 1, Lesson 5 (M1L5)</strong> &mdash; why any of it matters.</li>
+    </ul>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+  <!-- ============ SECTION 7 ============ -->
+  <section id="s7" aria-labelledby="s7-h">
+    <div class="section-head">
+      <h2 id="s7-h">7. Known Weaknesses</h2>
+      <p class="sub">The failure modes you will actually hit in this course.</p>
+    </div>
+
+    <ul>
+      <li><strong>Confident wrong answers</strong>, stated in the same tone as correct ones.</li>
+      <li><strong>Citations that don&rsquo;t hold up.</strong> When Copilot returns links, some will be real pages that don&rsquo;t actually support the sentence they&rsquo;re attached to. Module 3, Lesson 1 (M3L1) examines this failure mode closely.</li>
+      <li><strong>Inconsistency</strong> &mdash; the same prompt run twice can produce materially different answers.</li>
+      <li><strong>Refusals and truncation</strong> on topics the enterprise filtering treats as sensitive, sometimes on legitimate coursework.</li>
+      <li><strong>Staleness</strong> on recent events, and answers that mix current retrieved material with older material without flagging which is which.</li>
+    </ul>
+
+    <p>One phrasing note that matters for the rest of the course: when recent web content shows up in an answer, <strong>the app searched and gave the model the results</strong> &mdash; the model didn&rsquo;t search the web. M3L1 owns that distinction.</p>
+  </section>
+
+  <!-- ============ SECTION 8 ============ -->
+  <section id="s8" aria-labelledby="s8-h">
+    <div class="section-head">
+      <h2 id="s8-h">8. Where to Go Deeper</h2>
+      <p class="sub">Microsoft&rsquo;s own documentation, and the lessons that own the concepts this guide only points at.</p>
+    </div>
+
+    <h3>Microsoft&rsquo;s own documentation</h3>
+    <ul>
+      <li><a href="https://learn.microsoft.com/en-us/copilot/privacy-and-protections" target="_blank" rel="noopener" aria-label="Microsoft Learn, Microsoft 365 Copilot Chat Privacy and Protections, verified 2026-08-19">Microsoft Learn &mdash; <em>Microsoft 365 Copilot Chat Privacy and Protections</em></a> &mdash; the source for everything in Section 6. Verified 2026-08-19.</li>
+    </ul>
+
+    <h3>The lessons that own these concepts</h3>
+    <ul>
+      <li><strong>M1L2</strong> &mdash; what AI and machine learning actually are.</li>
+      <li><strong>M2L1</strong> &mdash; generative AI.</li>
+      <li><strong>M2L3&ndash;M2L4</strong> &mdash; prompting.</li>
+      <li><strong>M3L1</strong> &mdash; research use, verification, and the model-vs-product distinction.</li>
+      <li><strong>M1L4</strong> and <strong>M1L5</strong> &mdash; bias and privacy.</li>
+    </ul>
+
+    <h3>Elsewhere in the tool guides</h3>
+    <ul>
+      <li><a href="gemini.html" target="_blank" rel="noopener">Gemini</a> &mdash; the course baseline tool.</li>
+      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; the cross-tool comparison.</li>
+      <li>Other guides, not yet published: ChatGPT &middot; Claude.</li>
+      <li><a href="../../index.html" target="_blank" rel="noopener">Back to the CSC 141 course home</a>.</li>
+    </ul>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Tool Guides: Microsoft Copilot &middot; Accurate as of August 2026</p>
+  </div>
+</footer>
+
+<script>
+/* Copy controls for the example-prompt blocks.
+   Buttons are injected rather than written into the markup, so that with
+   JavaScript unavailable there is no dead control — the prompt text stays
+   selectable either way. */
+(function () {
+  var blocks = document.querySelectorAll('pre[data-copies]');
+  if (!blocks.length || !navigator.clipboard) { return; }
+  Array.prototype.forEach.call(blocks, function (pre) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn--secondary';
+    btn.textContent = 'Copy prompt';
+    var status = document.createElement('span');
+    status.className = 'visually-hidden';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(pre.textContent.trim()).then(function () {
+        btn.textContent = 'Copied';
+        status.textContent = 'Prompt copied to the clipboard.';
+        window.setTimeout(function () {
+          btn.textContent = 'Copy prompt';
+          status.textContent = '';
+        }, 2000);
+      }, function () {
+        btn.textContent = 'Copy failed — select the text instead';
+        status.textContent = 'Copy failed. Select the prompt text manually.';
+      });
+    });
+    pre.parentNode.appendChild(btn);
+    pre.parentNode.appendChild(status);
+  });
+}());
+
+/* Expand every accordion before printing so nothing is silently dropped
+   from a printed or PDF copy, then restore the reader's own state after. */
+(function () {
+  var wasOpen = null;
+  function expandAll() {
+    var items = document.querySelectorAll('details');
+    wasOpen = Array.prototype.map.call(items, function (d) { return d.open; });
+    Array.prototype.forEach.call(items, function (d) { d.open = true; });
+  }
+  function restore() {
+    if (!wasOpen) { return; }
+    var items = document.querySelectorAll('details');
+    Array.prototype.forEach.call(items, function (d, i) { d.open = wasOpen[i]; });
+    wasOpen = null;
+  }
+  window.addEventListener('beforeprint', expandAll);
+  window.addEventListener('afterprint', restore);
+}());
+</script>
+
+</body>
+</html>
