@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>ChatGPT | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from copilot.html (most recently built guide
+   in this track). Do not re-derive. --c-ui carries the corrected
+   #1d6690 (6.26:1), not the retired #2980b9.
+   Guide-only additions are marked at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  /* --c-try-* omitted: this page uses no "Try this" callout. */
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout--verify  { background: var(--c-verify-bg);  border-color: var(--c-verify-bd);  color: var(--c-verify-tx); }
+/* .callout--try omitted: not used on this page. */
+.callout a { color: inherit; }
+
+/* Table rules from the shared block omitted: this page has no table. */
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h3 { margin: 0; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .92rem; background: var(--c-surface); border: 1px solid var(--c-border); border-left: 4px solid var(--c-ui); border-radius: var(--radius); padding: var(--s-3); white-space: pre-wrap; word-break: break-word; }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-2) var(--s-3); margin: var(--s-3) 0; background: var(--c-bg); }
+details > summary { cursor: pointer; font-weight: 700; color: var(--c-primary-dark); padding: var(--s-1) 0; }
+details[open] > summary { border-bottom: 1px solid var(--c-border); margin-bottom: var(--s-2); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* --- guide-only: currency stamp --- */
+.stamp { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-4) 0; }
+.stamp p { margin: 0; }
+
+/* --- print: this guide has no export artifact, so print the whole page legibly --- */
+@media print {
+  body { font-size: 11pt; }
+  .jumpnav, .totop { display: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+}
+
+/* --- chatgpt page additions (this page only) --- */
+
+/* Figures: screenshots are the one asset type outside this file. */
+figure { margin: var(--s-4) 0; }
+figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--c-border); border-radius: var(--radius); }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+
+/* Section 6 "Data posture at a glance" — a real definition list, not styled divs. */
+.posture { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.posture > h3 { margin-top: 0; }
+.posture dl { margin: var(--s-3) 0 0; }
+.posture dt { font-weight: 700; color: var(--c-primary-dark); margin-top: var(--s-3); }
+.posture dt:first-of-type { margin-top: 0; }
+.posture dd { margin: var(--s-1) 0 0; }
+.posture dd .src { display: block; font-size: .85rem; color: var(--c-text-muted); font-style: italic; margin-top: var(--s-1); }
+
+.pending { font-size: .9rem; color: var(--c-text-muted); }
+
+@media print {
+  /* Accordions must never hide content from a printed page. */
+  details { border: none; padding: 0; }
+  details > summary { list-style: none; }
+  .posture, .activity { break-inside: avoid; }
+  figure { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Tool Guides</p>
+    <h1>ChatGPT</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">1. What this tool is</a></li>
+      <li><a href="#s2">2. Getting access</a></li>
+      <li><a href="#s3">3. The interface</a></li>
+      <li><a href="#s4">4. Core workflow</a></li>
+      <li><a href="#s5">5. Free-tier limits</a></li>
+      <li><a href="#s6">6. Privacy & data handling</a></li>
+      <li><a href="#s7">7. Known weaknesses</a></li>
+      <li><a href="#s8">8. Where to go deeper</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <div class="callout callout--verify">
+    <span class="label">Verify</span>
+    <p><strong>Accurate as of August 2026.</strong> AI tools change faster than a semester does. If what you see on screen doesn&rsquo;t match this guide, trust the screen &mdash; and tell your instructor so it can be fixed. Noticing that gap is itself an AI-literacy skill.</p>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <section id="s1" aria-labelledby="s1-h">
+    <div class="section-head">
+      <h2 id="s1-h">1. What This Tool Is</h2>
+      <p class="sub">What ChatGPT is &mdash; and why it&rsquo;s worth being precise about it.</p>
+    </div>
+
+    <p>ChatGPT is OpenAI&rsquo;s conversational AI assistant, and for most people it&rsquo;s the product that made this whole category visible &mdash; which is exactly why it&rsquo;s worth being precise about it rather than treating it as a synonym for &ldquo;AI.&rdquo; You talk to it in plain language: you type a question or a task, it answers, and you can keep the conversation going. In this course you&rsquo;d use it the way you&rsquo;d use any conversational assistant &mdash; to ask questions about material, draft and revise writing, and summarize documents.</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>ChatGPT is an <em>app</em> &mdash; the models it runs on are separate things with their own names, and most of what people call &ldquo;what the AI can do&rdquo; (web access, file upload, memory, image generation) are features of the app, not properties of the model. Module 3, Lesson 1 (<strong>M3L1</strong>) owns that distinction.</p>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section id="s2" aria-labelledby="s2-h">
+    <div class="section-head">
+      <h2 id="s2-h">2. Getting Access</h2>
+      <p class="sub">A personal account under OpenAI&rsquo;s own terms &mdash; and what that means before you sign up.</p>
+    </div>
+
+    <p>This tool is <strong>not provided or supported by Mendocino College</strong>. Using it means creating a personal account under <strong>OpenAI&rsquo;s</strong> own terms of service, with your own email &mdash; not your student email. Nothing in this course requires you to use it; every activity can be completed with a college-supported tool.</p>
+
+    <p>Before you sign up, know what you&rsquo;re agreeing to: <strong>on a personal ChatGPT account, your conversations are used to train OpenAI&rsquo;s models by default</strong> &mdash; OpenAI&rsquo;s own wording is <em>&ldquo;When you use our services for individuals such as ChatGPT and Codex, we may use your content to train our models&rdquo;</em> (<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance" target="_blank" rel="noopener">OpenAI Help Center, <em>How your data is used to improve model performance</em></a>, verified 2026-08-19). <a href="#s6">Section 6</a> shows where the setting to turn that off lives. Never enter your student ID, grades, other students&rsquo; work, anyone&rsquo;s personal information, or anything you&rsquo;d be uncomfortable seeing outside this course.</p>
+
+    <details open>
+      <summary>Step by step: signing up for ChatGPT</summary>
+
+      <ol>
+        <li>
+          <p><strong>Go to ChatGPT on the web.</strong> Open <code>chatgpt.com</code> in a browser tab and choose to sign up.</p>
+          <figure>
+            <img src="images/chatgpt-01-signup.png"
+                 alt="The signup screen, personal email entered (not a student address).">
+            <figcaption>The signup screen, with a personal email entered &mdash; not a student address.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Sign up with your own email</strong>, or with a Google, Microsoft, or Apple sign-in. Use a personal address, not your <code>@student.mendocino.edu</code> one &mdash; a student address would create a personal OpenAI account that merely looks institutional.</p>
+        </li>
+        <li>
+          <p><strong>Expect the screen to ask what it asks.</strong></p>
+          <p class="pending">Whether a phone number is required at signup is not stated in this guide: OpenAI has changed that requirement more than once, and it was not verified for this build. Trust whatever the signup screen actually asks.</p>
+        </li>
+        <li>
+          <p><strong>Test it.</strong> Type <code>Say hello</code> and press Enter. If you get a response, you&rsquo;re set.</p>
+          <figure>
+            <img src="images/chatgpt-03-test.png"
+                 alt="A &ldquo;Say hello&rdquo; exchange showing a response.">
+            <figcaption>A response means you&rsquo;re in and working.</figcaption>
+          </figure>
+        </li>
+      </ol>
+    </details>
+
+    <h3>Age</h3>
+    <p>ChatGPT is not open to all ages. OpenAI runs an <strong>age-prediction</strong> system that routes accounts it estimates to be under 18 into a restricted &ldquo;ChatGPT for Teens&rdquo; experience with content safeguards and some feature limits; the account stays active. An adult wrongly flagged verifies through Settings &rarr; Account &rarr; &ldquo;Verify age,&rdquo; handled by a third-party verification company that may ask for a live selfie or government-issued ID (OpenAI Help Center, <em>Age prediction in ChatGPT</em>, verified 2026-08-19).</p>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p>Some students in this class are under 18, and dual-enrollment students routinely are. <strong>You do not need ChatGPT for anything in CSC 141.</strong> If you&rsquo;re under 18, or you&rsquo;d rather not hand a government ID to a third-party verification vendor to use a chatbot, use <a href="gemini.html" target="_blank" rel="noopener">Gemini</a> or Copilot &mdash; both are college-provided and cover every activity in the course.</p>
+    </div>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section id="s3" aria-labelledby="s3-h">
+    <div class="section-head">
+      <h2 id="s3-h">3. The Interface</h2>
+      <p class="sub">The screen you actually land on, at the depth this course needs.</p>
+    </div>
+
+    <p>This is a short tour of the screen a student actually lands on &mdash; enough to work the course activities, not an exhaustive feature tour. You&rsquo;ll still see buttons for GPTs, Projects, Canvas and other features; naming them is fine, walking through them is out of scope here.</p>
+
+    <figure>
+      <img src="images/chatgpt-02-home.png"
+           alt="The chat home screen with the input field visible.">
+      <figcaption>The chat home screen, with the input field visible.</figcaption>
+    </figure>
+
+    <details>
+      <summary>Interface tour &mdash; seven things worth finding</summary>
+
+      <h3>The prompt input box</h3>
+      <p>The single text field where you type what you want. Everything you do with ChatGPT starts here.</p>
+      <figure>
+        <img src="images/chatgpt-06-input.png"
+             alt="The ChatGPT prompt input box, the text field where a question is typed.">
+        <figcaption>The prompt input box.</figcaption>
+      </figure>
+
+      <h3>The conversation thread</h3>
+      <p>Your prompts and ChatGPT&rsquo;s responses in sequence. Everything above the current message is context the conversation still carries.</p>
+      <figure>
+        <img src="images/chatgpt-07-thread.png"
+             alt="A ChatGPT conversation thread showing prompts and responses in sequence.">
+        <figcaption>The conversation thread.</figcaption>
+      </figure>
+
+      <h3>Starting a new chat vs. continuing one</h3>
+      <p>Starting a new chat opens an empty thread with no memory of the previous one; continuing in the current thread keeps its context. When to do which is Activity 3 in Section 4.</p>
+      <figure>
+        <img src="images/chatgpt-08-new-chat.png"
+             alt="The New Chat control in ChatGPT, used to start an empty conversation thread.">
+        <figcaption>New chat starts an empty thread.</figcaption>
+      </figure>
+
+      <h3>Chat history</h3>
+      <p>Previous conversations, listed and reachable again later. Temporary Chat is the exception &mdash; it never appears here.</p>
+      <figure>
+        <img src="images/chatgpt-09-history.png"
+             alt="The ChatGPT chat history list showing previous conversations.">
+        <figcaption>Chat history holds previous conversations.</figcaption>
+      </figure>
+
+      <h3>The model selector</h3>
+      <p>A control for choosing which model handles your conversation. Remember from Section 1: the app decides which model you get, and it can switch without you asking &mdash; a known quirk covered in Section 7.</p>
+      <figure>
+        <img src="images/chatgpt-10-model-selector.png"
+             alt="The model selector menu in ChatGPT, used to choose which model handles a conversation.">
+        <figcaption>The model selector.</figcaption>
+      </figure>
+
+      <h3>Attaching a file or image</h3>
+      <p>An attach control near the input box lets you add a document or image and then ask questions about it. The free tier limits this &mdash; see Section 5.</p>
+      <figure>
+        <img src="images/chatgpt-11-attach.png"
+             alt="The attach control near the ChatGPT input box, used to add a file or image to a prompt.">
+        <figcaption>Attaching a file or image to a prompt.</figcaption>
+      </figure>
+
+      <h3>Where Temporary Chat lives</h3>
+      <p>An icon at the top right of the chat screen starts a <strong>Temporary Chat</strong> &mdash; a conversation kept out of your history, out of memory, and out of model training. Section 6 explains what that means.</p>
+      <figure>
+        <img src="images/chatgpt-12-temporary-chat.png"
+             alt="The Temporary Chat icon at the top right of the ChatGPT chat screen.">
+        <figcaption>The Temporary Chat control, top right of the chat screen.</figcaption>
+      </figure>
+    </details>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section id="s4" aria-labelledby="s4-h">
+    <div class="section-head">
+      <h2 id="s4-h">4. Core Workflow</h2>
+      <p class="sub">Three short activities that exercise the interface. The same three appear in every tool guide, in the same order.</p>
+    </div>
+
+    <p>These prompts exist to make the buttons do something so you can see what happens. Writing <em>good</em> prompts is a separate skill, taught in Module 2, Lessons 3 and 4 (<strong>M2L3&ndash;M2L4</strong>).</p>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Activity 1 &mdash; Ask and follow up</h3>
+        <span class="badge">5 min</span>
+      </div>
+      <p><strong>Task: ask one question, then ask a second question that only makes sense if the first one is remembered.</strong></p>
+      <ol>
+        <li>Open a new chat and paste the first prompt.</li>
+        <li>Read the response.</li>
+        <li>In the <em>same</em> thread, paste the follow-up. Don&rsquo;t repeat the topic &mdash; the point is to see whether the thread carries it.</li>
+      </ol>
+      <div class="prompt">
+        <p class="sub" id="p1a-label">First prompt:</p>
+        <pre data-copies aria-labelledby="p1a-label">Explain what a community college transfer agreement is, in about four sentences.</pre>
+      </div>
+      <div class="prompt">
+        <p class="sub" id="p1b-label">Follow-up, in the same thread:</p>
+        <pre data-copies aria-labelledby="p1b-label">Now say that again for someone who has never heard the word "articulation."</pre>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Activity 2 &mdash; Attach something</h3>
+        <span class="badge">5 min</span>
+      </div>
+      <p><strong>Task: upload a document or image and ask a question about it.</strong></p>
+      <ol>
+        <li>Find a file you already have &mdash; a syllabus, a handout, a photo of a printed page. Nothing personal: no student ID, no grades, nobody else&rsquo;s work.</li>
+        <li>Use the attach control near the input box to add it.</li>
+        <li>Paste the prompt below and send it.</li>
+      </ol>
+      <div class="prompt">
+        <p class="sub" id="p2-label">Prompt:</p>
+        <pre data-copies aria-labelledby="p2-label">Summarize this document in five bullet points, then list anything in it you are unsure about.</pre>
+      </div>
+      <p class="pending">The free tier limits messages with uploads; how limited isn&rsquo;t published &mdash; see <a href="#s5">Section 5</a>.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Activity 3 &mdash; Start clean</h3>
+        <span class="badge">2 min</span>
+      </div>
+      <p><strong>Task: notice the difference between continuing a thread and starting a new one.</strong></p>
+      <ol>
+        <li>Still in the thread from Activity 2, paste the prompt below. The answer will probably still be coloured by the document you attached.</li>
+        <li>Now start a new chat and paste the same prompt into the empty thread.</li>
+        <li>Compare. A long thread carries everything in it &mdash; useful when that&rsquo;s what you want, and a source of drift when it isn&rsquo;t. When you change topic, start clean.</li>
+      </ol>
+      <div class="prompt">
+        <p class="sub" id="p3-label">Prompt (run it twice &mdash; old thread, then new chat):</p>
+        <pre data-copies aria-labelledby="p3-label">What are three good ways to take notes during a lecture?</pre>
+      </div>
+      <p>The stronger version of starting clean is <strong>Temporary Chat</strong> &mdash; a conversation that never enters your history at all. <a href="#s6">Section 6</a> covers it.</p>
+    </div>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+  <!-- ============ SECTION 5 ============ -->
+  <section id="s5" aria-labelledby="s5-h">
+    <div class="section-head">
+      <h2 id="s5-h">5. Free-Tier Limits</h2>
+      <p class="sub">What the free tier gets you &mdash; and where OpenAI stops being specific.</p>
+    </div>
+
+    <div class="stamp">
+      <p><strong>This section is accurate as of August 2026</strong>, verified against OpenAI&rsquo;s published pricing page on 2026-08-19. It is the fastest-staling section in the guide &mdash; re-verify it every term, and check it against your own screen before relying on it.</p>
+    </div>
+
+    <p><strong>Model access on Free:</strong> GPT-5.6 Luna as the primary model, plus GPT-5 Thinking Mini.</p>
+
+    <p><strong>Text chats:</strong> OpenAI describes Free as <em>&ldquo;unlimited text chats with GPT-5.6 Luna,&rdquo;</em> qualified as <em>&ldquo;subject to abuse guardrails.&rdquo;</em></p>
+
+    <p><strong>Limited on Free:</strong> messages with uploads; image generation (also described as slower); voice chats; deep research; data analysis and vision; and &ldquo;limited memory and context.&rdquo;</p>
+
+    <p><strong>Available on Free:</strong> unlimited chat history; web, iOS and Android; using GPTs others have made (but not creating or sharing them); Study mode.</p>
+
+    <p>All of the above: <a href="https://chatgpt.com/pricing" target="_blank" rel="noopener">OpenAI&rsquo;s pricing page</a>, verified 2026-08-19.</p>
+
+    <div class="callout callout--verify">
+      <span class="label">Verify</span>
+      <p>&ldquo;Unlimited&rdquo; and &ldquo;limited&rdquo; are doing a lot of work in that list, and OpenAI doesn&rsquo;t publish the actual numbers behind &ldquo;limited.&rdquo; The honest answer to <em>&ldquo;how many images can I generate?&rdquo;</em> is <strong>that OpenAI doesn&rsquo;t say</strong> &mdash; you find out when it stops. Noticing that a vendor&rsquo;s plan page describes caps without stating them is itself the skill this course is about.</p>
+    </div>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+  <!-- ============ SECTION 6 ============ -->
+  <section id="s6" aria-labelledby="s6-h">
+    <div class="section-head">
+      <h2 id="s6-h">6. Privacy & Data Handling</h2>
+      <p class="sub">What OpenAI does with what you type, and how to check it yourself.</p>
+    </div>
+
+    <div class="posture">
+      <h3>Data posture at a glance</h3>
+      <dl>
+        <dt>Account</dt>
+        <dd>Personal account under OpenAI&rsquo;s own terms. <strong>No college agreement applies to it.</strong></dd>
+
+        <dt>Training on your inputs</dt>
+        <dd>
+          <strong>On by default.</strong> You can turn it off; it is not already off for you.
+          <span class="src">OpenAI Help Center, verified 2026-08-19</span>
+        </dd>
+
+        <dt>Who else can see it</dt>
+        <dd>OpenAI, per its own policy. There is no institution in between and nobody at the college to ask.</dd>
+
+        <dt>Retention</dt>
+        <dd>
+          Temporary Chat is excluded from history, memory and training; Temporary Chats are deleted from OpenAI&rsquo;s systems after 30 days. OpenAI does not publish a retention period for ordinary deleted conversations.
+          <span class="src">OpenAI Help Center, Data Controls FAQ, verified 2026-08-19</span>
+        </dd>
+      </dl>
+    </div>
+
+    <h3>The detail</h3>
+
+    <ul>
+      <li><strong>Training is on by default</strong> on personal accounts. OpenAI: <em>&ldquo;When you use our services for individuals such as ChatGPT and Codex, we may use your content to train our models.&rdquo;</em> (<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance" target="_blank" rel="noopener">OpenAI Help Center, <em>How your data is used to improve model performance</em></a>, verified 2026-08-19.)</li>
+      <li><strong>How to turn it off.</strong> In ChatGPT, open Settings &rarr; Data Controls and find the toggle labelled <em>&ldquo;Improve the model for everyone&rdquo;</em> &mdash; turning it off stops your new conversations being used for training. You can also opt out through OpenAI&rsquo;s privacy portal by selecting <em>&ldquo;do not train on my content.&rdquo;</em> The menu moves, so if you can&rsquo;t find it where this guide says, look for a setting about improving or training the model &mdash; what it does matters more than where it sits.
+        <figure>
+          <img src="images/chatgpt-05-data-controls.png"
+               alt="The Data Controls settings screen showing the training toggle.">
+          <figcaption>The Data Controls settings screen, with the training toggle.</figcaption>
+        </figure>
+      </li>
+      <li><strong>Temporary Chat.</strong> OpenAI: chats from Temporary Chat <em>&ldquo;won&rsquo;t appear in history, use or create memories, or be used to train our models.&rdquo;</em> It&rsquo;s reached from the icon at the top right of the chat screen. This is the fastest privacy control in the product, and worth naming explicitly.
+        <figure>
+          <img src="images/chatgpt-04-temporary-chat.png"
+               alt="The Temporary Chat control, circled.">
+          <figcaption>The Temporary Chat control, top right of the chat screen.</figcaption>
+        </figure>
+      </li>
+      <li><strong>What deleting does and doesn&rsquo;t do.</strong> Deleting a conversation removes it from your history. What happens to it after that, OpenAI doesn&rsquo;t say: the model-training article states no retention periods, and the <a href="https://help.openai.com/en/articles/7730893-data-controls-faq" target="_blank" rel="noopener">Data Controls FAQ</a> (verified 2026-08-19) does not publish a retention window for ordinary deleted conversations. Temporary Chats are the exception to all of it &mdash; they never enter history, memory, or training in the first place.</li>
+    </ul>
+
+    <div class="callout callout--verify">
+      <span class="label">Verify</span>
+      <p><strong>The in-product check.</strong> Open Settings &rarr; Data Controls on your own account and read what the training setting is actually set to right now. Copilot shows you a shield; here you have to go and look. Do that before you put anything into it that you&rsquo;d mind seeing again.</p>
+    </div>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>The standing rule, whatever tool you&rsquo;re using:</strong> never enter your student ID, grades, other students&rsquo; work, or anyone&rsquo;s personal information.</p>
+    </div>
+
+    <p>With a college account on Copilot or Gemini, the vendor commits not to train on your data and the college is party to the arrangement; here, training is on until you turn it off and there is no institution in between.</p>
+
+    <ul>
+      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; how this compares to the other tools in the course.</li>
+      <li><strong>Module 1, Lesson 5 (M1L5)</strong> &mdash; why any of it matters.</li>
+    </ul>
+
+    <p class="sub">Sources: OpenAI Help Center &mdash; <a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance" target="_blank" rel="noopener"><em>How your data is used to improve model performance</em></a>; <a href="https://help.openai.com/en/articles/7730893-data-controls-faq" target="_blank" rel="noopener"><em>Data Controls FAQ</em></a>. Both verified 2026-08-19.</p>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+  <!-- ============ SECTION 7 ============ -->
+  <section id="s7" aria-labelledby="s7-h">
+    <div class="section-head">
+      <h2 id="s7-h">7. Known Weaknesses</h2>
+      <p class="sub">The failure modes you will actually hit in this course.</p>
+    </div>
+
+    <ul>
+      <li><strong>Confident wrong answers</strong>, stated in the same tone as correct ones.</li>
+      <li><strong>Fabricated or mismatched citations</strong> &mdash; invented sources, and real links that don&rsquo;t support the claim attached to them. Module 3, Lesson 1 (<strong>M3L1</strong>) examines this closely.</li>
+      <li><strong>Inconsistency</strong> &mdash; the same prompt twice, two materially different answers.</li>
+      <li><strong>Staleness</strong>, and answers that blend freshly retrieved material with older material without flagging which is which.</li>
+      <li><strong>Sycophancy</strong> &mdash; it tends to agree with a premise you hand it. Pushing back on your own prompt is a useful habit; try asking the same question with the opposite assumption baked in.</li>
+      <li><strong>Free-tier model switching</strong> &mdash; the answer quality you get can change without you doing anything differently, because the app decides which model handles a request.</li>
+    </ul>
+
+    <p>One phrasing note that matters for the rest of the course: where retrieved web content is involved, it&rsquo;s a <strong>product</strong> behaviour, never a model behaviour &mdash; <em>&ldquo;the app searched and gave the model the results,&rdquo;</em> not <em>&ldquo;the model searched the web.&rdquo;</em> M3L1 owns that distinction.</p>
+  </section>
+
+  <!-- ============ SECTION 8 ============ -->
+  <section id="s8" aria-labelledby="s8-h">
+    <div class="section-head">
+      <h2 id="s8-h">8. Where to Go Deeper</h2>
+      <p class="sub">OpenAI&rsquo;s own documentation, and the lessons that own the concepts this guide only points at.</p>
+    </div>
+
+    <h3>OpenAI&rsquo;s own help documentation</h3>
+    <ul>
+      <li><a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance" target="_blank" rel="noopener">OpenAI Help Center &mdash; <em>How your data is used to improve model performance</em></a> &mdash; the source for the training default and Temporary Chat. Verified 2026-08-19.</li>
+      <li><a href="https://help.openai.com/en/articles/7730893-data-controls-faq" target="_blank" rel="noopener">OpenAI Help Center &mdash; <em>Data Controls FAQ</em></a> &mdash; the source for the settings and retention. Verified 2026-08-19.</li>
+    </ul>
+
+    <h3>The lessons that own these concepts</h3>
+    <ul>
+      <li><strong>M1L2</strong> &mdash; what AI and machine learning actually are.</li>
+      <li><strong>M2L1</strong> &mdash; generative AI.</li>
+      <li><strong>M2L3&ndash;M2L4</strong> &mdash; prompting.</li>
+      <li><strong>M3L1</strong> &mdash; research use, verification, and the model-vs-product distinction.</li>
+      <li><strong>M1L4</strong> and <strong>M1L5</strong> &mdash; bias and privacy.</li>
+    </ul>
+
+    <h3>Elsewhere in the tool guides</h3>
+    <ul>
+      <li><a href="gemini.html" target="_blank" rel="noopener">Gemini</a> &mdash; the course baseline tool.</li>
+      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; the cross-tool comparison.</li>
+      <li>Other guides: Copilot &middot; Claude.</li>
+      <li><a href="../../index.html" target="_blank" rel="noopener">Back to the CSC 141 course home</a>.</li>
+    </ul>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Tool Guides: ChatGPT &middot; Accurate as of August 2026</p>
+  </div>
+</footer>
+
+<script>
+/* Copy controls for the example-prompt blocks.
+   Buttons are injected rather than written into the markup, so that with
+   JavaScript unavailable there is no dead control — the prompt text stays
+   selectable either way. */
+(function () {
+  var blocks = document.querySelectorAll('pre[data-copies]');
+  if (!blocks.length || !navigator.clipboard) { return; }
+  Array.prototype.forEach.call(blocks, function (pre) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn--secondary';
+    btn.textContent = 'Copy prompt';
+    var status = document.createElement('span');
+    status.className = 'visually-hidden';
+    status.setAttribute('role', 'status');
+    status.setAttribute('aria-live', 'polite');
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(pre.textContent.trim()).then(function () {
+        btn.textContent = 'Copied';
+        status.textContent = 'Prompt copied to the clipboard.';
+        window.setTimeout(function () {
+          btn.textContent = 'Copy prompt';
+          status.textContent = '';
+        }, 2000);
+      }, function () {
+        btn.textContent = 'Copy failed — select the text instead';
+        status.textContent = 'Copy failed. Select the prompt text manually.';
+      });
+    });
+    pre.parentNode.appendChild(btn);
+    pre.parentNode.appendChild(status);
+  });
+}());
+
+/* Expand every accordion before printing so nothing is silently dropped
+   from a printed or PDF copy, then restore the reader's own state after. */
+(function () {
+  var wasOpen = null;
+  function expandAll() {
+    var items = document.querySelectorAll('details');
+    wasOpen = Array.prototype.map.call(items, function (d) { return d.open; });
+    Array.prototype.forEach.call(items, function (d) { d.open = true; });
+  }
+  function restore() {
+    if (!wasOpen) { return; }
+    var items = document.querySelectorAll('details');
+    Array.prototype.forEach.call(items, function (d, i) { d.open = wasOpen[i]; });
+    wasOpen = null;
+  }
+  window.addEventListener('beforeprint', expandAll);
+  window.addEventListener('afterprint', restore);
+}());
+</script>
+
+</body>
+</html>
