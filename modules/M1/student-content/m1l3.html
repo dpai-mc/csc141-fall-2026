@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>M1L3 — Machine Learning Fundamentals | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from m1l2.html. Do not re-derive.
+   ONE CORRECTION ON COPY: --c-ui was #2980b9 (4.30:1 on white,
+   fails WCAG AA for text). Corrected to #1d6690 (6.26:1).
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+
+/* comparison card grid — identical section order in every card */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+.card .verdict { font-weight: 700; }
+.card .keyidea { border-top: 1px solid var(--c-border); margin-top: var(--s-3); padding-top: var(--s-2); font-size: .95rem; }
+
+/* a wide diagram scrolls inside its own box rather than shrinking to illegibility */
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 46rem; }
+
+/* numbered lifecycle steps */
+.steps { list-style: none; margin: var(--s-4) 0; padding: 0; counter-reset: step; }
+.steps > li { display: grid; grid-template-columns: 2.5rem 1fr; gap: var(--s-3); padding-bottom: var(--s-4); max-width: none; }
+.steps .num { display: flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--c-primary); color: #fff; font-weight: 700; }
+.steps h4 { margin-top: 0; }
+.steps p { margin-top: var(--s-1); }
+
+/* three-tool notes grid */
+.tool-note { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.tool-note h4 { margin-top: 0; }
+.tool-note .namefield { max-width: 22rem; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M1L3-A1 comparison notes only)
+   Accordions are force-opened before print by script so nothing
+   inside a collapsed <details> is dropped from the export.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+
+  /* Hide by DISPLAY, walking the ancestor chain down to the export panel.
+     The older shared block used `visibility: hidden`, which blanks the ink but
+     leaves every layout box in flow — a one-page artifact then exported with a
+     dozen blank pages after it. Removing the boxes is what actually scopes the
+     export. Chain: body > main > #a1 > details > .activity > #export-panel. */
+  body > *:not(main)                      { display: none !important; }
+  main > *:not(#a1)                       { display: none !important; }
+  #a1 > *:not(details)                    { display: none !important; }
+  #a1 details                             { border: 0; margin: 0; }
+  #a1 details > *:not(.activity)          { display: none !important; }
+  #a1 .activity > *:not(#export-panel)    { display: none !important; }
+  #a1 .activity                           { border: 0; padding: 0; margin: 0; }
+
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Module 1 &middot; Lesson 3</p>
+    <h1>Machine Learning Fundamentals</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#types">Three types of ML</a></li>
+      <li><a href="#lifecycle">Training data lifecycle</a></li>
+      <li><a href="#patterns">Pattern vs. prediction</a></li>
+      <li><a href="#algorithms">Algorithms</a></li>
+      <li><a href="#a1">Practice: compare three tools</a></li>
+      <li><a href="#checks">Check yourself</a></li>
+      <li><a href="#primer">Next discussion</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section aria-labelledby="intro-h">
+    <h2 id="intro-h" class="visually-hidden">How do machines actually learn?</h2>
+    <p>In the <a href="m1l2.html" target="_blank" rel="noopener">last lesson</a>, you learned that <strong>Machine Learning (ML)</strong> is a subset of AI where systems learn patterns from data instead of following explicitly programmed rules. But how does that learning actually happen? In this lesson, we'll break down the three main types of machine learning, walk through what happens to data before it becomes a model, and introduce the concept of algorithms &mdash; all without writing a single line of code.</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This is the longest lesson in Module 1. The five sections below are collapsible &mdash; open one at a time, and use the links at the top of the page to jump around. Plan for about 30 minutes.</p>
+    </div>
+  </section>
+
+  <!-- ================= THREE TYPES OF ML ================= -->
+  <section id="types" aria-labelledby="types-h">
+    <div class="section-head">
+      <h2 id="types-h">Three Types of Machine Learning</h2>
+      <p class="sub">Three ways to teach a system &mdash; kind of like three teaching styles in a classroom.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: supervised, unsupervised, and reinforcement learning</summary>
+
+      <p>Machine learning comes in three flavors. Each one teaches the system in a different way.</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 900 330" role="img" aria-labelledby="d1-title d1-desc" width="900" height="330">
+            <title id="d1-title">Three types of machine learning shown side by side</title>
+            <desc id="d1-desc">Three panels. Left, supervised learning: flashcards with the answer written on the back, labelled "Learning with an answer key", with an email spam filter as its everyday example. Centre, unsupervised learning: a mixed pile of shapes sorted into groups of like shapes, labelled "Finding hidden patterns", with customer segmentation as its everyday example. Right, reinforcement learning: an action followed by a reward token, labelled "Learning by trial and reward", with game-playing AI as its everyday example.</desc>
+
+            <!-- Panel 1: Supervised -->
+            <rect x="10" y="10" width="280" height="310" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+            <text x="150" y="40" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#0e3a56">Supervised</text>
+            <text x="150" y="62" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#14304a">Learning with an answer key</text>
+            <!-- flashcards -->
+            <rect x="52" y="90" width="96" height="66" rx="6" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+            <text x="100" y="130" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="#0e3a56">?</text>
+            <rect x="152" y="90" width="96" height="66" rx="6" fill="#aed6f1" stroke="#0e3a56" stroke-width="2"/>
+            <text x="200" y="120" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#14304a">answer</text>
+            <text x="200" y="138" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#14304a">on the back</text>
+            <path d="M150 172 L150 194" stroke="#0e3a56" stroke-width="2"/>
+            <path d="M150 200 l-6 -10 h12 z" fill="#0e3a56"/>
+            <text x="150" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">labelled data</text>
+            <!-- example -->
+            <rect x="52" y="242" width="196" height="58" rx="6" fill="#ffffff" stroke="#b0b8bd" stroke-width="1"/>
+            <rect x="68" y="258" width="34" height="24" rx="3" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <path d="M68 258 l17 13 l17 -13" fill="none" stroke="#0e3a56" stroke-width="1.5"/>
+            <text x="180" y="266" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#14304a">Everyday example:</text>
+            <text x="180" y="282" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14304a">email spam filtering</text>
+
+            <!-- Panel 2: Unsupervised -->
+            <rect x="310" y="10" width="280" height="310" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+            <text x="450" y="40" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#0e3a56">Unsupervised</text>
+            <text x="450" y="62" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#14304a">Finding hidden patterns</text>
+            <!-- mixed pile -->
+            <circle cx="356" cy="100" r="9" fill="#1a5276"/>
+            <rect x="374" y="112" width="16" height="16" fill="#7fb3d5"/>
+            <circle cx="404" cy="96" r="9" fill="#1a5276"/>
+            <path d="M366 140 l10 -17 l10 17 z" fill="#5499c7"/>
+            <rect x="398" y="132" width="16" height="16" fill="#7fb3d5"/>
+            <path d="M424 128 l10 -17 l10 17 z" fill="#5499c7"/>
+            <path d="M452 120 L488 120" stroke="#0e3a56" stroke-width="2"/>
+            <path d="M494 120 l-10 -6 v12 z" fill="#0e3a56"/>
+            <!-- grouped -->
+            <rect x="500" y="82" width="72" height="34" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <circle cx="522" cy="99" r="8" fill="#1a5276"/><circle cx="548" cy="99" r="8" fill="#1a5276"/>
+            <rect x="500" y="122" width="72" height="34" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <rect x="514" y="131" width="15" height="15" fill="#7fb3d5"/><rect x="541" y="131" width="15" height="15" fill="#7fb3d5"/>
+            <rect x="500" y="162" width="72" height="34" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <path d="M513 189 l9 -16 l9 16 z" fill="#5499c7"/><path d="M540 189 l9 -16 l9 16 z" fill="#5499c7"/>
+            <text x="450" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">no labels &mdash; groups discovered</text>
+            <!-- example -->
+            <rect x="352" y="242" width="196" height="58" rx="6" fill="#ffffff" stroke="#b0b8bd" stroke-width="1"/>
+            <circle cx="382" cy="264" r="6" fill="#1a5276"/><circle cx="396" cy="276" r="6" fill="#5499c7"/><circle cx="370" cy="278" r="6" fill="#7fb3d5"/>
+            <text x="478" y="266" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#14304a">Everyday example:</text>
+            <text x="478" y="282" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14304a">customer segmentation</text>
+
+            <!-- Panel 3: Reinforcement -->
+            <rect x="610" y="10" width="280" height="310" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+            <text x="750" y="40" text-anchor="middle" font-family="sans-serif" font-size="17" font-weight="700" fill="#0e3a56">Reinforcement</text>
+            <text x="750" y="62" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#14304a">Learning by trial and reward</text>
+            <!-- action -> reward loop -->
+            <rect x="646" y="86" width="88" height="40" rx="6" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+            <text x="690" y="111" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">action</text>
+            <path d="M742 106 L784 106" stroke="#0e3a56" stroke-width="2"/>
+            <path d="M790 106 l-10 -6 v12 z" fill="#0e3a56"/>
+            <rect x="792" y="86" width="70" height="40" rx="6" fill="#aed6f1" stroke="#0e3a56" stroke-width="2"/>
+            <text x="827" y="105" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#0e3a56">reward</text>
+            <text x="827" y="119" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#0e3a56">or penalty</text>
+            <path d="M827 130 v26 q0 10 -10 10 H700 q-10 0 -10 -10 v-24" fill="none" stroke="#0e3a56" stroke-width="2"/>
+            <path d="M690 126 l-6 12 h12 z" fill="#0e3a56"/>
+            <text x="750" y="188" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#14304a">try &rarr; get feedback &rarr; adjust</text>
+            <text x="750" y="222" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">learns the best strategy</text>
+            <!-- example -->
+            <rect x="652" y="242" width="196" height="58" rx="6" fill="#ffffff" stroke="#b0b8bd" stroke-width="1"/>
+            <rect x="668" y="258" width="34" height="22" rx="8" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <circle cx="678" cy="269" r="3" fill="#0e3a56"/><circle cx="692" cy="269" r="3" fill="#0e3a56"/>
+            <text x="780" y="266" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#14304a">Everyday example:</text>
+            <text x="780" y="282" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#14304a">game-playing AI</text>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 1 &mdash; the three types side by side.</strong> Supervised learning studies flashcards that already have the answer on the back (labelled data); its everyday example is email spam filtering. Unsupervised learning is handed a mixed pile with no answers and sorts it into groups it discovers itself; its everyday example is customer segmentation. Reinforcement learning takes an action, receives a reward or penalty, and adjusts &mdash; repeating until it finds the best strategy; its everyday example is game-playing AI.</figcaption>
+      </figure>
+
+      <h3>Supervised Learning &mdash; Learning with an Answer Key</h3>
+      <p><strong>Supervised learning</strong> is the most straightforward type. You give the system lots of examples that already have the correct answer labeled, and it learns to recognize the pattern so it can predict the answer for new, unseen examples.</p>
+      <p>Think of it like studying with flashcards that have the answer on the back. The system studies thousands of these "flashcards" until it internalizes the pattern.</p>
+      <p><strong>Real-world examples:</strong></p>
+      <ul>
+        <li><strong>Email spam filtering:</strong> The system is trained on thousands of emails already labeled as "spam" or "not spam." After training, it can classify new emails you receive.</li>
+        <li><strong>House price prediction:</strong> Feed the system historical data with house features (size, location, bedrooms) and their actual selling prices. It learns to estimate prices for houses it hasn't seen before.</li>
+        <li><strong>Medical image diagnosis:</strong> Train on X-rays labeled as "healthy" or "disease present," then apply the model to new patient scans.</li>
+      </ul>
+      <p>The key idea: the system learns from <strong>labeled data</strong> &mdash; data where the correct output is already known.</p>
+
+      <h3>Unsupervised Learning &mdash; Finding Hidden Patterns Without Answers</h3>
+      <p><strong>Unsupervised learning</strong> gives the system data without any labels or answers. The system's job is to find structure, groupings, or patterns on its own.</p>
+      <p>Think of it like being handed a box of mixed objects and asked to sort them into groups without being told what the categories should be. You might group by color, size, shape &mdash; the system does something similar with data.</p>
+      <p><strong>Real-world examples:</strong></p>
+      <ul>
+        <li><strong>Customer segmentation:</strong> An online store feeds the system purchase history for all its customers (no labels). The system discovers natural groupings &mdash; like "frequent buyers of outdoor gear" or "budget-conscious shoppers who buy in bulk."</li>
+        <li><strong>News article clustering:</strong> Feed the system thousands of headlines and it groups them by topic &mdash; politics, sports, technology &mdash; without being told what the topics are.</li>
+        <li><strong>Anomaly detection:</strong> The system learns what "normal" network traffic looks like, then flags unusual patterns that might indicate a security breach.</li>
+      </ul>
+      <p>The key idea: the system discovers <strong>hidden structure</strong> in unlabeled data.</p>
+
+      <h3>Reinforcement Learning &mdash; Learning by Trial and Reward</h3>
+      <p><strong>Reinforcement learning</strong> is the most interactive type. An agent (the AI system) learns by taking actions in an environment and receiving feedback in the form of rewards or penalties. Over time, it figures out which actions lead to the best outcomes.</p>
+      <p>Think of it like training a dog: you give a treat when it does something right and no reward (or a gentle correction) when it doesn't. Eventually, the dog learns which behaviors earn treats.</p>
+      <p><strong>Real-world examples:</strong></p>
+      <ul>
+        <li><strong>Game-playing AI:</strong> Systems like AlphaGo learned to play the board game Go by playing millions of games against themselves, receiving a "reward" for winning and a "penalty" for losing. They discovered strategies no human had ever taught them.</li>
+        <li><strong>Robot navigation:</strong> A robot learns to move through a room without bumping into things &mdash; it gets rewarded for reaching the goal and penalized for collisions.</li>
+        <li><strong>Recommendation systems (advanced):</strong> Some recommendation engines use reinforcement learning, getting a "reward" when you click on or enjoy a recommended item, and adjusting future suggestions based on what worked.</li>
+      </ul>
+      <p>The key idea: the system learns through <strong>trial, feedback, and optimization</strong> &mdash; figuring out the best strategy to maximize rewards over time.</p>
+
+      <div class="table-scroll">
+        <table>
+          <caption>Summary table &mdash; the three types at a glance</caption>
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">How it learns</th>
+              <th scope="col">Needs labels?</th>
+              <th scope="col">Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Supervised</th><td>Studies labeled examples (answer key)</td><td>Yes</td><td>Prediction and classification</td></tr>
+            <tr><th scope="row">Unsupervised</th><td>Finds hidden patterns on its own</td><td>No</td><td>Discovery, grouping, segmentation</td></tr>
+            <tr><th scope="row">Reinforcement</th><td>Tries actions, learns from rewards/penalties</td><td>No (uses reward signals)</td><td>Decision-making, strategy, optimization</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= TRAINING DATA LIFECYCLE ================= -->
+  <section id="lifecycle" aria-labelledby="lifecycle-h">
+    <div class="section-head">
+      <h2 id="lifecycle-h">The Training Data Lifecycle &mdash; From Raw Data to Working Model</h2>
+      <p class="sub">Seven steps every model goes through before you ever use it.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: the seven steps from raw data to a deployed model</summary>
+
+      <p>Every ML model starts with data. Here's the journey that data takes, from collection to a model you can actually use:</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 1180 300" role="img" aria-labelledby="d2-title d2-desc" width="1180" height="300">
+            <title id="d2-title">The seven-step training data lifecycle, with a feedback loop from evaluation back to earlier steps</title>
+            <desc id="d2-desc">Seven numbered steps run left to right, each an arrow into the next: 1 Data Collection, 2 Data Cleaning, 3 Data Labeling, 4 Splitting into training and test sets, 5 Model Training, 6 Evaluation, 7 Deployment. A return arrow runs from step 6, Evaluation, back to step 2, Data Cleaning, labelled "If results aren't good enough, iterate" — meaning the process loops rather than running straight through once.</desc>
+
+            <g font-family="sans-serif">
+              <!-- step boxes -->
+              <g>
+                <rect x="14" y="60" width="140" height="96" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="40" cy="86" r="14" fill="#1a5276"/>
+                <text x="40" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">1</text>
+                <text x="84" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Data</text>
+                <text x="84" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Collection</text>
+                <ellipse cx="112" cy="80" rx="18" ry="7" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M94 80 v14 a18 7 0 0 0 36 0 v-14" fill="none" stroke="#0e3a56" stroke-width="1.5"/>
+              </g>
+              <g>
+                <rect x="180" y="60" width="140" height="96" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="206" cy="86" r="14" fill="#1a5276"/>
+                <text x="206" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">2</text>
+                <text x="250" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Cleaning &amp;</text>
+                <text x="250" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Preparation</text>
+                <path d="M268 74 l16 -8 l6 12 l-16 8 z" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M272 88 l4 8 M278 85 l5 9 M284 82 l5 9" stroke="#0e3a56" stroke-width="1.5"/>
+              </g>
+              <g>
+                <rect x="346" y="60" width="140" height="96" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="372" cy="86" r="14" fill="#1a5276"/>
+                <text x="372" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">3</text>
+                <text x="416" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Data</text>
+                <text x="416" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Labeling</text>
+                <path d="M434 74 h22 l12 12 l-12 12 h-22 z" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <circle cx="446" cy="86" r="3" fill="#0e3a56"/>
+              </g>
+              <g>
+                <rect x="512" y="60" width="140" height="96" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="538" cy="86" r="14" fill="#1a5276"/>
+                <text x="538" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">4</text>
+                <text x="582" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Splitting</text>
+                <text x="582" y="140" text-anchor="middle" font-size="12" fill="#14304a">train / test</text>
+                <path d="M598 86 h14 M612 86 l10 -12 M612 86 l10 12" fill="none" stroke="#0e3a56" stroke-width="1.5"/>
+                <rect x="622" y="68" width="14" height="10" fill="#aed6f1" stroke="#0e3a56" stroke-width="1"/>
+                <rect x="622" y="94" width="14" height="10" fill="#ffffff" stroke="#0e3a56" stroke-width="1"/>
+              </g>
+              <g>
+                <rect x="678" y="60" width="140" height="96" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="704" cy="86" r="14" fill="#1a5276"/>
+                <text x="704" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">5</text>
+                <text x="748" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Model</text>
+                <text x="748" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Training</text>
+                <circle cx="770" cy="84" r="12" fill="none" stroke="#0e3a56" stroke-width="1.5"/>
+                <circle cx="770" cy="84" r="4" fill="#0e3a56"/>
+                <path d="M770 68 v-6 M770 100 v6 M754 84 h-6 M786 84 h6" stroke="#0e3a56" stroke-width="1.5"/>
+              </g>
+              <g>
+                <rect x="844" y="60" width="140" height="96" rx="8" fill="#d6eaf8" stroke="#0e3a56" stroke-width="2"/>
+                <circle cx="870" cy="86" r="14" fill="#0e3a56"/>
+                <text x="870" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">6</text>
+                <text x="914" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Evaluation</text>
+                <rect x="932" y="70" width="22" height="28" rx="3" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M936 80 l4 4 l8 -8" fill="none" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M936 90 h14" stroke="#0e3a56" stroke-width="1.5"/>
+              </g>
+              <g>
+                <rect x="1010" y="60" width="140" height="96" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="1036" cy="86" r="14" fill="#1a5276"/>
+                <text x="1036" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">7</text>
+                <text x="1080" y="122" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">Deployment</text>
+                <path d="M1100 96 q6 -22 14 -30 q8 8 14 30 z" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M1106 96 l-4 8 M1122 96 l4 8" stroke="#0e3a56" stroke-width="1.5"/>
+              </g>
+
+              <!-- forward arrows -->
+              <g stroke="#0e3a56" stroke-width="2" fill="#0e3a56">
+                <path d="M156 108 H172"/><path d="M180 108 l-10 -6 v12 z"/>
+                <path d="M322 108 H338"/><path d="M346 108 l-10 -6 v12 z"/>
+                <path d="M488 108 H504"/><path d="M512 108 l-10 -6 v12 z"/>
+                <path d="M654 108 H670"/><path d="M678 108 l-10 -6 v12 z"/>
+                <path d="M820 108 H836"/><path d="M844 108 l-10 -6 v12 z"/>
+                <path d="M986 108 H1002"/><path d="M1010 108 l-10 -6 v12 z"/>
+              </g>
+
+              <!-- feedback loop: 6 -> 2 -->
+              <path d="M914 160 v56 q0 12 -12 12 H262 q-12 0 -12 -12 v-40" fill="none" stroke="#b9770e" stroke-width="2.5" stroke-dasharray="7 5"/>
+              <path d="M250 158 l-7 14 h14 z" fill="#b9770e"/>
+              <rect x="430" y="212" width="304" height="24" rx="5" fill="#fdebd0" stroke="#b9770e" stroke-width="1"/>
+              <text x="582" y="229" text-anchor="middle" font-size="13" font-weight="700" fill="#6b4708">If results aren't good enough, iterate</text>
+              <text x="582" y="266" text-anchor="middle" font-size="12" fill="#14304a">The lifecycle is a loop, not a one-way line &mdash; steps 2 to 6 repeat until the model is good enough.</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 2 &mdash; the training data lifecycle.</strong> The seven steps run in order: Data Collection &rarr; Cleaning and Preparation &rarr; Data Labeling &rarr; Splitting into training and test sets &rarr; Model Training &rarr; Evaluation &rarr; Deployment. <strong>The dashed orange arrow is a feedback loop:</strong> when Evaluation (step 6) shows the results aren't good enough, the team goes back to Cleaning and Preparation (step 2) and works forward again &mdash; collecting more data, relabelling, trying a different algorithm, adjusting settings. In practice steps 2 through 6 repeat many times before a model is ever deployed.</figcaption>
+      </figure>
+
+      <ol class="steps">
+        <li>
+          <div class="num" aria-hidden="true">1</div>
+          <div>
+            <h4>Data Collection</h4>
+            <p>Raw data is gathered from whatever source is relevant &mdash; customer transactions, sensor readings, text from websites, images from cameras, medical records, social media posts. The quality and quantity of this data will shape everything that follows.</p>
+          </div>
+        </li>
+        <li>
+          <div class="num" aria-hidden="true">2</div>
+          <div>
+            <h4>Data Cleaning and Preparation</h4>
+            <p>Real-world data is messy. It might have missing values, duplicates, inconsistent formatting, or irrelevant information. Before training, the data must be cleaned &mdash; removing errors, filling in gaps, standardizing formats. This step often takes more time than any other part of the process.</p>
+          </div>
+        </li>
+        <li>
+          <div class="num" aria-hidden="true">3</div>
+          <div>
+            <h4>Data Labeling (for supervised learning)</h4>
+            <p>If the model uses supervised learning, someone (or something) needs to label the data with the correct answers. This might involve human annotators reviewing images and tagging objects, or experts classifying documents. Labeling is expensive and time-consuming &mdash; and if the labels are biased or inconsistent, the model will learn those problems too.</p>
+          </div>
+        </li>
+        <li>
+          <div class="num" aria-hidden="true">4</div>
+          <div>
+            <h4>Splitting the Data</h4>
+            <p>The cleaned (and labeled) data is split into at least two sets:</p>
+            <ul>
+              <li><strong>Training set</strong> (usually 70&ndash;80%): The data the model actually learns from.</li>
+              <li><strong>Testing set</strong> (the rest): Held-out data the model has never seen, used to evaluate how well it generalizes to new situations.</li>
+            </ul>
+            <p>This is critical &mdash; if you test a model on the same data it trained on, it will always look great (it just memorized the answers). The test set simulates real-world performance.</p>
+          </div>
+        </li>
+        <li>
+          <div class="num" aria-hidden="true">5</div>
+          <div>
+            <h4>Model Training</h4>
+            <p>The algorithm runs over the training data, adjusting its internal parameters to minimize errors. This can take hours, days, or even weeks depending on the model size and data volume. During training, the model gradually gets better at recognizing patterns.</p>
+          </div>
+        </li>
+        <li>
+          <div class="num" aria-hidden="true">6</div>
+          <div>
+            <h4>Evaluation</h4>
+            <p>The trained model is tested against the held-out testing set. Metrics like accuracy, precision, and recall measure how well it performs. If the results aren't good enough, developers go back &mdash; maybe collecting more data, trying a different algorithm, or adjusting settings.</p>
+          </div>
+        </li>
+        <li>
+          <div class="num" aria-hidden="true">7</div>
+          <div>
+            <h4>Deployment</h4>
+            <p>Once the model meets performance standards, it's deployed into a real application &mdash; embedded in an app, integrated into a website, running on a server. Now it starts making predictions on truly new data from real users.</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Why this matters to you:</strong> Understanding this lifecycle helps you evaluate AI claims critically. When someone says "our AI is 95% accurate," you can ask: accurate on what data? Was the test set independent? How was the training data collected and labeled? These questions separate informed consumers of AI from people who just take marketing claims at face value.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PATTERN RECOGNITION VS PREDICTION ================= -->
+  <section id="patterns" aria-labelledby="patterns-h">
+    <div class="section-head">
+      <h2 id="patterns-h">Pattern Recognition vs. Prediction &mdash; Two Jobs, One Tool</h2>
+      <p class="sub">"What is it?" and "how much will it be?" are different questions.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: the two kinds of work ML models do</summary>
+
+      <p>Machine learning models do two main kinds of work, and it helps to understand the difference:</p>
+
+      <figure>
+        <svg viewBox="0 0 800 320" role="img" aria-labelledby="d3-title d3-desc" width="800" height="320">
+          <title id="d3-title">Pattern recognition compared with prediction</title>
+          <desc id="d3-desc">Two panels side by side. Left, "Pattern Recognition — What IS it?", listing an email spam filter, an image label, and a fraud flag: the model sorts an input into a category. Right, "Prediction — What WILL be, or HOW MUCH?", listing a price estimate, a demand forecast, and a risk percentage: the model produces a number. A bar across the bottom joining both panels reads "Both use the same underlying ML techniques."</desc>
+
+          <g font-family="sans-serif">
+            <!-- left -->
+            <rect x="14" y="14" width="366" height="232" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+            <text x="197" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#0e3a56">Pattern Recognition</text>
+            <text x="197" y="68" text-anchor="middle" font-size="13" fill="#14304a">What IS it?  &rarr;  a category</text>
+
+            <rect x="40" y="88" width="314" height="42" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <rect x="54" y="99" width="26" height="20" rx="3" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <path d="M54 99 l13 10 l13 -10" fill="none" stroke="#0e3a56" stroke-width="1.5"/>
+            <text x="96" y="115" font-size="13" fill="#14304a">Is this email spam, or not?</text>
+
+            <rect x="40" y="140" width="314" height="42" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <rect x="54" y="151" width="26" height="20" rx="3" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <circle cx="61" cy="158" r="3" fill="#0e3a56"/>
+            <path d="M54 171 l10 -9 l7 6 l6 -5 l3 8 z" fill="#0e3a56"/>
+            <text x="96" y="167" font-size="13" fill="#14304a">Cat, dog, or bicycle?</text>
+
+            <rect x="40" y="192" width="314" height="42" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <path d="M56 194 h20 v26 l-10 -6 l-10 6 z" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <text x="96" y="219" font-size="13" fill="#14304a">Fraudulent or legitimate?</text>
+
+            <!-- right -->
+            <rect x="420" y="14" width="366" height="232" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+            <text x="603" y="46" text-anchor="middle" font-size="16" font-weight="700" fill="#0e3a56">Prediction</text>
+            <text x="603" y="68" text-anchor="middle" font-size="13" fill="#14304a">What WILL be / HOW MUCH?  &rarr;  a number</text>
+
+            <rect x="446" y="88" width="314" height="42" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <path d="M460 99 h18 l10 10 l-14 10 h-14 z" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <circle cx="468" cy="106" r="2.5" fill="#0e3a56"/>
+            <text x="502" y="115" font-size="13" fill="#14304a">What will this house sell for?</text>
+
+            <rect x="446" y="140" width="314" height="42" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <rect x="460" y="150" width="24" height="22" rx="3" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+            <path d="M460 157 h24 M466 150 v-4 M478 150 v-4" stroke="#0e3a56" stroke-width="1.5"/>
+            <text x="502" y="167" font-size="13" fill="#14304a">How many customers next weekend?</text>
+
+            <rect x="446" y="192" width="314" height="42" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <rect x="460" y="205" width="26" height="12" rx="2" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+            <rect x="460" y="205" width="16" height="12" fill="#aed6f1"/>
+            <text x="502" y="219" font-size="13" fill="#14304a">Chance of readmission in 30 days?</text>
+
+            <!-- shared base -->
+            <rect x="14" y="262" width="772" height="44" rx="8" fill="#d6eaf8" stroke="#0e3a56" stroke-width="2"/>
+            <text x="400" y="290" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">Both use the same underlying ML techniques</text>
+          </g>
+        </svg>
+        <figcaption><strong>Diagram 3 &mdash; two jobs, one toolkit.</strong> Pattern recognition answers "what is it?" and returns a category: spam or not, cat or dog or bicycle, fraudulent or legitimate. Prediction answers "what will be, or how much?" and returns a number: a sale price, a customer count, a risk percentage. Both rest on the same underlying machine learning techniques.</figcaption>
+      </figure>
+
+      <h3>Pattern Recognition</h3>
+      <p><strong>Pattern Recognition</strong> is about identifying what something <em>is</em>. The model looks at input data and classifies it into categories it learned during training.</p>
+      <p>Examples:</p>
+      <ul>
+        <li>Is this email spam or not? (classification)</li>
+        <li>What object is in this image &mdash; a cat, a dog, or a bicycle? (image recognition)</li>
+        <li>Is this transaction fraudulent or legitimate? (anomaly detection)</li>
+      </ul>
+
+      <h3>Prediction</h3>
+      <p><strong>Prediction</strong> is about estimating what <em>will be</em> or <em>how much</em>. Instead of picking a category, the model produces a number or forecast.</p>
+      <p>Examples:</p>
+      <ul>
+        <li>What will this house sell for? (price prediction)</li>
+        <li>How many customers will visit the store next weekend? (demand forecasting)</li>
+        <li>What's the likelihood this patient will be readmitted within 30 days? (risk scoring)</li>
+      </ul>
+
+      <p>In practice, the line between these can blur &mdash; both use the same underlying ML techniques. But the distinction helps you think about what kind of problem you're trying to solve with AI.</p>
+    </details>
+  </section>
+
+  <!-- ================= ALGORITHMS ================= -->
+  <section id="algorithms" aria-labelledby="algorithms-h">
+    <div class="section-head">
+      <h2 id="algorithms-h">Introduction to Algorithms &mdash; What's Happening Under the Hood?</h2>
+      <p class="sub">Four common ML algorithms in plain language. No math, no code.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: decision trees, linear regression, neural networks, and k-NN</summary>
+
+      <p>You don't need to code to understand algorithms conceptually. An <strong>algorithm</strong> is simply a step-by-step procedure for solving a problem &mdash; like a recipe. In machine learning, algorithms are the specific methods the system uses to learn from data.</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 940 250" role="img" aria-labelledby="d4-title d4-desc" width="940" height="250">
+            <title id="d4-title">Four machine learning algorithms shown as simple pictures</title>
+            <desc id="d4-desc">Four cards. Decision Tree: a branching flowchart of yes and no questions narrowing to an answer. Linear Regression: scattered dots with a single straight best-fit line drawn through them. Neural Network: three layers of dots, every dot connected forward to the dots in the next layer. k-Nearest Neighbors: a new unlabelled point surrounded by five nearby points, four of one kind and one of another, so the majority vote decides its label.</desc>
+
+            <g font-family="sans-serif">
+              <!-- Decision tree -->
+              <rect x="10" y="10" width="220" height="230" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+              <text x="120" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">Decision Tree</text>
+              <rect x="82" y="56" width="76" height="26" rx="4" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="120" y="74" text-anchor="middle" font-size="11" fill="#14304a">Has fur?</text>
+              <path d="M100 82 L62 112 M140 82 L178 112" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="74" y="100" font-size="10" fill="#14304a">yes</text>
+              <text x="152" y="100" font-size="10" fill="#14304a">no</text>
+              <rect x="26" y="112" width="72" height="26" rx="4" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="62" y="130" text-anchor="middle" font-size="11" fill="#14304a">Barks?</text>
+              <rect x="142" y="112" width="72" height="26" rx="4" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="178" y="130" text-anchor="middle" font-size="11" fill="#14304a">Flies?</text>
+              <path d="M46 138 L34 168 M78 138 L92 168" stroke="#0e3a56" stroke-width="1.5"/>
+              <rect x="12" y="168" width="48" height="24" rx="4" fill="#aed6f1" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="36" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="#0e3a56">dog</text>
+              <rect x="70" y="168" width="48" height="24" rx="4" fill="#aed6f1" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="94" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="#0e3a56">cat</text>
+              <text x="120" y="222" text-anchor="middle" font-size="11" fill="#14304a">yes/no questions &rarr; an answer</text>
+
+              <!-- Linear regression -->
+              <rect x="248" y="10" width="220" height="230" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+              <text x="358" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">Linear Regression</text>
+              <path d="M282 190 H442 M282 190 V60" stroke="#0e3a56" stroke-width="1.5"/>
+              <circle cx="304" cy="172" r="4" fill="#1a5276"/><circle cx="326" cy="162" r="4" fill="#1a5276"/>
+              <circle cx="344" cy="150" r="4" fill="#1a5276"/><circle cx="362" cy="128" r="4" fill="#1a5276"/>
+              <circle cx="384" cy="124" r="4" fill="#1a5276"/><circle cx="404" cy="104" r="4" fill="#1a5276"/>
+              <circle cx="424" cy="92" r="4" fill="#1a5276"/><circle cx="316" cy="150" r="4" fill="#1a5276"/>
+              <circle cx="396" cy="138" r="4" fill="#1a5276"/>
+              <path d="M296 178 L432 88" stroke="#b9770e" stroke-width="3"/>
+              <text x="358" y="222" text-anchor="middle" font-size="11" fill="#14304a">the best-fit line through the dots</text>
+
+              <!-- Neural network -->
+              <rect x="486" y="10" width="220" height="230" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+              <text x="596" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">Neural Network</text>
+              <g stroke="#7fb3d5" stroke-width="1">
+                <path d="M528 88 L596 78 M528 88 L596 122 M528 88 L596 166"/>
+                <path d="M528 128 L596 78 M528 128 L596 122 M528 128 L596 166"/>
+                <path d="M528 168 L596 78 M528 168 L596 122 M528 168 L596 166"/>
+                <path d="M596 78 L664 106 M596 78 L664 146"/>
+                <path d="M596 122 L664 106 M596 122 L664 146"/>
+                <path d="M596 166 L664 106 M596 166 L664 146"/>
+              </g>
+              <g fill="#1a5276">
+                <circle cx="528" cy="88" r="8"/><circle cx="528" cy="128" r="8"/><circle cx="528" cy="168" r="8"/>
+                <circle cx="596" cy="78" r="8"/><circle cx="596" cy="122" r="8"/><circle cx="596" cy="166" r="8"/>
+                <circle cx="664" cy="106" r="8"/><circle cx="664" cy="146" r="8"/>
+              </g>
+              <text x="596" y="222" text-anchor="middle" font-size="11" fill="#14304a">layers of connected nodes</text>
+
+              <!-- kNN -->
+              <rect x="724" y="10" width="206" height="230" rx="8" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+              <text x="827" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">k-Nearest Neighbors</text>
+              <circle cx="827" cy="130" r="52" fill="none" stroke="#b9770e" stroke-width="2" stroke-dasharray="6 4"/>
+              <circle cx="795" cy="106" r="7" fill="#1a5276"/><circle cx="858" cy="112" r="7" fill="#1a5276"/>
+              <circle cx="798" cy="158" r="7" fill="#1a5276"/><circle cx="856" cy="160" r="7" fill="#1a5276"/>
+              <rect x="820" y="82" width="14" height="14" fill="#7fb3d5"/>
+              <path d="M827 118 l12 12 l-12 12 l-12 -12 z" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+              <text x="827" y="200" text-anchor="middle" font-size="11" fill="#14304a">4 of the 5 neighbors agree</text>
+              <text x="827" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#0e3a56">&rarr; majority vote wins</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 4 &mdash; four algorithms at a glance.</strong> A <strong>decision tree</strong> asks a chain of yes/no questions until it reaches an answer. <strong>Linear regression</strong> draws the single straight line that comes closest to all the data points. A <strong>neural network</strong> is layers of connected nodes, each connection carrying a weight adjusted during training. <strong>k-nearest neighbors</strong> classifies a new point by looking at the handful of points closest to it &mdash; here four of the five nearest neighbors agree, so the majority vote decides.</figcaption>
+      </figure>
+
+      <p>Here are a few common ML algorithms, explained in plain language:</p>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Decision Trees</h3>
+          <p>Imagine you're trying to identify an animal by asking yes/no questions: "Does it have fur?" &rarr; "Can it fly?" &rarr; "Does it bark?" Each answer narrows down the possibilities until you reach a conclusion. A decision tree algorithm does exactly this &mdash; it builds a flowchart of decisions from the training data.</p>
+          <p class="keyidea"><strong>In one line:</strong> simple, transparent, and easy to explain.</p>
+        </div>
+        <div class="card">
+          <h3>Linear Regression</h3>
+          <p>This algorithm finds the best-fitting straight line through a set of data points. If you plotted house size vs. price on a graph, linear regression would draw the line that comes closest to all the dots.</p>
+          <p class="keyidea"><strong>In one line:</strong> the simplest prediction tool &mdash; great for understanding relationships between numbers.</p>
+        </div>
+        <div class="card">
+          <h3>Neural Networks</h3>
+          <p>Inspired (very loosely) by how the human brain works, neural networks are layers of connected "nodes" that process information together. Each connection has a weight that gets adjusted during training. Simple neural networks can solve basic problems; deep neural networks (many layers) power today's most advanced AI systems, including the language models you use every day. We won't go into architectural detail.</p>
+          <p class="keyidea"><strong>In one line:</strong> more data + more layers = more powerful but less transparent models.</p>
+        </div>
+        <div class="card">
+          <h3>k-Nearest Neighbors (k-NN)</h3>
+          <p>One of the simplest algorithms: to classify a new item, look at the "k" closest items in your training data and go with the majority vote. If you're trying to classify a fruit and its 5 nearest neighbors are 4 apples and 1 orange, it's probably an apple.</p>
+          <p class="keyidea"><strong>In one line:</strong> simple concept, but it can be slow with large datasets.</p>
+        </div>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Key takeaway:</strong> Algorithms are tools &mdash; each one works well for certain types of problems and poorly for others. In practice, ML practitioners try several algorithms on their data and pick the one that performs best. You don't need to know how to implement these; you just need to understand what they do so you can have informed conversations about AI systems.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= ACTIVITY M1L3-A1 ================= -->
+  <section id="a1" aria-labelledby="a1-h">
+    <div class="section-head">
+      <h2 id="a1-h">Your Practice Activity: Compare How AI Tools Explain ML</h2>
+      <p class="sub">Activity M1L3-A1 &mdash; about 20 minutes, ungraded.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: run the same prompt through three tools and compare</summary>
+
+      <div class="activity">
+        <div class="activity-meta">
+          <h3>Compare How AI Tools Explain ML</h3>
+          <span class="badge">About 20 minutes</span>
+          <span class="badge badge--quiet">Activity M1L3-A1 &middot; ungraded</span>
+        </div>
+
+        <p>Now let's put your tool-comparison skills to work. You'll ask three different AI tools to explain how machine learning models are trained, then compare the quality and clarity of their responses.</p>
+
+        <p><strong>Step-by-step instructions:</strong></p>
+
+        <ol>
+          <li>Open <strong>Gemini</strong> plus <strong>two other AI tools of your choice</strong> in separate browser tabs. Gemini is your baseline; the other two are up to you. The course has step-by-step guides for four tools if you want one: <a href="../../../tool-guides/llms/gemini.html" target="_blank" rel="noopener">Gemini</a>, <a href="../../../tool-guides/llms/copilot.html" target="_blank" rel="noopener">Microsoft Copilot</a> &mdash; both free with your <code>@student.mendocino.edu</code> login &mdash; and <a href="../../../tool-guides/llms/chatgpt.html" target="_blank" rel="noopener">ChatGPT</a> and <a href="../../../tool-guides/llms/claude.html" target="_blank" rel="noopener">Claude</a> (18+), which need a personal account you create yourself. You can also use a tool that isn't on that list; nothing here depends on which two you pick.</li>
+
+          <li>In each tool, type this exact prompt:
+            <div class="prompt">
+              <pre id="a1-prompt">Explain how a machine learning model is trained, step by step, as if I'm a college student who has never studied computer science. Cover what happens to the data from collection to a working model.</pre>
+              <button type="button" class="btn btn--secondary" id="a1-copy" data-copies="a1-prompt">Copy this prompt</button>
+              <span id="a1-copy-status" role="status" aria-live="polite"></span>
+            </div>
+          </li>
+
+          <li>Read all three responses and compare them across these dimensions:
+            <ul>
+              <li><strong>Clarity:</strong> Which explanation was easiest to understand?</li>
+              <li><strong>Completeness:</strong> Did any tool skip important steps (like data cleaning or testing)?</li>
+              <li><strong>Accuracy:</strong> Do the responses match what you learned in this lesson? Did any tool include something misleading?</li>
+              <li><strong>Tone and length:</strong> Were some responses too technical, too brief, or just right?</li>
+            </ul>
+          </li>
+
+          <li>Jot down 2&ndash;3 brief notes about what you noticed. These are for your own reflection &mdash; no submission required for this activity.</li>
+        </ol>
+
+        <p>This practice helps you develop a critical skill: using AI tools to learn new material while also verifying that what they tell you is accurate. You'll use this same approach throughout the course.</p>
+
+        <h3>Record your comparison (optional)</h3>
+        <p>Use the boxes below if you'd like a printable copy of your notes. Nothing is saved when you close or reload this page, so export promptly if you want to keep it.</p>
+
+        <form id="notes-form">
+          <div class="tool-note">
+            <h4>Tool 1 &mdash; Gemini (your baseline)</h4>
+            <label class="field" for="t1-notes">What stood out about Gemini's explanation?</label>
+            <textarea id="t1-notes" placeholder="Clarity, completeness, accuracy, tone and length&hellip;"></textarea>
+          </div>
+
+          <div class="tool-note">
+            <h4>Tool 2 &mdash; your choice</h4>
+            <label class="field" for="t2-name">Which tool did you use?</label>
+            <input type="text" id="t2-name" class="namefield" placeholder="e.g. Microsoft Copilot">
+            <label class="field" for="t2-notes">What stood out about its explanation?</label>
+            <textarea id="t2-notes" placeholder="Clarity, completeness, accuracy, tone and length&hellip;"></textarea>
+          </div>
+
+          <div class="tool-note">
+            <h4>Tool 3 &mdash; your choice</h4>
+            <label class="field" for="t3-name">Which tool did you use?</label>
+            <input type="text" id="t3-name" class="namefield" placeholder="e.g. ChatGPT">
+            <label class="field" for="t3-notes">What stood out about its explanation?</label>
+            <textarea id="t3-notes" placeholder="Clarity, completeness, accuracy, tone and length&hellip;"></textarea>
+          </div>
+
+          <button type="submit" class="btn">Save my notes</button>
+          <span id="notes-status" role="status" aria-live="polite"></span>
+        </form>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p>Nothing here is scored, recorded, or submitted. Disagreement between the three tools is not a bug in the activity &mdash; noticing <em>where</em> they disagree, and checking that against this lesson, is the whole point.</p>
+        </div>
+
+        <div class="export-panel" id="export-panel" hidden>
+          <div class="export-head">
+            <p><strong>CSC 141: AI Literacy</strong> &mdash; M1L3, ML Fundamentals Practice</p>
+          </div>
+          <div class="export-meta">
+            <span><strong>Date:</strong> <span id="out-date"></span></span>
+          </div>
+          <h3>How three tools explained ML training</h3>
+          <div id="out-notes"></div>
+          <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+          <p class="no-print sub">"Save as PDF" prints this summary only &mdash; not the whole lesson. This export is optional and for your own records; nothing is submitted to Canvas.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= KNOWLEDGE CHECKS ================= -->
+  <section id="checks" aria-labelledby="checks-h">
+    <div class="section-head">
+      <h2 id="checks-h">Check Yourself</h2>
+      <p class="sub">Three quick questions. Nothing is scored or recorded.</p>
+    </div>
+
+    <div class="kc" data-kc data-answer="c">
+      <fieldset>
+        <legend>1. Which type of machine learning uses labeled data with known answers to train a model?</legend>
+        <label class="opt"><input type="radio" name="kc1" value="a"> Unsupervised learning</label>
+        <label class="opt"><input type="radio" name="kc1" value="b"> Reinforcement learning</label>
+        <label class="opt"><input type="radio" name="kc1" value="c"> Supervised learning</label>
+        <label class="opt"><input type="radio" name="kc1" value="d"> All of the above</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Exactly right &mdash; supervised learning is like studying with an answer key. The system learns from examples where the correct output is already known.</p></template>
+      <template data-no><p>The correct answer is C, Supervised learning. It's called "supervised" because the training data comes with labels &mdash; like a teacher providing the correct answers while the student learns.</p></template>
+    </div>
+
+    <div class="kc" data-kc data-answer="b">
+      <fieldset>
+        <legend>2. In the training data lifecycle, why is the data split into a training set and a testing set?</legend>
+        <label class="opt"><input type="radio" name="kc2" value="a"> To make the model train faster.</label>
+        <label class="opt"><input type="radio" name="kc2" value="b"> To evaluate how well the model performs on data it has never seen before.</label>
+        <label class="opt"><input type="radio" name="kc2" value="c"> To label more data.</label>
+        <label class="opt"><input type="radio" name="kc2" value="d"> To reduce the amount of data needed.</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>That's right &mdash; the testing set simulates real-world performance by evaluating the model on truly new data. Without this split, you couldn't tell if the model actually learned patterns or just memorized the training answers.</p></template>
+      <template data-no><p>The answer is B. Splitting data lets us test whether the model generalizes to new situations &mdash; which is the whole point of machine learning. If you tested on training data, the model would always look perfect because it already saw those examples.</p></template>
+    </div>
+
+    <div class="kc" data-kc data-answer="true">
+      <fieldset>
+        <legend>3. True or false: In reinforcement learning, the system learns by receiving rewards for good actions and penalties for bad ones.</legend>
+        <label class="opt"><input type="radio" name="kc3" value="true"> True</label>
+        <label class="opt"><input type="radio" name="kc3" value="false"> False</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Correct! Reinforcement learning is all about trial and feedback &mdash; the agent figures out the best strategy to maximize its total reward over time.</p></template>
+      <template data-no><p>The answer is true. Think of it like training with rewards: the system tries different actions, gets feedback (rewards or penalties), and gradually learns which actions lead to the best outcomes.</p></template>
+    </div>
+  </section>
+
+  <!-- ================= DISCUSSION PRIMER (Session 3) ================= -->
+  <section id="primer" aria-labelledby="primer-h">
+    <div class="section-head">
+      <h2 id="primer-h">Coming Up at Our Next Zoom Session</h2>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>Coming up at our next Zoom session:</strong> we'll take up the question <em>"Should AI tools be required to disclose what data they were trained on?"</em> You just walked the training-data lifecycle end to end &mdash; collection, cleaning, labeling, splitting, training. Pick the one step where you think a problem would be hardest to spot from the outside, looking only at the finished tool's answers. That step is the argument for disclosure, and it's what we'll build the discussion on. The next lesson (M1L4) goes deeper into where bias enters that pipeline, so it's worth doing before Monday.</p>
+    </div>
+    <p class="totop"><a href="#top">&uarr; Back to top</a> &middot; <a href="../../../index.html" target="_blank" rel="noopener">Course homepage</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 1, Lesson 3</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l2.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  /* ===== M1L3-A1 comparison notes. Nothing persisted, nothing scored. ===== */
+  var form = document.getElementById("notes-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var tools = [
+        { name: "Gemini (baseline)", notes: document.getElementById("t1-notes").value.trim() },
+        { name: document.getElementById("t2-name").value.trim() || "Tool 2 (not named)",
+          notes: document.getElementById("t2-notes").value.trim() },
+        { name: document.getElementById("t3-name").value.trim() || "Tool 3 (not named)",
+          notes: document.getElementById("t3-notes").value.trim() }
+      ];
+
+      var status = document.getElementById("notes-status");
+      var written = tools.filter(function (t) { return t.notes; });
+      if (written.length === 0) {
+        status.textContent = " Add notes for at least one tool first.";
+        return;
+      }
+
+      var out = document.getElementById("out-notes");
+      out.textContent = "";
+      tools.forEach(function (t) {
+        var h = document.createElement("h4");
+        h.textContent = t.name;
+        var p = document.createElement("p");
+        p.textContent = t.notes || "(no notes recorded)";
+        out.appendChild(h);
+        out.appendChild(p);
+      });
+
+      document.getElementById("out-date").textContent =
+        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+      document.getElementById("export-panel").hidden = false;
+      status.textContent = " Saved below. A printable summary is at the bottom of this activity.";
+    });
+  }
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>
