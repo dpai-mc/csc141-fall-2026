@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>M1L4 — Data Ethics in AI | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from the approved m1l3.html, which carries the
+   corrected --c-ui token and the display-based print scoping.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+
+/* a wide diagram scrolls inside its own box rather than shrinking to illegibility */
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 46rem; }
+
+/* chart legend — identity is never carried by colour alone */
+.legend { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); list-style: none; margin: var(--s-3) 0 0; padding: 0; font-size: .9rem; }
+.legend li { margin: 0; max-width: none; display: flex; align-items: center; gap: var(--s-2); }
+.legend .swatch { width: .85rem; height: .85rem; border: 1px solid var(--c-border); flex: none; }
+
+/* M1L4-A1 concern + mitigation pairs */
+.concern { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.concern h4 { margin-top: 0; }
+.export-concern { margin-bottom: var(--s-3); }
+.export-concern h4 { margin-top: var(--s-3); }
+.export-concern .mit { margin-top: var(--s-1); }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M1L3-A1 comparison notes only)
+   Accordions are force-opened before print by script so nothing
+   inside a collapsed <details> is dropped from the export.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+
+  /* Hide by DISPLAY, walking the ancestor chain down to the export panel.
+     The older shared block used `visibility: hidden`, which blanks the ink but
+     leaves every layout box in flow — a one-page artifact then exported with a
+     dozen blank pages after it. Removing the boxes is what actually scopes the
+     export. Chain: body > main > #a1 > details > .activity > #export-panel. */
+  body > *:not(main)                      { display: none !important; }
+  main > *:not(#a1)                       { display: none !important; }
+  #a1 > *:not(details)                    { display: none !important; }
+  #a1 details                             { border: 0; margin: 0; }
+  #a1 details > *:not(.activity)          { display: none !important; }
+  #a1 .activity > *:not(#export-panel)    { display: none !important; }
+  #a1 .activity                           { border: 0; padding: 0; margin: 0; }
+
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Module 1 &middot; Lesson 4</p>
+    <h1>Data Ethics in AI</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#collection">How data is gathered</a></li>
+      <li><a href="#bias">Where bias comes from</a></li>
+      <li><a href="#privacy">Privacy &amp; consent</a></li>
+      <li><a href="#a1">Practice: find the gaps</a></li>
+      <li><a href="#checks">Check yourself</a></li>
+      <li><a href="#primer">Next discussion</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section aria-labelledby="intro-h">
+    <h2 id="intro-h" class="visually-hidden">Where does AI get its data?</h2>
+    <p>Every AI system runs on data. The models you interact with &mdash; from search engines to chatbots &mdash; were trained on massive collections of text, images, audio, and other information gathered from the real world. But that data doesn't appear magically. Someone, somewhere, collected it. And the way it was collected shapes what the AI can do, what it gets wrong, and whose interests it serves.</p>
+
+    <p>In this lesson, you'll learn how big data is gathered, where bias sneaks into datasets, and what privacy and consent frameworks exist to protect people. This matters because <strong>garbage in, garbage out</strong> &mdash; if the training data is biased or incomplete, the AI system will be biased or incomplete too. You can't evaluate AI output critically without understanding its data origins.</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This lesson picks up where <a href="m1l3.html" target="_blank" rel="noopener">M1L3</a> left off. There you walked the training-data lifecycle; here you look at where that data actually comes from and what can go wrong in it. Plan for about 20 minutes. The four sections below are collapsible &mdash; use the links at the top of the page to jump around.</p>
+    </div>
+  </section>
+
+  <!-- ================= COLLECTION METHODS ================= -->
+  <section id="collection" aria-labelledby="collection-h">
+    <div class="section-head">
+      <h2 id="collection-h">Big Data Collection Methods &mdash; How Is Training Data Gathered?</h2>
+      <p class="sub">Five pathways feed the pool that models learn from.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: the five ways training data is collected</summary>
+
+      <p>AI models need enormous amounts of data to learn. Here are the main ways that data is collected:</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 980 372" role="img" aria-labelledby="d1-title d1-desc" width="980" height="372">
+            <title id="d1-title">Five collection pathways feeding a single pool of AI training data</title>
+            <desc id="d1-desc">Five labelled sources on the left each feed an arrow into one central pool labelled "AI Training Data", which holds a mix of text, images and audio. The five sources are: Web Crawling and Scraping, gathering pages from websites, forums and news sites; Public Datasets and Open Data, from governments, universities and research bodies; User-Generated Content, from posts, reviews and uploaded photos; Commercial Data Purchases, bought from data brokers; and Sensors and Internet-of-Things devices, including cameras, microphones and wearables.</desc>
+
+            <g font-family="sans-serif">
+              <!-- source boxes -->
+              <g>
+                <rect x="14" y="14" width="300" height="56" rx="7" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <rect x="30" y="30" width="24" height="24" rx="3" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M30 38 h24 M42 30 v24 M34 32 q8 10 0 20 M50 32 q-8 10 0 20" fill="none" stroke="#0e3a56" stroke-width="1.2"/>
+                <text x="70" y="39" font-size="13" font-weight="700" fill="#0e3a56">Web Crawling &amp; Scraping</text>
+                <text x="70" y="57" font-size="11.5" fill="#14304a">websites, forums, news sites</text>
+              </g>
+              <g>
+                <rect x="14" y="82" width="300" height="56" rx="7" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <path d="M30 122 h24 M32 122 v-14 M40 122 v-14 M48 122 v-14 M28 108 l14 -10 l14 10 z" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <text x="70" y="107" font-size="13" font-weight="700" fill="#0e3a56">Public Datasets &amp; Open Data</text>
+                <text x="70" y="125" font-size="11.5" fill="#14304a">governments, universities, research</text>
+              </g>
+              <g>
+                <rect x="14" y="150" width="300" height="56" rx="7" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <rect x="28" y="164" width="20" height="16" rx="3" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <path d="M32 180 v6 l7 -6" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <rect x="38" y="176" width="18" height="14" rx="3" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+                <text x="70" y="175" font-size="13" font-weight="700" fill="#0e3a56">User-Generated Content</text>
+                <text x="70" y="193" font-size="11.5" fill="#14304a">posts, reviews, uploaded photos</text>
+              </g>
+              <g>
+                <rect x="14" y="218" width="300" height="56" rx="7" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <circle cx="40" cy="246" r="13" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <text x="40" y="251" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">$</text>
+                <text x="70" y="243" font-size="13" font-weight="700" fill="#0e3a56">Commercial Data Purchases</text>
+                <text x="70" y="261" font-size="11.5" fill="#14304a">bought from data brokers</text>
+              </g>
+              <g>
+                <rect x="14" y="286" width="300" height="56" rx="7" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+                <rect x="28" y="304" width="20" height="16" rx="3" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+                <circle cx="38" cy="312" r="4" fill="#0e3a56"/>
+                <path d="M48 308 l8 -5 v18 l-8 -5 z" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+                <text x="70" y="311" font-size="13" font-weight="700" fill="#0e3a56">Sensors &amp; IoT Devices</text>
+                <text x="70" y="329" font-size="11.5" fill="#14304a">cameras, microphones, wearables</text>
+              </g>
+
+              <!-- arrows into the pool -->
+              <g stroke="#0e3a56" stroke-width="2" fill="none">
+                <path d="M314 42  C 420 42, 470 140, 576 156"/>
+                <path d="M314 110 C 420 110, 480 152, 576 170"/>
+                <path d="M314 178 H 576"/>
+                <path d="M314 246 C 420 246, 480 204, 576 186"/>
+                <path d="M314 314 C 420 314, 470 216, 576 200"/>
+              </g>
+              <g fill="#0e3a56">
+                <path d="M584 156 l-11 -5 v10 z"/><path d="M584 170 l-11 -5 v10 z"/>
+                <path d="M584 178 l-11 -5 v10 z"/><path d="M584 186 l-11 -5 v10 z"/>
+                <path d="M584 200 l-11 -5 v10 z"/>
+              </g>
+
+              <!-- central pool -->
+              <ellipse cx="772" cy="178" rx="176" ry="136" fill="#d6eaf8" stroke="#0e3a56" stroke-width="2.5"/>
+              <text x="772" y="76" text-anchor="middle" font-size="18" font-weight="700" fill="#0e3a56">AI Training Data</text>
+              <rect x="666" y="112" width="106" height="34" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+              <path d="M682 124 h74 M682 132 h74 M682 140 h48" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="812" y="134" font-size="12" font-weight="700" fill="#14304a">text</text>
+              <rect x="666" y="160" width="106" height="34" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+              <circle cx="686" cy="172" r="4" fill="#0e3a56"/>
+              <path d="M668 192 l20 -18 l14 12 l12 -9 l8 15 z" fill="#0e3a56"/>
+              <text x="812" y="182" font-size="12" font-weight="700" fill="#14304a">images</text>
+              <rect x="666" y="208" width="106" height="34" rx="5" fill="#ffffff" stroke="#0e3a56" stroke-width="1.5"/>
+              <path d="M676 225 v-8 M686 225 v-14 M696 225 v-18 M706 225 v-10 M716 225 v-16 M726 225 v-6 M736 225 v-12 M746 225 v-8 M756 225 v-14" stroke="#0e3a56" stroke-width="2"/>
+              <text x="812" y="230" font-size="12" font-weight="700" fill="#14304a">audio</text>
+              <text x="772" y="262" text-anchor="middle" font-size="12" fill="#14304a">what goes in here decides what the model can do</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 1 &mdash; five pathways, one pool.</strong> Web crawling and scraping (websites, forums, news sites), public datasets and open data (governments, universities, research), user-generated content (posts, reviews, uploaded photos), commercial data purchases (bought from data brokers), and sensors and IoT devices (cameras, microphones, wearables) all feed a single pool of AI training data made up of text, images and audio. What goes into that pool decides what the model can do.</figcaption>
+      </figure>
+
+      <h3>Web Crawling and Scraping</h3>
+      <p>Automated programs (called "crawlers" or "scrapers") browse the internet and collect text, images, and metadata from websites, forums, social media platforms, and news sites. This is how large language models like Gemini and ChatGPT gather much of their training text &mdash; by reading billions of web pages. Companies don't always ask permission before scraping content, which raises legal and ethical questions about ownership and consent.</p>
+
+      <h3>Public Datasets and Open Data</h3>
+      <p>Governments, universities, and organizations publish datasets for research and public use. Examples include census data, medical records (anonymized), scientific publications, and government reports. These are valuable because they're curated and documented &mdash; but they can still reflect the biases of whoever collected and published them.</p>
+
+      <h3>User-Generated Content</h3>
+      <p>Every time you post on social media, write a review, upload a photo, or interact with an app, you're generating data that could be used to train AI systems. Some platforms include data collection in their terms of service; others are less transparent. The scale is staggering: billions of posts, comments, and images every day.</p>
+
+      <h3>Commercial Data Purchases</h3>
+      <p>Companies buy datasets from data brokers &mdash; businesses that collect, aggregate, and sell personal information. These datasets can include everything from purchasing habits to location history. The people whose data is being sold often don't know it's happening.</p>
+
+      <h3>Sensors and IoT Devices</h3>
+      <p>Cameras, microphones, wearables, and smart devices continuously generate data. Traffic cameras feed computer vision models. Smart speakers collect voice data. Fitness trackers produce health data. This data is collected passively &mdash; you don't actively "give" it; it's captured as you go about your day.</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Key point:</strong> The more diverse and representative the training data, the fairer and more accurate the AI system tends to be. But collecting truly representative data at scale is extremely difficult &mdash; and that's where bias enters the picture.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= BIAS SOURCES ================= -->
+  <section id="bias" aria-labelledby="bias-h">
+    <div class="section-head">
+      <h2 id="bias-h">Bias Sources in Datasets &mdash; Where Does Bias Come From?</h2>
+      <p class="sub">Two ways it gets in: who ends up in the data, and who decides what the labels mean.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: sampling bias and labeling bias</summary>
+
+      <p>Bias in AI doesn't come from the algorithm being "prejudiced." It comes from the data. Here are the two main sources:</p>
+
+      <h3>Sampling Bias &mdash; Whose Voice Is Missing?</h3>
+
+      <p><strong>Sampling bias</strong> happens when the data used to train a model doesn't represent the full population the model will serve. If you train a facial recognition system mostly on photos of light-skinned people, it will perform poorly on dark-skinned faces. The algorithm isn't racist &mdash; but its output is discriminatory because its training data was unrepresentative.</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 900 330" role="img" aria-labelledby="d2-title d2-desc" width="900" height="330">
+            <title id="d2-title">A representative population compared with an unrepresentative training dataset</title>
+            <desc id="d2-desc">Two pie charts side by side, using illustrative figures. The first, "The population the tool will serve", is split fairly evenly between four speaker groups: A 30 percent, B 28 percent, C 24 percent, D 18 percent. The second, "The data it was trained on", is dominated by one group: A 72 percent, B 18 percent, C 7 percent, D 3 percent. An arrow leads from the second chart to a model marked with a warning symbol, labelled "Unrepresentative data leads to biased output". Exact figures for both charts are given in the table below the diagram.</desc>
+
+            <g font-family="sans-serif">
+              <text x="150" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">The population the tool will serve</text>
+              <text x="150" y="50" text-anchor="middle" font-size="11.5" fill="#14304a">roughly even across four groups</text>
+              <g stroke="#ffffff" stroke-width="2">
+                <path d="M150 150 L151.3 78.0 A72 72 0 0 1 218.9 171.1 Z" fill="#0e3a56"/>
+                <path d="M150 150 L218.1 173.4 A72 72 0 0 1 116.4 213.7 Z" fill="#2e7ab0"/>
+                <path d="M150 150 L114.2 212.5 A72 72 0 0 1 84.3 120.5 Z" fill="#7fb3d5"/>
+                <path d="M150 150 L85.4 118.2 A72 72 0 0 1 148.7 78.0 Z" fill="#d6eaf8"/>
+              </g>
+              <text x="185" y="129" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">30%</text>
+
+              <text x="470" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#0e3a56">The data it was trained on</text>
+              <text x="470" y="50" text-anchor="middle" font-size="11.5" fill="#14304a">one group crowds out the rest</text>
+              <g stroke="#ffffff" stroke-width="2">
+                <path d="M470 150 L471.3 78.0 A72 72 0 1 1 399.5 164.7 Z" fill="#0e3a56"/>
+                <path d="M470 150 L399.1 162.3 A72 72 0 0 1 426.7 92.5 Z" fill="#2e7ab0"/>
+                <path d="M470 150 L428.7 91.0 A72 72 0 0 1 455.3 79.5 Z" fill="#7fb3d5"/>
+                <path d="M470 150 L457.7 79.1 A72 72 0 0 1 468.7 78.0 Z" fill="#d6eaf8"/>
+              </g>
+              <text x="504" y="184" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">72%</text>
+
+              <!-- arrow to model -->
+              <path d="M556 150 H 632" stroke="#b9770e" stroke-width="2.5"/>
+              <path d="M640 150 l-11 -6 v12 z" fill="#b9770e"/>
+              <rect x="648" y="106" width="236" height="88" rx="8" fill="#fdebd0" stroke="#b9770e" stroke-width="2"/>
+              <path d="M678 136 l14 -24 l14 24 z" fill="#ffffff" stroke="#b9770e" stroke-width="2"/>
+              <path d="M692 122 v6" stroke="#b9770e" stroke-width="2"/>
+              <circle cx="692" cy="132" r="1.6" fill="#b9770e"/>
+              <text x="794" y="132" text-anchor="middle" font-size="13" font-weight="700" fill="#6b4708">Unrepresentative data</text>
+              <text x="794" y="152" text-anchor="middle" font-size="13" font-weight="700" fill="#6b4708">&rarr; biased output</text>
+              <text x="766" y="180" text-anchor="middle" font-size="11.5" fill="#6b4708">works well for A, poorly for C and D</text>
+
+              <text x="450" y="264" text-anchor="middle" font-size="12" fill="#14304a">Illustrative figures &mdash; a made-up example of the voice-assistant case described above, not measured data.</text>
+              <text x="450" y="286" text-anchor="middle" font-size="12" fill="#14304a">Exact percentages for both charts are in the table below.</text>
+            </g>
+          </svg>
+        </div>
+        <ul class="legend">
+          <li><span class="swatch" style="background:#0e3a56"></span> Speaker group A</li>
+          <li><span class="swatch" style="background:#2e7ab0"></span> Speaker group B</li>
+          <li><span class="swatch" style="background:#7fb3d5"></span> Speaker group C</li>
+          <li><span class="swatch" style="background:#d6eaf8"></span> Speaker group D</li>
+        </ul>
+        <figcaption><strong>Diagram 2 &mdash; sampling bias, illustrated.</strong> These are made-up numbers standing in for the voice-assistant example above, not measured data. In the population the tool will serve, four speaker groups are represented fairly evenly. In the data it was actually trained on, one group takes nearly three quarters of the total and two groups almost vanish. The model that comes out of that data works well for group A and poorly for groups C and D &mdash; not because anyone intended it to, but because that is what it saw.</figcaption>
+      </figure>
+
+      <div class="table-scroll">
+        <table>
+          <caption>The same two charts as exact figures (illustrative example)</caption>
+          <thead>
+            <tr>
+              <th scope="col">Speaker group</th>
+              <th scope="col">Share of the population</th>
+              <th scope="col">Share of the training data</th>
+              <th scope="col">Difference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">A</th><td>30%</td><td>72%</td><td>over-represented by 42 points</td></tr>
+            <tr><th scope="row">B</th><td>28%</td><td>18%</td><td>under-represented by 10 points</td></tr>
+            <tr><th scope="row">C</th><td>24%</td><td>7%</td><td>under-represented by 17 points</td></tr>
+            <tr><th scope="row">D</th><td>18%</td><td>3%</td><td>under-represented by 15 points</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><strong>Real-world examples:</strong></p>
+      <ul>
+        <li><strong>Voice assistants</strong> that struggle with certain accents or dialects because the voice data used to train them came mostly from speakers with standard accents.</li>
+        <li><strong>Medical diagnosis AI</strong> trained primarily on data from one demographic group, leading to less accurate predictions for underrepresented groups.</li>
+        <li><strong>Hiring algorithms</strong> trained on historical hiring data from a company that mostly hired men &mdash; the system learns to favor male candidates because that's what "success" looked like in the training data.</li>
+      </ul>
+
+      <p><strong>Why it happens:</strong> It's easier and cheaper to collect data from certain populations. English-language web content vastly outnumbers content in other languages. Urban areas have more sensors and cameras than rural areas. Tech companies' user bases skew younger, wealthier, and more tech-savvy than the general population.</p>
+
+      <h3>Labeling Bias &mdash; Who Decides What's "Correct"?</h3>
+
+      <p><strong>Labeling bias</strong> happens when the people (or systems) who label training data introduce their own assumptions, blind spots, or cultural biases into the labels. Remember from <a href="m1l3.html" target="_blank" rel="noopener">M1L3</a>: in supervised learning, someone has to tell the system what the "correct" answer is for each training example. If those answers are biased, the model learns bias.</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 900 252" role="img" aria-labelledby="d3-title d3-desc" width="900" height="252">
+            <title id="d3-title">How a labeler's assumptions enter the training set</title>
+            <desc id="d3-desc">A three-step flow. Step one, a raw data item: an unlabelled photo. Step two, a human labeler applies a label, with a thought bubble above them showing the assumptions, culture and guidelines they bring; a callout reads "The labeler's assumptions become the model's truth." Step three, the now-labelled item joins the training set alongside others.</desc>
+
+            <g font-family="sans-serif">
+              <!-- step 1 -->
+              <text x="120" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">1. Raw data item</text>
+              <rect x="52" y="52" width="136" height="102" rx="6" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+              <circle cx="86" cy="84" r="9" fill="#7fb3d5"/>
+              <path d="M58 148 l38 -44 l26 24 l22 -18 l40 38 z" fill="#aed6f1"/>
+              <text x="120" y="176" text-anchor="middle" font-size="12" fill="#14304a">no label yet</text>
+
+              <path d="M196 102 H 246" stroke="#0e3a56" stroke-width="2"/>
+              <path d="M254 102 l-11 -6 v12 z" fill="#0e3a56"/>
+
+              <!-- step 2 -->
+              <text x="450" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">2. A person applies a label</text>
+              <ellipse cx="450" cy="76" rx="128" ry="30" fill="#eaf2f8" stroke="#1a5276" stroke-width="1.5"/>
+              <circle cx="392" cy="112" r="6" fill="#eaf2f8" stroke="#1a5276" stroke-width="1.5"/>
+              <circle cx="382" cy="126" r="4" fill="#eaf2f8" stroke="#1a5276" stroke-width="1.5"/>
+              <text x="450" y="72" text-anchor="middle" font-size="11.5" fill="#14304a">their assumptions, culture,</text>
+              <text x="450" y="88" text-anchor="middle" font-size="11.5" fill="#14304a">training and the deadline they're under</text>
+              <circle cx="374" cy="152" r="16" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+              <path d="M354 186 q20 -22 40 0 z" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+              <rect x="412" y="132" width="120" height="40" rx="5" fill="#d6eaf8" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="472" y="157" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">label: "nurse"</text>
+              <rect x="298" y="204" width="304" height="30" rx="5" fill="#fdebd0" stroke="#b9770e" stroke-width="1.5"/>
+              <text x="450" y="224" text-anchor="middle" font-size="12" font-weight="700" fill="#6b4708">Their assumptions become the model&rsquo;s &ldquo;truth&rdquo;</text>
+
+              <path d="M556 102 H 606" stroke="#0e3a56" stroke-width="2"/>
+              <path d="M614 102 l-11 -6 v12 z" fill="#0e3a56"/>
+
+              <!-- step 3 -->
+              <text x="762" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#0e3a56">3. It joins the training set</text>
+              <rect x="654" y="52" width="216" height="124" rx="6" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+              <g stroke="#0e3a56" stroke-width="1.5" fill="#ffffff">
+                <rect x="672" y="70" width="86" height="26" rx="4"/>
+                <rect x="766" y="70" width="86" height="26" rx="4"/>
+                <rect x="672" y="104" width="86" height="26" rx="4"/>
+                <rect x="766" y="104" width="86" height="26" rx="4"/>
+              </g>
+              <rect x="672" y="138" width="86" height="26" rx="4" fill="#d6eaf8" stroke="#0e3a56" stroke-width="2"/>
+              <text x="715" y="156" text-anchor="middle" font-size="11" font-weight="700" fill="#0e3a56">the new one</text>
+              <text x="810" y="156" text-anchor="middle" font-size="11" fill="#14304a">&hellip;and millions more</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 3 &mdash; how labeling bias enters.</strong> An unlabelled item reaches a human labeler, who brings their own assumptions, culture, training and time pressure to the judgement. Whatever they decide becomes the "correct answer" that the model is trained toward &mdash; so their assumptions become the model's truth, and then join millions of others in the training set where no one will see them individually again.</figcaption>
+      </figure>
+
+      <p><strong>Real-world examples:</strong></p>
+      <ul>
+        <li><strong>Content moderation AI</strong> trained on labels created by moderators from one cultural background may flag language that's normal or respectful in other cultures as "offensive."</li>
+        <li><strong>Sentiment analysis tools</strong> that misread sarcasm or culturally specific expressions because the labelers didn't recognize them.</li>
+        <li><strong>Image classification datasets</strong> where objects associated with certain professions are labeled in stereotypical ways (e.g., "nurse" images are mostly women, "doctor" images are mostly men).</li>
+      </ul>
+
+      <p><strong>Why it happens:</strong> Human labelers bring their own perspectives and blind spots. Labeling guidelines may be vague or culturally specific. When labeling is outsourced to low-wage workers (common in the industry), those workers may not have the context or training to make nuanced decisions. Rushed labeling to meet deadlines increases errors.</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Why this matters:</strong> When you evaluate AI-generated content, one of your first questions should be: <em>What data was this system trained on, and whose perspectives might be missing?</em> You can't assess bias in the output without considering bias in the input.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= PRIVACY & CONSENT ================= -->
+  <section id="privacy" aria-labelledby="privacy-h">
+    <div class="section-head">
+      <h2 id="privacy-h">Privacy and Consent Frameworks &mdash; Protecting People Behind the Data</h2>
+      <p class="sub">What exists to protect the people the data came from.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: consent, anonymization, minimization, GDPR and CCPA</summary>
+
+      <p>When billions of data points are collected to train AI systems, privacy becomes a major concern. Here are the key frameworks and concepts:</p>
+
+      <h3>Informed Consent</h3>
+      <p>The gold standard for ethical data collection: people know what data is being collected, why it's being collected, how it will be used, and they explicitly agree to it. In practice, informed consent is rare in big-data AI. Most web scraping happens without the knowledge of the people whose content is being collected. Terms-of-service agreements are long, complex, and rarely read &mdash; which raises questions about whether consent given through them is truly "informed."</p>
+
+      <h3>Anonymization and De-identification</h3>
+      <p>Data can be stripped of direct identifiers (name, email, address) before being used for training. But anonymization is harder than it sounds: researchers have repeatedly re-identified "anonymous" individuals by cross-referencing datasets. True de-identification requires careful techniques and ongoing review.</p>
+
+      <h3>Data Minimization</h3>
+      <p>The principle that you should collect only the data you actually need, not everything available. If an app needs your location to give you directions, it shouldn't also be collecting your contacts list and browsing history. Data minimization reduces privacy risk &mdash; but many AI systems are built on the opposite principle: collect as much as possible, figure out the use later.</p>
+
+      <h3>Regulatory Frameworks</h3>
+      <p><strong>GDPR (General Data Protection Regulation)</strong> is Europe's comprehensive privacy law. It gives individuals rights over their data, including the right to access it, correct it, and request deletion (the "right to be forgotten"). It requires explicit consent for data processing, and it applies to any organization handling EU residents' data, regardless of where the organization is located.</p>
+
+      <p><strong>CCPA (California Consumer Privacy Act)</strong> is California's privacy law, similar in spirit to GDPR but with different specifics. It gives California residents rights to know what personal data is collected, request deletion, and opt out of data sales.</p>
+
+      <p>These frameworks create legal obligations for companies &mdash; but enforcement varies, and much AI training data was collected before these laws existed. For what the individual tools you use say they do with what you type, the course keeps a cross-tool comparison: <a href="../../../tool-guides/llms/data-privacy.html" target="_blank" rel="noopener">How the tools handle your data</a>.</p>
+
+      <div class="table-scroll">
+        <table>
+          <caption>Diagram 4 &mdash; GDPR and CCPA compared</caption>
+          <thead>
+            <tr>
+              <th scope="col">Dimension</th>
+              <th scope="col">GDPR</th>
+              <th scope="col">CCPA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Who is covered</th>
+              <td>EU residents, whoever is processing their data</td>
+              <td>California residents</td>
+            </tr>
+            <tr>
+              <th scope="row">Key rights</th>
+              <td>Access, correction, and deletion &mdash; the "right to be forgotten"</td>
+              <td>Know what is collected, request deletion, opt out of data sales</td>
+            </tr>
+            <tr>
+              <th scope="row">Consent requirement</th>
+              <td>Explicit consent required for data processing</td>
+              <td>Opt-out model &mdash; collection may proceed until you object to sales</td>
+            </tr>
+            <tr>
+              <th scope="row">Geographic reach</th>
+              <td>Any organization handling EU residents' data, wherever it is based</td>
+              <td>Organizations doing business with California residents</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p>These frameworks set the floor for everyone. There's a second layer that varies student by student &mdash; the account you sign in with changes what a tool is allowed to do with what you type &mdash; and that's M1L5's subject.</p>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Tension to understand:</strong> AI development pushes toward collecting more data (bigger data = better models). Privacy frameworks push toward collecting less data and protecting individual rights. Navigating this tension is one of the central ethical challenges in AI today.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= ACTIVITY M1L4-A1 ================= -->
+  <section id="a1" aria-labelledby="a1-h">
+    <div class="section-head">
+      <h2 id="a1-h">Your Practice Activity: Analyze a Dataset for Representation Gaps</h2>
+      <p class="sub">Activity M1L4-A1 &mdash; about 25 minutes, ungraded, and the foundation for M1-Q02.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: run the analysis and record your four concerns</summary>
+
+      <div class="activity">
+        <div class="activity-meta">
+          <h3>Analyze a Dataset for Representation Gaps</h3>
+          <span class="badge">About 25 minutes</span>
+          <span class="badge badge--quiet">Activity M1L4-A1 &middot; ungraded</span>
+        </div>
+
+        <p>This activity is the foundation for your M1-Q02 assessment (Dataset bias/representation analysis, due Sunday 9/6). You'll use an AI tool to help analyze a real-world dataset scenario and identify representation gaps.</p>
+
+        <p><strong>Step-by-step instructions:</strong></p>
+
+        <ol>
+          <li>Open <strong>Gemini</strong> in a browser tab (or another tool if you prefer). Step-by-step guides for the two tools the college provides are here if you want one: <a href="../../../tool-guides/llms/gemini.html" target="_blank" rel="noopener">Gemini</a> and <a href="../../../tool-guides/llms/copilot.html" target="_blank" rel="noopener">Microsoft Copilot</a>.</li>
+
+          <li>Copy and paste this prompt into it:
+            <div class="prompt">
+              <pre id="a1-prompt">I want to analyze a dataset for bias and representation gaps. Imagine a dataset of 10,000 news articles used to train an AI summarization tool. The dataset was collected by scraping the front pages of 50 major English-language news websites over one year. For each article, the dataset includes: headline, full text, publication date, source website, and topic category. Help me identify potential representation gaps and bias sources in this dataset. Think about: whose voices might be missing? What topics might be underrepresented? What languages, regions, or perspectives are excluded? What kinds of sampling bias and labeling bias could be present?</pre>
+              <button type="button" class="btn btn--secondary" id="a1-copy" data-copies="a1-prompt">Copy this prompt</button>
+              <span id="a1-copy-status" role="status" aria-live="polite"></span>
+            </div>
+          </li>
+
+          <li>Read the response carefully. Look for at least <strong>four distinct bias or representation concerns</strong> it identifies.</li>
+
+          <li>Now follow up with this second prompt to push deeper:
+            <div class="prompt">
+              <pre id="a1-prompt2">For each of the top four bias concerns you identified, suggest one practical mitigation strategy — something a data scientist could do to make the dataset more representative and fair.</pre>
+              <button type="button" class="btn btn--secondary" id="a1-copy2" data-copies="a1-prompt2">Copy this prompt</button>
+              <span id="a1-copy2-status" role="status" aria-live="polite"></span>
+            </div>
+          </li>
+
+          <li>Record your findings in a document (Google Doc, Word, or the notes area below in the SPA). Your notes should include:
+            <ul>
+              <li>The four bias/representation concerns you identified</li>
+              <li>One mitigation strategy per concern</li>
+              <li>A brief reflection (2&ndash;3 sentences): How might these biases affect the AI summarization tool's output? Whose interests could be harmed?</li>
+            </ul>
+          </li>
+
+          <li>This work feeds directly into your M1-Q02 assessment. You'll expand and formalize it during the week-3 studio session. Save your notes &mdash; you'll need them.</li>
+        </ol>
+
+        <h3>Record your findings (optional)</h3>
+        <p>Use the boxes below if you'd like a printable copy. Nothing is saved when you close or reload this page, so export promptly &mdash; you'll want these in week 3.</p>
+
+        <form id="notes-form">
+          <div class="concern">
+            <h4>Concern 1</h4>
+            <label class="field" for="c1">The bias or representation concern</label>
+            <textarea id="c1" placeholder="What gap did the tool identify?"></textarea>
+            <label class="field" for="m1">One mitigation strategy</label>
+            <textarea id="m1" placeholder="What could a data scientist do about it?"></textarea>
+          </div>
+          <div class="concern">
+            <h4>Concern 2</h4>
+            <label class="field" for="c2">The bias or representation concern</label>
+            <textarea id="c2" placeholder="What gap did the tool identify?"></textarea>
+            <label class="field" for="m2">One mitigation strategy</label>
+            <textarea id="m2" placeholder="What could a data scientist do about it?"></textarea>
+          </div>
+          <div class="concern">
+            <h4>Concern 3</h4>
+            <label class="field" for="c3">The bias or representation concern</label>
+            <textarea id="c3" placeholder="What gap did the tool identify?"></textarea>
+            <label class="field" for="m3">One mitigation strategy</label>
+            <textarea id="m3" placeholder="What could a data scientist do about it?"></textarea>
+          </div>
+          <div class="concern">
+            <h4>Concern 4</h4>
+            <label class="field" for="c4">The bias or representation concern</label>
+            <textarea id="c4" placeholder="What gap did the tool identify?"></textarea>
+            <label class="field" for="m4">One mitigation strategy</label>
+            <textarea id="m4" placeholder="What could a data scientist do about it?"></textarea>
+          </div>
+          <div class="concern">
+            <h4>Reflection</h4>
+            <label class="field" for="reflect">How might these biases affect the tool's output, and whose interests could be harmed? (2&ndash;3 sentences)</label>
+            <textarea id="reflect" placeholder="Two or three sentences."></textarea>
+          </div>
+
+          <button type="submit" class="btn">Save my notes</button>
+          <span id="notes-status" role="status" aria-live="polite"></span>
+        </form>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p>Nothing here is scored, recorded, or submitted. Treat the tool's list as a starting point, not an answer key &mdash; it is itself a system with training data, and the gaps it fails to notice are part of what you're learning to see.</p>
+        </div>
+
+        <div class="export-panel" id="export-panel" hidden>
+          <div class="export-head">
+            <p><strong>CSC 141: AI Literacy</strong> &mdash; M1L4, Data Ethics Practice</p>
+          </div>
+          <div class="export-meta">
+            <span><strong>Date:</strong> <span id="out-date"></span></span>
+          </div>
+          <h3>Bias and representation concerns, with mitigations</h3>
+          <div id="out-concerns"></div>
+          <h3>Reflection</h3>
+          <div id="out-reflect"></div>
+          <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+          <p class="no-print sub">"Save as PDF" prints this summary only &mdash; not the whole lesson. Keep it: this feeds directly into M1-Q02, due Sunday 9/6.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= KNOWLEDGE CHECKS ================= -->
+  <section id="checks" aria-labelledby="checks-h">
+    <div class="section-head">
+      <h2 id="checks-h">Check Yourself</h2>
+      <p class="sub">Three quick questions. Nothing is scored or recorded.</p>
+    </div>
+
+    <div class="kc" data-kc data-answer="b">
+      <fieldset>
+        <legend>1. Which type of bias occurs when the training data doesn't represent the full population the AI system will serve?</legend>
+        <label class="opt"><input type="radio" name="kc1" value="a"> Labeling bias</label>
+        <label class="opt"><input type="radio" name="kc1" value="b"> Sampling bias</label>
+        <label class="opt"><input type="radio" name="kc1" value="c"> Algorithmic bias</label>
+        <label class="opt"><input type="radio" name="kc1" value="d"> Confirmation bias</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Exactly right &mdash; sampling bias happens when certain groups or perspectives are underrepresented in the training data, leading to an AI system that performs poorly for those groups.</p></template>
+      <template data-no><p>The correct answer is B, Sampling bias. It occurs when the data used to train a model doesn't reflect the diversity of the real-world population &mdash; like training a facial recognition system mostly on one demographic group.</p></template>
+    </div>
+
+    <div class="kc" data-kc data-answer="false">
+      <fieldset>
+        <legend>2. True or false: Anonymizing data by removing names and email addresses completely eliminates privacy risks.</legend>
+        <label class="opt"><input type="radio" name="kc2" value="true"> True</label>
+        <label class="opt"><input type="radio" name="kc2" value="false"> False</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Correct. Researchers have repeatedly re-identified "anonymous" individuals by cross-referencing datasets. True de-identification requires more careful techniques than simply removing direct identifiers.</p></template>
+      <template data-no><p>The answer is false. Simply removing names and emails isn't enough &mdash; people have been re-identified from "anonymized" data by combining it with other publicly available information. Stronger techniques are needed for true privacy protection.</p></template>
+    </div>
+
+    <div class="kc" data-kc data-answer="b">
+      <fieldset>
+        <legend>3. Which principle states that organizations should collect only the data they actually need, rather than everything available?</legend>
+        <label class="opt"><input type="radio" name="kc3" value="a"> Informed consent</label>
+        <label class="opt"><input type="radio" name="kc3" value="b"> Data minimization</label>
+        <label class="opt"><input type="radio" name="kc3" value="c"> Anonymization</label>
+        <label class="opt"><input type="radio" name="kc3" value="d"> Right to be forgotten</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>That's right &mdash; data minimization is the principle that you should collect only what you need for a specific purpose, reducing unnecessary privacy risk.</p></template>
+      <template data-no><p>The answer is B, Data minimization. It's a core privacy principle: collect the minimum amount of data necessary for your stated purpose, rather than hoarding everything available "just in case."</p></template>
+    </div>
+  </section>
+
+  <!-- ================= DISCUSSION PRIMER (Session 3) ================= -->
+  <section id="primer" aria-labelledby="primer-h">
+    <div class="section-head">
+      <h2 id="primer-h">Coming Up at Our Next Zoom Session</h2>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>Coming up at our next Zoom session:</strong> <em>"Should AI tools be required to disclose what data they were trained on?"</em> You've now seen two ways bias gets in &mdash; who ends up in the data (sampling) and who decides what the labels mean (labeling) &mdash; and neither one is visible from the outside if all you have is the finished tool. So: would published training-data details actually let someone catch these, or would they just be too big to read? What would a company reasonably object to publishing? Bring a position and one thing that would change your mind. Bring your in-progress M1-Q02 bias analysis draft too &mdash; we'll work from real examples.</p>
+      <p>One scheduling note: <strong>week 4's discussion is asynchronous</strong> &mdash; Monday September 7 is Labor Day, so there's no session that week. The instructions are on the M1-Q02 studio page, where you'll be when you have something to post.</p>
+    </div>
+    <p class="totop"><a href="#top">&uarr; Back to top</a> &middot; <a href="../../../index.html" target="_blank" rel="noopener">Course homepage</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 1, Lesson 4</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l2.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  /* ===== M1L4-A1 bias-analysis notes. Nothing persisted, nothing scored. ===== */
+  var form = document.getElementById("notes-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var rows = [1, 2, 3, 4].map(function (n) {
+        return {
+          n: n,
+          concern: document.getElementById("c" + n).value.trim(),
+          mitigation: document.getElementById("m" + n).value.trim()
+        };
+      });
+      var reflection = document.getElementById("reflect").value.trim();
+
+      var status = document.getElementById("notes-status");
+      var filled = rows.filter(function (r) { return r.concern || r.mitigation; }).length;
+      if (filled === 0 && !reflection) {
+        status.textContent = " Fill in at least one concern first.";
+        return;
+      }
+
+      var out = document.getElementById("out-concerns");
+      out.textContent = "";
+      rows.forEach(function (r) {
+        var wrap = document.createElement("div");
+        wrap.className = "export-concern";
+        var h = document.createElement("h4");
+        h.textContent = "Concern " + r.n;
+        var p1 = document.createElement("p");
+        p1.textContent = r.concern || "(not recorded)";
+        var p2 = document.createElement("p");
+        p2.className = "mit";
+        var strong = document.createElement("strong");
+        strong.textContent = "Mitigation: ";
+        p2.appendChild(strong);
+        p2.appendChild(document.createTextNode(r.mitigation || "(not recorded)"));
+        wrap.appendChild(h); wrap.appendChild(p1); wrap.appendChild(p2);
+        out.appendChild(wrap);
+      });
+
+      var ref = document.getElementById("out-reflect");
+      ref.textContent = "";
+      var rp = document.createElement("p");
+      rp.textContent = reflection || "(not recorded)";
+      ref.appendChild(rp);
+
+      document.getElementById("out-date").textContent =
+        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+      document.getElementById("export-panel").hidden = false;
+      status.textContent = " Saved below. A printable summary is at the bottom of this activity.";
+    });
+  }
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>
