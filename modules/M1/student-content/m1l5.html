@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>M1L5 — Data Protection Strategies | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from the approved m1l3.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+
+/* a wide diagram scrolls inside its own box rather than shrinking to illegibility */
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+
+/* comparison card grid — identical section order in every card */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+/* The two remaining approved callout types. These complete the pattern
+   library's fixed four (Note / Try this / Caution / Verify) and use the
+   tool-guide track's exact values — SHARED, not lesson-specific: keep them
+   when copying this block forward even if a given lesson uses only two. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+/* M1L5-A1 commitment + principle pairs */
+.commit { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.commit h4 { margin-top: 0; }
+.export-commit { margin-bottom: var(--s-3); }
+.export-commit h4 { margin-top: var(--s-3); }
+.export-commit .principle { margin-top: var(--s-1); }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M1L3-A1 comparison notes only)
+   Accordions are force-opened before print by script so nothing
+   inside a collapsed <details> is dropped from the export.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+
+  /* Hide by DISPLAY, walking the ancestor chain down to the export panel.
+     The older shared block used `visibility: hidden`, which blanks the ink but
+     leaves every layout box in flow — a one-page artifact then exported with a
+     dozen blank pages after it. Removing the boxes is what actually scopes the
+     export. Chain: body > main > #a1 > details > .activity > #export-panel. */
+  body > *:not(main)                      { display: none !important; }
+  main > *:not(#a1)                       { display: none !important; }
+  #a1 > *:not(details)                    { display: none !important; }
+  #a1 details                             { border: 0; margin: 0; }
+  #a1 details > *:not(.activity)          { display: none !important; }
+  #a1 .activity > *:not(#export-panel)    { display: none !important; }
+  #a1 .activity                           { border: 0; padding: 0; margin: 0; }
+
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Module 1 &middot; Lesson 5</p>
+    <h1>Data Protection Strategies</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#minimization">Data minimization</a></li>
+      <li><a href="#anonymization">Anonymization techniques</a></li>
+      <li><a href="#account">Whose account are you using?</a></li>
+      <li><a href="#teaser">A privacy-first alternative</a></li>
+      <li><a href="#a1">Practice: outline a policy</a></li>
+      <li><a href="#checks">Check yourself</a></li>
+      <li><a href="#next">What's next</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section aria-labelledby="intro-h">
+    <h2 id="intro-h" class="visually-hidden">Protecting people behind the data</h2>
+    <p>In the <a href="m1l4.html" target="_blank" rel="noopener">last lesson</a>, you learned how bias and privacy problems get into AI systems through the data they're trained on. Now you'll learn about practical strategies for protecting people's data &mdash; from principles that guide what data should be collected, to techniques that hide identities, to a growing movement toward running AI models locally where your data never leaves your device.</p>
+
+    <p>These aren't just technical details. <strong>Every one of these strategies represents a choice about whose privacy matters and how much control individuals should have over their own information.</strong> Understanding them helps you evaluate whether an AI tool respects the people behind its data &mdash; including you.</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This is week-3 pre-work &mdash; plan for about 30 minutes. The five sections below are collapsible; use the links at the top of the page to jump around. The practice activity at the end is the one you'll finish in the studio, so leave yourself time for it.</p>
+    </div>
+  </section>
+
+  <!-- ================= DATA MINIMIZATION ================= -->
+  <section id="minimization" aria-labelledby="minimization-h">
+    <div class="section-head">
+      <h2 id="minimization-h">Data Minimization &mdash; Collect Less, Risk Less</h2>
+      <p class="sub">The simplest privacy principle, and the one most often ignored.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: why collecting less protects more</summary>
+
+      <p><strong>Data minimization</strong> is one of the simplest and most powerful privacy principles: collect only the data you actually need to accomplish your specific purpose, and nothing more.</p>
+
+      <p>Think about it this way: if a restaurant needs your phone number to call ahead a reservation, it doesn't also need your home address, birthdate, and social media accounts. But many apps operate on the opposite principle &mdash; collect everything available now and figure out what to do with it later. That's how data breaches happen, and how personal information ends up in AI training datasets without anyone's knowledge or consent.</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 820 372" role="img" aria-labelledby="d1-title d1-desc" width="820" height="372">
+            <title id="d1-title">The same study app asking for permissions two different ways</title>
+            <desc id="d1-desc">Two phone permission screens side by side for the same AI study app. The screen on the left, "Without minimization", requests access to contacts, location, camera, microphone, browsing history and cloud storage — six permissions. The screen on the right, "With minimization", requests only text input and local note storage — two permissions — and is marked with a checkmark labelled "Only what's needed."</desc>
+
+            <g font-family="sans-serif">
+              <!-- LEFT: without minimization -->
+              <text x="200" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0e3a56">Without minimization</text>
+              <rect x="86" y="44" width="228" height="308" rx="16" fill="#ffffff" stroke="#0e3a56" stroke-width="2.5"/>
+              <rect x="164" y="52" width="72" height="8" rx="4" fill="#b0b8bd"/>
+              <text x="200" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14304a">Study App would like access to:</text>
+              <g font-size="12.5" fill="#14304a">
+                <rect x="102" y="100" width="196" height="30" rx="4" fill="#eaf2f8" stroke="#b0b8bd" stroke-width="1"/>
+                <text x="116" y="120">Contacts</text>
+                <rect x="102" y="136" width="196" height="30" rx="4" fill="#eaf2f8" stroke="#b0b8bd" stroke-width="1"/>
+                <text x="116" y="156">Location</text>
+                <rect x="102" y="172" width="196" height="30" rx="4" fill="#eaf2f8" stroke="#b0b8bd" stroke-width="1"/>
+                <text x="116" y="192">Camera</text>
+                <rect x="102" y="208" width="196" height="30" rx="4" fill="#eaf2f8" stroke="#b0b8bd" stroke-width="1"/>
+                <text x="116" y="228">Microphone</text>
+                <rect x="102" y="244" width="196" height="30" rx="4" fill="#eaf2f8" stroke="#b0b8bd" stroke-width="1"/>
+                <text x="116" y="264">Browsing history</text>
+                <rect x="102" y="280" width="196" height="30" rx="4" fill="#eaf2f8" stroke="#b0b8bd" stroke-width="1"/>
+                <text x="116" y="300">Cloud storage</text>
+              </g>
+              <text x="200" y="332" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6b4708">six permissions</text>
+
+              <!-- RIGHT: with minimization -->
+              <text x="620" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0e3a56">With minimization</text>
+              <rect x="506" y="44" width="228" height="308" rx="16" fill="#ffffff" stroke="#0e3a56" stroke-width="2.5"/>
+              <rect x="584" y="52" width="72" height="8" rx="4" fill="#b0b8bd"/>
+              <text x="620" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14304a">Study App would like access to:</text>
+              <g font-size="12.5" fill="#14304a">
+                <rect x="522" y="100" width="196" height="30" rx="4" fill="#d6eaf8" stroke="#1a5276" stroke-width="1.5"/>
+                <text x="536" y="120">Text you type in</text>
+                <rect x="522" y="136" width="196" height="30" rx="4" fill="#d6eaf8" stroke="#1a5276" stroke-width="1.5"/>
+                <text x="536" y="156">Notes stored on this device</text>
+              </g>
+              <circle cx="620" cy="234" r="34" fill="#e3f4ea" stroke="#1e8449" stroke-width="2.5"/>
+              <path d="M602 234 l12 13 l24 -26" fill="none" stroke="#1e8449" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <text x="620" y="296" text-anchor="middle" font-size="13" font-weight="700" fill="#11532e">Only what's needed</text>
+              <text x="620" y="332" text-anchor="middle" font-size="12.5" font-weight="700" fill="#11532e">two permissions</text>
+
+              <!-- vs -->
+              <text x="410" y="204" text-anchor="middle" font-size="15" font-weight="700" fill="#4a4a4a">vs.</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 1 &mdash; the same app, two ways of asking.</strong> Without minimization, the study app requests six permissions: contacts, location, camera, microphone, browsing history and cloud storage. With minimization it requests two: the text you type in, and notes stored on this device. Same app, same function &mdash; the difference is a design choice about what to ask for.</figcaption>
+      </figure>
+
+      <h3>Why data minimization matters for AI</h3>
+      <ul>
+        <li><strong>Less exposure risk:</strong> The less personal data an AI system holds, the less damage a breach can cause.</li>
+        <li><strong>Narrower bias surface:</strong> Collecting only relevant data reduces the chance of accidentally including biased proxy variables (like zip codes that correlate with race).</li>
+        <li><strong>Clearer accountability:</strong> When a company collects only what it needs for a stated purpose, it's easier to audit whether it's using that data responsibly.</li>
+      </ul>
+
+      <h3>Data minimization in practice</h3>
+      <ul>
+        <li>An AI-powered job screening tool should collect resume text and job-relevant qualifications &mdash; not the applicant's age, gender, or photos (which could introduce bias and violate privacy).</li>
+        <li>A health-chatbot should collect symptoms and medical history relevant to its advice &mdash; not your location history, contacts list, or browsing habits.</li>
+        <li>An educational AI tutor should track learning progress &mdash; not record voice samples, monitor keystroke timing, or profile behavioral patterns beyond what's needed for the tutoring function.</li>
+      </ul>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Key principle:</strong> Data minimization shifts the default assumption from "collect everything" to "collect only what's necessary." It's a design choice that protects privacy before problems happen, rather than trying to fix them after.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= ANONYMIZATION ================= -->
+  <section id="anonymization" aria-labelledby="anonymization-h">
+    <div class="section-head">
+      <h2 id="anonymization-h">Anonymization Techniques &mdash; Hiding Identity Without Losing Utility</h2>
+      <p class="sub">Four techniques, from the baseline to the most advanced &mdash; and why none of them is a finish line.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: four anonymization techniques and their limits</summary>
+
+      <p>When data must be collected, <strong>anonymization</strong> is the process of removing or transforming identifying information so individuals can't be recognized. But as you learned in <a href="m1l4.html" target="_blank" rel="noopener">M1L4</a>, true anonymization is harder than it sounds. Here's an overview of the main techniques and their limitations:</p>
+
+      <figure>
+        <svg viewBox="0 0 800 340" role="img" aria-labelledby="d2-title d2-desc" width="800" height="340">
+          <title id="d2-title">Four anonymization techniques ordered from baseline to most advanced</title>
+          <desc id="d2-desc">A four-step staircase rising from left to right. From the bottom step upward, in order of increasing strength: step one, Direct Identifier Removal, marked "Baseline"; step two, Aggregation; step three, Differential Privacy; step four, Data Synthesis, the most advanced. A note beside the staircase reads "No single technique is perfect — combine methods for stronger protection." The same order is given in the headings below the diagram.</desc>
+
+          <g font-family="sans-serif">
+            <!-- steps, bottom-left to top-right -->
+            <rect x="24" y="248" width="176" height="58" rx="6" fill="#eaf2f8" stroke="#1a5276" stroke-width="2"/>
+            <text x="44" y="272" font-size="13" font-weight="700" fill="#0e3a56">1. Direct Identifier</text>
+            <text x="44" y="290" font-size="13" font-weight="700" fill="#0e3a56">Removal <tspan font-weight="400">(baseline)</tspan></text>
+
+            <rect x="176" y="188" width="176" height="58" rx="6" fill="#d6eaf8" stroke="#1a5276" stroke-width="2"/>
+            <text x="196" y="222" font-size="13" font-weight="700" fill="#0e3a56">2. Aggregation</text>
+
+            <rect x="328" y="128" width="176" height="58" rx="6" fill="#aed6f1" stroke="#0e3a56" stroke-width="2"/>
+            <text x="348" y="153" font-size="13" font-weight="700" fill="#0e3a56">3. Differential</text>
+            <text x="348" y="171" font-size="13" font-weight="700" fill="#0e3a56">Privacy</text>
+
+            <rect x="480" y="68" width="176" height="58" rx="6" fill="#7fb3d5" stroke="#0e3a56" stroke-width="2"/>
+            <text x="500" y="102" font-size="13" font-weight="700" fill="#0e3a56">4. Data Synthesis</text>
+
+            <!-- rising arrow -->
+            <path d="M28 322 L672 322" stroke="#b0b8bd" stroke-width="1.5"/>
+            <path d="M676 46 L676 300" stroke="#0e3a56" stroke-width="2"/>
+            <path d="M676 38 l-6 12 h12 z" fill="#0e3a56"/>
+            <text x="694" y="120" font-size="12" font-weight="700" fill="#0e3a56" transform="rotate(90 694 120)">stronger protection</text>
+
+            <!-- side note -->
+            <rect x="24" y="18" width="472" height="36" rx="5" fill="#fdebd0" stroke="#b9770e" stroke-width="1.5"/>
+            <text x="260" y="42" text-anchor="middle" font-size="12.5" font-weight="700" fill="#6b4708">No single technique is perfect &mdash; combine methods for stronger protection</text>
+          </g>
+        </svg>
+        <figcaption><strong>Diagram 2 &mdash; the four techniques in order.</strong> From the baseline upward: <strong>(1) direct identifier removal</strong>, the starting point and the weakest on its own; <strong>(2) aggregation</strong>; <strong>(3) differential privacy</strong>; and <strong>(4) data synthesis</strong>, the most advanced. Each step is stronger than the one below it, and no single one of them is sufficient by itself &mdash; the protection comes from combining methods. They are described in that same order below.</figcaption>
+      </figure>
+
+      <h3>1. Direct Identifier Removal &mdash; the baseline</h3>
+      <p>The simplest approach: strip names, email addresses, phone numbers, social security numbers, and other direct identifiers from a dataset. This is the baseline &mdash; but it's not enough on its own. A dataset of medical records without names can still be traced back to individuals when combined with other publicly available information.</p>
+
+      <h3>2. Aggregation</h3>
+      <p>Instead of storing individual data points, combine them into group-level statistics. For example, instead of recording "Person A visited these 15 websites," store "37% of users in this age group visited category X." Aggregation protects individuals well &mdash; but it also loses detail, which can reduce the usefulness of the data for training AI models.</p>
+
+      <h3>3. Differential Privacy</h3>
+      <p>A more advanced technique that adds carefully calibrated statistical "noise" to a dataset, making it mathematically difficult to determine whether any specific individual is in the data. Major organizations (including Apple and the U.S. Census Bureau) use differential privacy. It's one of the strongest anonymization methods available &mdash; but adding too much noise degrades data quality, and adding too little leaves individuals exposed. Finding the right balance requires expertise.</p>
+
+      <h3>4. Data Synthesis</h3>
+      <p>Instead of using real personal data, generate artificial (synthetic) datasets that preserve the statistical patterns of the original data without containing any actual individual records. Synthetic data is promising for AI training &mdash; but if the synthesis process isn't done carefully, it can reintroduce identifiable patterns or amplify biases present in the source data.</p>
+
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p><strong>The hard truth:</strong> No anonymization technique is perfect. Researchers have repeatedly re-identified individuals from "anonymized" datasets by cross-referencing with public records, social media, or other databases. The best approach combines multiple techniques and treats anonymization as an ongoing process &mdash; not a one-time fix applied before the data is released.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= ACCOUNT TIER ================= -->
+  <section id="account" aria-labelledby="account-h">
+    <div class="section-head">
+      <h2 id="account-h">Whose Account Are You Using?</h2>
+      <p class="sub">The single most useful privacy fact in this course &mdash; and it's about you, this week.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: why the account, not the tool, sets the rules</summary>
+
+      <p>Everything so far has been about what <em>companies</em> do with data they collect. Now here's the part that's about you, this week, in this course.</p>
+
+      <p><strong>The account you sign in with &mdash; not the tool you pick &mdash; is what decides how your words are handled.</strong> The same product, opened in the same browser, on the same laptop, can operate under two completely different sets of rules depending on which email address you logged in with. This surprises almost everyone, and it's the single most useful privacy fact in this course.</p>
+
+      <p>Roughly, there are two tiers:</p>
+
+      <div class="cards">
+        <div class="card">
+          <h4>An account your college provides</h4>
+          <p>You sign in with your <code>@student.mendocino.edu</code> address. The college has an agreement with the vendor, and that agreement usually adds protections a personal account doesn't get &mdash; most commonly a commitment that what you type isn't used to train the company's models.</p>
+        </div>
+        <div class="card">
+          <h4>An account you create yourself</h4>
+          <p>You sign up with a personal email. There's no agreement between that company and anyone acting on your behalf. You get whatever the vendor's public terms say, which the vendor can change, and which often default to <em>using your conversations to improve the product</em> unless you go turn that off.</p>
+        </div>
+      </div>
+
+      <h3>Two questions that sound like one</h3>
+
+      <p>Here's where people get it wrong, and it's worth slowing down for:</p>
+
+      <blockquote class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>"Is it used for training?"</strong> and <strong>"Can anyone see it?"</strong> are different questions with different answers.</p>
+      </blockquote>
+
+      <p>A college-provided tool can be covered by a firm no-training commitment <strong>and</strong> be logged in the college's systems, where an administrator with a documented reason can retrieve what you typed. Both things are true at once. "Not used for training" was never a promise that nobody can read it.</p>
+
+      <p>And the reverse trips people up even harder. A personal account you made yourself has <em>fewer people</em> able to look at your conversations &mdash; no college administrator, no institutional audit trail. That sounds like more privacy. What it actually means is <strong>there's no accountable party and nowhere to appeal.</strong> Nobody to ask what's retained, nobody obliged to answer, nobody who has to tell you if something changes. The oversight and the protection tend to come from the same place.</p>
+
+      <p>Neither tier is "the safe one." They're different arrangements with different trade-offs, and the literacy skill is being able to say which one you're in right now.</p>
+
+      <h3>What this means for your work</h3>
+      <ul>
+        <li><strong>For anything connected to this course, use your college account.</strong> It's free, it's already yours, and it's the tier with an agreement behind it.</li>
+        <li><strong>Never type another person's information into any AI tool</strong> &mdash; a classmate's work, a name, anything from a job or a volunteer role. Your consent isn't theirs to give.</li>
+        <li><strong>Assume "delete" doesn't mean "gone" until you've checked</strong> what a given tool actually does. Deleting from your view and deleting from the company's systems are different operations, and the second one often has a timer on it.</li>
+      </ul>
+
+      <div class="callout callout--verify">
+        <span class="label">Verify</span>
+        <p>Don't take this lesson's word for any of it. Open the tool you actually use, find the account indicator (usually your avatar, top right), and confirm which address you're signed in as. Then find its privacy or data-controls setting and read what it says about training. Every tool guide in this course &mdash; <a href="../../../tool-guides/llms/gemini.html" target="_blank" rel="noopener">Gemini</a>, <a href="../../../tool-guides/llms/copilot.html" target="_blank" rel="noopener">Copilot</a>, <a href="../../../tool-guides/llms/chatgpt.html" target="_blank" rel="noopener">ChatGPT</a>, <a href="../../../tool-guides/llms/claude.html" target="_blank" rel="noopener">Claude</a> &mdash; walks you to that exact screen, and <a href="../../../tool-guides/llms/data-privacy.html" target="_blank" rel="noopener">How the tools handle your data</a> puts the four tools side by side with sources and dates you can click. If what you find there disagrees with what you read here, <strong>the product screen wins</strong> &mdash; and tell me, because it means the guide needs updating.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= TEASER ================= -->
+  <section id="teaser" aria-labelledby="teaser-h">
+    <div class="section-head">
+      <h2 id="teaser-h">A Privacy-First Alternative &mdash; Coming in Module 2</h2>
+      <p class="sub">A pointer, not a lesson. Module 2 does this properly.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: a short preview of where your data goes</summary>
+
+      <p>There's a growing alternative to cloud-based AI that addresses privacy from the opposite direction: <strong>what if your data never left your device in the first place?</strong> Some AI tools can run on your own computer instead of sending everything you type to a company's servers.</p>
+
+      <p>We won't define or compare this category of tool here &mdash; Module 2 introduces the vocabulary properly and walks you through exactly how it works, how it compares to the cloud tools you've been using, and when each makes sense. For now, the key takeaway is just that this option exists, and that it's part of a bigger tradeoff between privacy and convenience that runs throughout this course.</p>
+
+      <figure>
+        <div class="figure-scroll">
+          <svg viewBox="0 0 820 268" role="img" aria-labelledby="d3-title d3-desc" width="820" height="268">
+            <title id="d3-title">Where your data travels, in two arrangements</title>
+            <desc id="d3-desc">Two panels showing data flow only. Left, "Cloud model": your device sends data along an arrow labelled "Your data travels to company servers" to a cloud, and a second arrow labelled "Response returns" brings the answer back. Right, "Local model": the AI model sits inside your device, and a circular arrow stays entirely within the device, labelled "Your data never leaves your device." A note reads "Full comparison coming in Module 2."</desc>
+
+            <g font-family="sans-serif">
+              <!-- LEFT: cloud -->
+              <text x="204" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0e3a56">Cloud model</text>
+              <rect x="24" y="96" width="104" height="72" rx="8" fill="#ffffff" stroke="#0e3a56" stroke-width="2"/>
+              <rect x="44" y="110" width="64" height="40" rx="3" fill="#eaf2f8" stroke="#0e3a56" stroke-width="1.5"/>
+              <text x="76" y="186" text-anchor="middle" font-size="11.5" font-weight="700" fill="#14304a">your device</text>
+
+              <path d="M136 118 H 276" stroke="#0e3a56" stroke-width="2"/>
+              <path d="M284 118 l-11 -6 v12 z" fill="#0e3a56"/>
+              <text x="206" y="80" text-anchor="middle" font-size="11" fill="#14304a">your data travels to</text>
+              <text x="206" y="96" text-anchor="middle" font-size="11" fill="#14304a">company servers</text>
+
+              <path d="M284 152 H 144" stroke="#0e3a56" stroke-width="2"/>
+              <path d="M136 152 l11 -6 v12 z" fill="#0e3a56"/>
+              <text x="210" y="172" text-anchor="middle" font-size="11" fill="#14304a">response returns</text>
+
+              <path d="M300 140 a30 30 0 0 1 8 -59 a38 38 0 0 1 72 -6 a28 28 0 0 1 6 65 z" fill="#d6eaf8" stroke="#0e3a56" stroke-width="2"/>
+              <text x="344" y="106" text-anchor="middle" font-size="12" font-weight="700" fill="#0e3a56">company</text>
+              <text x="344" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#0e3a56">servers</text>
+
+              <!-- divider -->
+              <path d="M436 40 V 228" stroke="#b0b8bd" stroke-width="1.5" stroke-dasharray="6 5"/>
+
+              <!-- RIGHT: local -->
+              <text x="630" y="28" text-anchor="middle" font-size="15" font-weight="700" fill="#0e3a56">Local model</text>
+              <rect x="514" y="66" width="232" height="128" rx="10" fill="#ffffff" stroke="#0e3a56" stroke-width="2.5"/>
+              <text x="630" y="186" text-anchor="middle" font-size="11.5" font-weight="700" fill="#14304a">your device</text>
+              <rect x="558" y="96" width="144" height="46" rx="6" fill="#e3f4ea" stroke="#1e8449" stroke-width="2"/>
+              <text x="630" y="124" text-anchor="middle" font-size="12.5" font-weight="700" fill="#11532e">the model runs here</text>
+              <path d="M548 108 a44 44 0 0 0 0 24" fill="none" stroke="#1e8449" stroke-width="2"/>
+              <path d="M712 132 a44 44 0 0 0 0 -24" fill="none" stroke="#1e8449" stroke-width="2"/>
+              <path d="M548 136 l-5 -11 h10 z" fill="#1e8449"/>
+              <path d="M712 104 l5 11 h-10 z" fill="#1e8449"/>
+              <text x="630" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#11532e">your data never leaves your device</text>
+
+              <text x="410" y="252" text-anchor="middle" font-size="12" fill="#4a4a4a">Full comparison coming in Module 2.</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption><strong>Diagram 3 &mdash; where the data goes.</strong> With a cloud model, what you type leaves your device, travels to the company's servers, and the response comes back. With a local model, the model itself runs on your device and what you type stays there. This diagram shows the path your data takes and nothing else &mdash; the full comparison is Module 2's.</figcaption>
+      </figure>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Preview:</strong> In Module 2, you'll build a comparison table mapping the full AI landscape &mdash; from the most powerful cloud models to the most capable privacy-first alternatives. In Module 4, we'll return to this topic when discussing this approach as a deliberate data-protection strategy for organizations and individuals who can't risk sending sensitive data to the cloud.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= ACTIVITY M1L5-A1 ================= -->
+  <section id="a1" aria-labelledby="a1-h">
+    <div class="section-head">
+      <h2 id="a1-h">Your Practice Activity: Outline a Privacy Policy</h2>
+      <p class="sub">Activity M1L5-A1 &mdash; started here, finished in the week-3 studio.</p>
+    </div>
+
+    <details>
+      <summary>Open this section: draft your 3&ndash;5 privacy commitments</summary>
+
+      <div class="activity">
+        <div class="activity-meta">
+          <h3>Outline a Privacy Policy</h3>
+          <span class="badge">About 15 minutes here</span>
+          <span class="badge badge--quiet">Activity M1L5-A1 &middot; ungraded</span>
+        </div>
+
+        <p>In this activity, you'll use an AI tool to help outline a privacy policy for a hypothetical AI app. You're not writing a full legal document &mdash; just 3&ndash;5 bullet-point commitments that show you understand data protection principles. You'll complete and refine this outline during the opening 20 minutes of your week-3 studio session.</p>
+
+        <p><strong>Step-by-step instructions:</strong></p>
+
+        <ol>
+          <li>Open <strong>Gemini</strong> in a browser tab (or another tool if you prefer).</li>
+
+          <li>Copy and paste this prompt into it:
+            <div class="prompt">
+              <pre id="a1-prompt">I'm designing a hypothetical AI-powered study assistant app for college students. The app helps students summarize lecture notes, generate practice questions, and get explanations of difficult concepts. Help me outline a privacy policy with 3-5 key commitments about how the app will protect student data. Think about: what data should the app collect (and what it shouldn't), how student data is stored and protected, whether data is used to train models, and how students can control or delete their data. Frame each commitment as a clear promise to the user.</pre>
+              <button type="button" class="btn btn--secondary" id="a1-copy" data-copies="a1-prompt">Copy this prompt</button>
+              <span id="a1-copy-status" role="status" aria-live="polite"></span>
+            </div>
+          </li>
+
+          <li>Read the response and identify <strong>3&ndash;5 commitments</strong> that cover different aspects of data protection (data minimization, storage/security, user control, model training transparency, etc.).</li>
+
+          <li>Record your 3&ndash;5 bullet commitments in a document or the notes area below. For each bullet, add a brief note (1 sentence) explaining which data protection principle it addresses (minimization, anonymization, user consent, local processing, etc.).</li>
+
+          <li><strong>This outline will be completed during the week-3 studio session</strong> (opening 20 minutes). Bring your notes and be ready to refine them with peer feedback and instructor guidance.</li>
+        </ol>
+
+        <h3>Record your outline (optional)</h3>
+        <p>Use the boxes below if you'd like a printable copy. Three commitments is the minimum; five fields are provided if you want them. Nothing is saved when you close or reload this page, so export before you go &mdash; the studio opens with these notes.</p>
+
+        <form id="notes-form">
+          <div class="commit">
+            <h4>Commitment 1</h4>
+            <label class="field" for="c1">The commitment, written as a promise to the user</label>
+            <textarea id="c1" placeholder="&ldquo;We will only collect&hellip;&rdquo;"></textarea>
+            <label class="field" for="p1">Which principle does it address? (1 sentence)</label>
+            <textarea id="p1" placeholder="Minimization, anonymization, user consent, local processing&hellip;"></textarea>
+          </div>
+          <div class="commit">
+            <h4>Commitment 2</h4>
+            <label class="field" for="c2">The commitment, written as a promise to the user</label>
+            <textarea id="c2"></textarea>
+            <label class="field" for="p2">Which principle does it address? (1 sentence)</label>
+            <textarea id="p2"></textarea>
+          </div>
+          <div class="commit">
+            <h4>Commitment 3</h4>
+            <label class="field" for="c3">The commitment, written as a promise to the user</label>
+            <textarea id="c3"></textarea>
+            <label class="field" for="p3">Which principle does it address? (1 sentence)</label>
+            <textarea id="p3"></textarea>
+          </div>
+          <div class="commit">
+            <h4>Commitment 4 <span class="badge badge--quiet">optional</span></h4>
+            <label class="field" for="c4">The commitment, written as a promise to the user</label>
+            <textarea id="c4"></textarea>
+            <label class="field" for="p4">Which principle does it address? (1 sentence)</label>
+            <textarea id="p4"></textarea>
+          </div>
+          <div class="commit">
+            <h4>Commitment 5 <span class="badge badge--quiet">optional</span></h4>
+            <label class="field" for="c5">The commitment, written as a promise to the user</label>
+            <textarea id="c5"></textarea>
+            <label class="field" for="p5">Which principle does it address? (1 sentence)</label>
+            <textarea id="p5"></textarea>
+          </div>
+
+          <button type="submit" class="btn">Save my outline</button>
+          <span id="notes-status" role="status" aria-live="polite"></span>
+        </form>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p>Nothing here is scored, recorded, or submitted. The tool will happily write you five confident-sounding promises &mdash; your job is deciding which ones actually correspond to a principle from this lesson, and which just sound reassuring.</p>
+        </div>
+
+        <div class="export-panel" id="export-panel" hidden>
+          <div class="export-head">
+            <p><strong>CSC 141: AI Literacy</strong> &mdash; M1L5, Data Protection Strategies Practice</p>
+          </div>
+          <div class="export-meta">
+            <span><strong>Date:</strong> <span id="out-date"></span></span>
+          </div>
+          <h3>My privacy policy outline</h3>
+          <div id="out-commits"></div>
+          <p><em>This outline will be refined during the opening of the week-3 studio session.</em></p>
+          <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+          <p class="no-print sub">"Save as PDF" prints this outline only &mdash; not the whole lesson. Bring it to the studio.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= KNOWLEDGE CHECKS ================= -->
+  <section id="checks" aria-labelledby="checks-h">
+    <div class="section-head">
+      <h2 id="checks-h">Check Yourself</h2>
+      <p class="sub">Three quick questions. Nothing is scored or recorded.</p>
+    </div>
+
+    <div class="kc" data-kc data-answer="b">
+      <fieldset>
+        <legend>1. Which privacy principle states that organizations should collect only the data necessary for a specific purpose?</legend>
+        <label class="opt"><input type="radio" name="kc1" value="a"> Anonymization</label>
+        <label class="opt"><input type="radio" name="kc1" value="b"> Data minimization</label>
+        <label class="opt"><input type="radio" name="kc1" value="c"> Differential privacy</label>
+        <label class="opt"><input type="radio" name="kc1" value="d"> Informed consent</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Right &mdash; data minimization means collecting only what you need for your stated purpose, which reduces both privacy risk and the surface area for bias.</p></template>
+      <template data-no><p>The correct answer is B, Data minimization. It's the principle that you should collect only the data necessary to accomplish your specific goal &mdash; not everything available "just in case."</p></template>
+    </div>
+
+    <div class="kc" data-kc data-answer="false">
+      <fieldset>
+        <legend>2. True or false: Removing names and email addresses from a dataset is sufficient to fully protect individual privacy.</legend>
+        <label class="opt"><input type="radio" name="kc2" value="true"> True</label>
+        <label class="opt"><input type="radio" name="kc2" value="false"> False</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>Correct. While removing direct identifiers is a necessary first step, researchers have repeatedly re-identified individuals using only seemingly anonymous data combined with other public information. Stronger techniques &mdash; like differential privacy or aggregation &mdash; provide better protection.</p></template>
+      <template data-no><p>The answer is false. Simply removing names and emails isn't enough for true privacy protection. People have been re-identified from "anonymized" datasets by cross-referencing with other data sources. More advanced techniques are needed.</p></template>
+    </div>
+
+    <div class="kc" data-kc data-answer="c">
+      <fieldset>
+        <legend>3. A student signs in to the same AI tool twice: once with their <code>@student.mendocino.edu</code> college account, and once with a personal account they made themselves. Which statement is accurate?</legend>
+        <label class="opt"><input type="radio" name="kc3" value="a"> The protections are identical, because it's the same tool either way.</label>
+        <label class="opt"><input type="radio" name="kc3" value="b"> The college account is the private one &mdash; nobody can see what they type there.</label>
+        <label class="opt"><input type="radio" name="kc3" value="c"> The two accounts operate under different terms, and the college account is the one with an agreement behind it &mdash; though "not used for training" is not the same as "nobody can see it."</label>
+        <label class="opt"><input type="radio" name="kc3" value="d"> The personal account is safer, because the college can't see anything they do in it.</label>
+      </fieldset>
+      <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+      <div class="kc-feedback" role="status" aria-live="polite"></div>
+      <template data-ok><p>That's it &mdash; and you kept the two questions separate, which is the hard part. The account tier, not the tool, sets the terms; and a no-training commitment and institutional access can both be true at the same time.</p></template>
+      <template data-no><p>The answer is C. Two things to hold onto. First, the account decides the terms, not the product &mdash; same tool, two logins, two sets of rules. Second, <em>"not used for training"</em> and <em>"nobody can see it"</em> are separate claims with separate answers; a college account can carry both a no-training commitment and administrator access. Option D has the right observation with the wrong conclusion: a personal account does have fewer people able to look at it, but that also means no accountable party and nowhere to appeal. Check your own tool's account indicator and privacy settings &mdash; the guides show you where.</p></template>
+    </div>
+  </section>
+
+  <!-- ================= FORWARD POINTER (no discussion primer) ================= -->
+  <section id="next" aria-labelledby="next-h">
+    <div class="section-head">
+      <h2 id="next-h">What's Next</h2>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>What's next:</strong> you'll finish this privacy-policy outline in the first 20 minutes of the week-3 studio, then spend the rest of the session on your bias analysis (M1-Q02, due Sunday 9/6). Bring the notes you just exported &mdash; the studio opens with them.</p>
+    </div>
+    <p class="totop"><a href="#top">&uarr; Back to top</a> &middot; <a href="../../../index.html" target="_blank" rel="noopener">Course homepage</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 1, Lesson 5</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l2.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  /* ===== M1L5-A1 privacy-policy outline. Nothing persisted, nothing scored. ===== */
+  var form = document.getElementById("notes-form");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var rows = [1, 2, 3, 4, 5].map(function (n) {
+        return {
+          n: n,
+          commitment: document.getElementById("c" + n).value.trim(),
+          principle: document.getElementById("p" + n).value.trim()
+        };
+      }).filter(function (r) { return r.commitment || r.principle; });
+
+      var status = document.getElementById("notes-status");
+      if (rows.length === 0) {
+        status.textContent = " Write at least one commitment first.";
+        return;
+      }
+
+      var out = document.getElementById("out-commits");
+      out.textContent = "";
+      rows.forEach(function (r, i) {
+        var wrap = document.createElement("div");
+        wrap.className = "export-commit";
+        var h = document.createElement("h4");
+        h.textContent = "Commitment " + (i + 1);
+        var p1 = document.createElement("p");
+        p1.textContent = r.commitment || "(not recorded)";
+        var p2 = document.createElement("p");
+        p2.className = "principle";
+        var strong = document.createElement("strong");
+        strong.textContent = "Principle: ";
+        p2.appendChild(strong);
+        p2.appendChild(document.createTextNode(r.principle || "(not recorded)"));
+        wrap.appendChild(h); wrap.appendChild(p1); wrap.appendChild(p2);
+        out.appendChild(wrap);
+      });
+
+      document.getElementById("out-date").textContent =
+        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+      document.getElementById("export-panel").hidden = false;
+      status.textContent = " Saved below. A printable copy is at the bottom of this activity — bring it to the studio.";
+    });
+  }
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>
