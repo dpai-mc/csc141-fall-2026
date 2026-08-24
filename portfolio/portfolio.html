@@ -193,27 +193,16 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 .upcoming .what { display: block; }
 
 /* export panel internals */
-.export-panel h3 { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-1); }
-.export-panel .out-line { font-family: var(--mono); font-size: .95rem; }
-.export-panel .index-list { list-style: none; margin: var(--s-3) 0; padding: 0; }
-.export-panel .index-list li { margin: .3rem 0; max-width: none; }
 
 /* ============================================================
-   PRINT — SCOPED EXPORT ARTIFACT (the portfolio index only)
-   Boxes are removed, not merely hidden: `visibility: hidden`
-   leaves the layout in flow and pads the export with blank pages.
-   Chain: body > main > #index > #export-panel.
+   PRINT — this page produces no export artifact, so it simply
+   prints as a readable document with the controls removed.
    ============================================================ */
 @media print {
   body { background: #fff; font-size: 12pt; }
-
-  body > *:not(main)              { display: none !important; }
-  main > *:not(#index)            { display: none !important; }
-  #index > *:not(#export-panel)   { display: none !important; }
-
-  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
-  #export-panel .no-print { display: none !important; }
-  #export-panel p, #export-panel li { max-width: none; }
+  .jumpnav, .btn, .totop, .builder .fields { display: none !important; }
+  .callout, .card, .folder { break-inside: avoid; page-break-inside: avoid; }
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
   a[href]::after { content: ""; }
 }
 </style>
@@ -235,9 +224,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <li><a href="#naming">Naming your files</a></li>
       <li><a href="#builder">Filename helper</a></li>
       <li><a href="#sofar">What goes in it</a></li>
-      <li><a href="checklist.html" target="_blank" rel="noopener">Checklist &#8599;</a></li>
       <li><a href="#grade">How it's graded</a></li>
-      <li><a href="#index">Make a portfolio index</a></li>
     </ul>
   </div>
 </nav>
@@ -286,11 +273,6 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <p>That's the entire system. The number keeps the folder in order, so that at the end of the term the story of your semester reads top to bottom.</p>
 
-    <h3>There's a running checklist</h3>
-
-    <p><strong>You never have to guess what should be in the folder.</strong> The <a href="checklist.html" target="_blank" rel="noopener">Portfolio Checklist</a> is the live list of every artifact assigned so far, each with its number and its exact filename &mdash; and it gets updated every time a new artifact is added to the course.</p>
-
-    <p>Open it whenever you want to check where you stand: tick off what's actually in your folder and it tells you what's missing. It's the page to visit at the start of each module, and again before you submit at the end of the term.</p>
   </section>
 
   <!-- ================= GRADED / UNGRADED ================= -->
@@ -389,7 +371,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <div class="callout callout--note">
       <span class="label">Note</span>
-      <p>Don't want to type it? <strong>The <a href="checklist.html" target="_blank" rel="noopener">Portfolio Checklist</a> lists every assigned artifact's exact filename with a Copy button</strong> beside it. Use this builder for anything that isn't on that list yet.</p>
+      <p>Don't want to type it? <strong>The Portfolio Checklist page lists every assigned artifact's exact filename with a Copy button</strong> beside it. Use this builder for anything that isn't on that list yet.</p>
     </div>
   </section>
 
@@ -402,12 +384,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <h3>Filed already</h3>
 
-    <p><strong>Two artifacts so far.</strong> Rather than repeat them here, the details &mdash; numbers, exact filenames, which are graded, and where each comes from &mdash; live in one place that stays current:</p>
-
-    <div class="callout callout--note">
-      <span class="label">Note</span>
-      <p><strong>&rarr; <a href="checklist.html" target="_blank" rel="noopener">Open the Portfolio Checklist</a></strong> to see everything assigned so far and tick off what you've filed. That page is updated as the course goes; this one explains the rules and doesn't change.</p>
-    </div>
+    <p><strong>Two artifacts so far.</strong> Their numbers, exact filenames, and whether each is graded are all on the <strong>Portfolio Checklist</strong> page in Canvas &mdash; that's the page that stays current as the course goes, so it isn't repeated here.</p>
 
     <h3>Still to come</h3>
     <p>You'll add roughly one file per module, plus the final assembly. <strong>Each one has a number waiting for it</strong>, and you'll be given that number when the assignment is. Here's the shape of the rest of the semester &mdash; the details come with each module, so there's nothing to do about these yet:</p>
@@ -452,40 +429,6 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     <div class="callout callout--verify">
       <span class="label">Verify</span>
       <p><strong>Canvas is the system of record for every date and score.</strong> This page describes what the portfolio is and how to keep it; it deliberately doesn't list due dates, because a date printed here would eventually disagree with Canvas and you'd have no way to know which one was wrong. Check Canvas for when things are due, and for what you've been given credit for.</p>
-    </div>
-  </section>
-
-  <!-- ================= INDEX EXPORT ================= -->
-  <section id="index" aria-labelledby="index-h">
-    <div class="section-head">
-      <h2 id="index-h">Make a Portfolio Index</h2>
-      <p class="sub">Optional, and genuinely useful at the end of term.</p>
-    </div>
-
-    <p>List what's currently in <code>CSC141-portfolio</code>, one file per line, and this builds a printable index you can keep with the portfolio. You'll want one when you assemble everything at the end &mdash; and building it now shows you the gaps, which is the fastest way to spot an artifact you never finished.</p>
-
-    <label class="field" for="pf-name">Your name</label>
-    <input type="text" id="pf-name" placeholder="First Last">
-
-    <label class="field" for="pf-files">Your files, one per line</label>
-    <textarea id="pf-files" rows="8" placeholder="01-ten-things-baseline.pdf&#10;02-m1-bias-analysis.pdf"></textarea>
-    <p class="sub">Paste them straight from your folder if that's easier &mdash; whatever you type is what gets listed.</p>
-
-    <p><button type="button" class="btn" id="build-btn">Build my index</button> <span id="build-status" role="status" aria-live="polite"></span></p>
-
-    <div class="export-panel" id="export-panel" hidden>
-      <div class="export-head">
-        <p><strong>CSC 141: AI Literacy</strong> &mdash; Semester Portfolio Index</p>
-      </div>
-      <div class="export-meta">
-        <span><strong>Name:</strong> <span id="out-name"></span></span>
-        <span><strong>Date:</strong> <span id="out-date"></span></span>
-        <span><strong>Files:</strong> <span id="out-count"></span></span>
-      </div>
-      <h3>Contents</h3>
-      <div id="out-list"></div>
-      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
-      <p class="no-print sub">"Save as PDF" prints the index only &mdash; not this page's instructions.</p>
     </div>
 
     <p class="totop"><a href="#top">&uarr; Back to top</a></p>
@@ -599,61 +542,6 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     updateFilename();
   }
 
-  /* ===== Portfolio index. Nothing persisted, nothing scored. ===== */
-  var buildBtn = document.getElementById("build-btn");
-  if (buildBtn) {
-    buildBtn.addEventListener("click", function () {
-      var raw = document.getElementById("pf-files").value;
-      var files = raw.split("\n")
-        .map(function (l) { return l.trim(); })
-        .filter(function (l) { return l.length > 0; });
-
-      var status = document.getElementById("build-status");
-      if (files.length === 0) {
-        status.textContent = " List at least one file first.";
-        return;
-      }
-
-      var name = document.getElementById("pf-name").value.trim();
-      document.getElementById("out-name").textContent = name || "(name not entered)";
-      document.getElementById("out-count").textContent =
-        files.length + " file" + (files.length === 1 ? "" : "s");
-      document.getElementById("out-date").textContent =
-        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
-
-      /* Deliberately an unordered list: the filenames carry their own fixed
-         numbers, and an <ol> would print a second, competing sequence that
-         disagrees with them wherever an artifact is missing. */
-      var list = document.getElementById("out-list");
-      list.textContent = "";
-      var ul = document.createElement("ul");
-      ul.className = "index-list";
-      files.forEach(function (f) {
-        var li = document.createElement("li");
-        li.className = "out-line";
-        li.textContent = f;
-        ul.appendChild(li);
-      });
-      list.appendChild(ul);
-
-      var panel = document.getElementById("export-panel");
-      panel.hidden = false;
-      status.textContent = " Built below.";
-      panel.scrollIntoView({ block: "start" });
-    });
-  }
-
-  /* Chrome uses document.title as the default PDF filename. */
-  var savedTitle = document.title;
-  window.addEventListener("beforeprint", function () {
-    var el = document.getElementById("pf-name");
-    var last = el && el.value.trim() ? el.value.trim().split(/\s+/).pop() : "YourLastName";
-    document.title = "Portfolio-Index-" + last.replace(/[^A-Za-z0-9-]/g, "");
-  });
-  window.addEventListener("afterprint", function () { document.title = savedTitle; });
-
-  var printBtn = document.getElementById("print-btn");
-  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
 })();
 </script>
 </body>
