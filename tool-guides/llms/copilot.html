@@ -220,42 +220,66 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
       <ol>
         <li>
-          <p><strong>Go to Copilot on the web.</strong> Open <code>copilot.microsoft.com</code> in a browser tab.</p>
+          <p><strong>Go to Copilot on the web.</strong> Open <code>copilot.microsoft.com</code> in a browser tab. You&rsquo;ll be asked to sign in, with three buttons: <strong>Sign in with Microsoft</strong>, Sign in with Apple, and Sign in with Google. <strong>Choose Sign in with Microsoft.</strong></p>
           <figure>
-            <img src="images/copilot-04-home.png"
-                 alt="The Copilot home screen with the input field visible.">
-            <figcaption>The Copilot home screen, with the input field visible.</figcaption>
+            <img src="images/copilot-1.png"
+                 alt="The copilot.microsoft.com sign-in page, with three option buttons: Sign in with Microsoft, Sign in with Apple, and Sign in with Google.">
+            <figcaption>Three sign-in buttons. Take the Microsoft one.</figcaption>
           </figure>
         </li>
         <li>
-          <p><strong>Sign in with your college address.</strong> Use your full <code>@student.mendocino.edu</code> address and your college password &mdash; the same credentials as your student email.</p>
+          <p><strong>Enter your college address.</strong> In the email box, type your full <code>@student.mendocino.edu</code> address &mdash; the same one you use for student email.</p>
           <figure>
-            <img src="images/copilot-01-signin.png"
-                 alt="The Copilot sign-in screen with the @student.mendocino.edu address entered.">
-            <figcaption>Sign in with the full college address, not a personal Microsoft account.</figcaption>
+            <img src="images/copilot-2-microsoft-email.png"
+                 alt="The Microsoft sign-in email box with a college email address entered.">
+            <figcaption>Use the college address, not a personal Microsoft account.</figcaption>
           </figure>
         </li>
         <li>
-          <p><strong>Check for the shield.</strong> Look along the top of the interface, next to the New Chat control, for the <strong>green shield icon</strong>. That icon is Microsoft&rsquo;s own indicator that <em>enterprise data protection</em> is switched on for your session &mdash; which is what <a href="#s6">Section 6</a> is about. If you don&rsquo;t see it, you&rsquo;re probably signed in on a personal Microsoft account rather than your college one.</p>
+          <p><strong>Sign in on the college page.</strong> Your college address hands you off to Mendocino College&rsquo;s own login page &mdash; <strong>the same one you use for Canvas.</strong> Sign in there and complete your usual two-factor check.</p>
           <figure>
-            <img src="images/copilot-02-shield.png"
-                 alt="The top of the interface with the green shield next to New Chat, circled.">
-            <figcaption>Look for the green shield &mdash; it confirms enterprise data protection is on.</figcaption>
+            <img src="images/copilot-3-mendo-college-signin.png"
+                 alt="The Mendocino College sign-in page, the same login page used for Canvas.">
+            <figcaption>If this page looks like your Canvas login, you&rsquo;re in the right place.</figcaption>
           </figure>
         </li>
         <li>
-          <p><strong>Confirm the account.</strong> Open the account menu and verify it shows your <code>@student.mendocino.edu</code> address. Same failure as in Gemini: a personal account still <em>works</em>, but you get consumer terms instead of the college&rsquo;s, and your coursework lands in a personal account.</p>
+          <p><strong>Answer &ldquo;Stay signed in?&rdquo;</strong> After a successful two-factor login you&rsquo;ll be asked whether to stay signed in. Choosing <strong>Yes</strong> saves you logging in every time. On a shared or public computer, choose No.</p>
           <figure>
-            <img src="images/copilot-03-account-check.png"
-                 alt="The account menu expanded, showing the college address selected.">
-            <figcaption>The account menu should show your college address.</figcaption>
+            <img src="images/copilot-4-stay-signed-in.png"
+                 alt="The &ldquo;Stay signed in?&rdquo; prompt shown after a successful two-factor login.">
+            <figcaption>Yes on your own device; No on a shared one.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>You land in the chat interface.</strong> Copilot opens with a prompt of its own &mdash; something like &ldquo;Hi, how can I assist?&rdquo; &mdash; and an input box waiting for you.</p>
+          <figure>
+            <img src="images/copilot-5-chat-interface.png"
+                 alt="The Copilot chat interface after signing in, opening with the question &ldquo;Hi, how can I assist?&rdquo;">
+            <figcaption>You&rsquo;re in. This is where everything else happens.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Check for the shield.</strong> Look toward the <strong>upper right</strong> of the interface for a <strong>shield with a green outline and a green checkmark</strong> in it. That icon is Microsoft&rsquo;s own indicator that <em>enterprise data protection</em> is switched on &mdash; it reads <em>&ldquo;Enterprise data protection applies to this chat&rdquo;</em> &mdash; and it is what <a href="#s6">Section 6</a> is about. If you don&rsquo;t see it, you&rsquo;re probably signed in on a personal Microsoft account rather than your college one.</p>
+          <figure>
+            <img src="images/copilot-6-connection-status.png"
+                 alt="A shield with a green outline and a green checkmark toward the upper right of the Copilot interface, indicating that enterprise data protection applies to this chat.">
+            <figcaption>The shield is the one that matters. Your browser&rsquo;s own &ldquo;connection status&rdquo; &mdash; under the toggle just left of the address bar &mdash; is a different thing: it tells you the connection is encrypted, not who may read the conversation.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Confirm the account.</strong> Click your login name in the <strong>lower left-hand corner</strong> to see your account information, and verify it shows your <code>@student.mendocino.edu</code> address. Same failure as in Gemini: a personal account still <em>works</em>, but you get consumer terms instead of the college&rsquo;s, and your coursework lands in a personal account.</p>
+          <figure>
+            <img src="images/copilot-7-account-info.png"
+                 alt="Copilot account information, opened by clicking the login name in the lower left-hand corner of the interface.">
+            <figcaption>Account information lives behind your login name, bottom left.</figcaption>
           </figure>
         </li>
         <li>
           <p><strong>Test it.</strong> Type <code>Say hello</code> and press Enter. If you get a response, you&rsquo;re set.</p>
           <figure>
-            <img src="images/copilot-05-test.png"
-                 alt="A &ldquo;Say hello&rdquo; exchange showing a response.">
+            <img src="images/copilot-8-say-hello.png"
+                 alt="A &ldquo;say hello&rdquo; prompt in Copilot and the response it returned.">
             <figcaption>A response means you&rsquo;re in and working.</figcaption>
           </figure>
         </li>
@@ -266,7 +290,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <span class="label">Caution</span>
       <p><strong>If Copilot won&rsquo;t load or asks you to pay:</strong></p>
       <ul>
-        <li>Re-check steps 3 and 4 &mdash; wrong-account is the most common cause, same as with Gemini.</li>
+        <li>Re-check steps 6 and 7 &mdash; wrong-account is the most common cause, same as with Gemini.</li>
         <li>Sign out of any personal Microsoft account in that browser first, or use a private/incognito window, then sign in fresh with the college address.</li>
         <li>Still stuck? Contact the college IT help desk and say you need Microsoft Copilot access for CSC 141.</li>
         <li><strong>While you&rsquo;re waiting, use <a href="gemini.html" target="_blank" rel="noopener">Gemini</a></strong> &mdash; it&rsquo;s also college-provided and it&rsquo;s the course baseline. If <em>both</em> are blocked, tell your instructor; this is an access problem the course has to solve for you, not something you should be fixing with a personal account at an outside company.</li>
@@ -287,25 +311,15 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <summary>Interface tour &mdash; six things worth finding</summary>
 
       <h3>The prompt input box</h3>
-      <p>The single text field where you type what you want. Everything you do with Copilot starts here.</p>
-      <figure>
-        <img src="images/copilot-06-input.png"
-             alt="The Copilot prompt input box, the text field where a question is typed.">
-        <figcaption>The prompt input box.</figcaption>
-      </figure>
+      <p>The single text field where you type what you want. Everything you do with Copilot starts here &mdash; you have already seen it, waiting for you, in <a href="#s2">step 5 of Getting access</a>.</p>
 
-      <h3>The green shield indicator, and where it sits</h3>
-      <p>Along the top of the interface, next to the New Chat control. It is Microsoft&rsquo;s own signal that enterprise data protection is applied to your session. Its presence or absence is a fact about your <em>account</em>, not about the question you asked.</p>
-      <figure>
-        <img src="images/copilot-07-shield-location.png"
-             alt="The green shield indicator along the top of the Copilot interface, next to the New Chat control.">
-        <figcaption>The green shield sits along the top of the interface, next to New Chat.</figcaption>
-      </figure>
+      <h3>The shield, and where it sits</h3>
+      <p>Toward the upper right of the interface: a shield with a green outline and a green checkmark, reading <em>&ldquo;Enterprise data protection applies to this chat.&rdquo;</em> It is Microsoft&rsquo;s own signal that enterprise data protection is applied to your session, and it is pictured in <a href="#s2">step 6 of Getting access</a>. Its presence or absence is a fact about your <em>account</em>, not about the question you asked.</p>
 
       <h3>The conversation thread</h3>
       <p>Your prompts and Copilot&rsquo;s responses in sequence. Everything above the current message is context the tool can still refer to.</p>
       <figure>
-        <img src="images/copilot-08-thread.png"
+        <img src="images/copilot-9-conversation-thread.png"
              alt="A Copilot conversation thread showing prompts and responses in sequence.">
         <figcaption>The conversation thread.</figcaption>
       </figure>
@@ -313,7 +327,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <h3>Starting a new chat vs. continuing one</h3>
       <p>The New Chat control opens an empty thread with no memory of the previous one. Continuing in the current thread keeps the context.</p>
       <figure>
-        <img src="images/copilot-09-new-chat.png"
+        <img src="images/copilot-10-new-chat.png"
              alt="The New Chat control in Copilot, used to start an empty conversation thread.">
         <figcaption>New Chat starts an empty thread.</figcaption>
       </figure>
@@ -321,7 +335,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <h3>Chat history</h3>
       <p>Previous conversations, reachable again later. Worth knowing about before you assume a thread is gone.</p>
       <figure>
-        <img src="images/copilot-10-history.png"
+        <img src="images/copilot-11-chat-history.png"
              alt="The Copilot chat history list showing previous conversations.">
         <figcaption>Chat history holds previous conversations.</figcaption>
       </figure>
@@ -329,7 +343,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <h3>Attaching a file or image</h3>
       <p>An attach control near the input box lets you add a document or image and then ask questions about it.</p>
       <figure>
-        <img src="images/copilot-11-attach.png"
+        <img src="images/copilot-12-attach-file.png"
              alt="The attach control near the Copilot input box, used to add a file or image to a prompt.">
         <figcaption>Attaching a file or image to a prompt.</figcaption>
       </figure>
@@ -468,7 +482,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <ul>
       <li><strong>Prompts and responses are not used to train Microsoft&rsquo;s foundation models</strong> when you&rsquo;re signed in with a work or school account. Microsoft&rsquo;s own wording: <em>&ldquo;Prompts and responses aren&rsquo;t used to train the underlying foundation models.&rdquo;</em> (<a href="https://learn.microsoft.com/en-us/copilot/privacy-and-protections" target="_blank" rel="noopener" aria-label="Microsoft Learn, Microsoft 365 Copilot Chat Privacy and Protections, verified 2026-08-19">Microsoft Learn, <em>Microsoft 365 Copilot Chat Privacy and Protections</em></a> &mdash; verified 2026-08-19.)</li>
-      <li><strong>The green shield is the indicator.</strong> Microsoft: Copilot Chat <em>&ldquo;makes it clear that enterprise data protection is applied by featuring a green shield along the top of the user interface next to the New Chat button.&rdquo;</em> No shield means you&rsquo;re not covered &mdash; check it, don&rsquo;t assume it.</li>
+      <li><strong>The green shield is the indicator.</strong> Microsoft: Copilot Chat <em>&ldquo;makes it clear that enterprise data protection is applied by featuring a green shield along the top of the user interface next to the New Chat button.&rdquo;</em> On the screen captured for this guide in August 2026 the shield sits toward the <strong>upper right</strong> rather than beside New Chat, and reads <em>&ldquo;Enterprise data protection applies to this chat.&rdquo;</em> The indicator is what matters, not its exact position &mdash; and a documented description that no longer matches the screen is worth noticing. No shield means you&rsquo;re not covered: check it, don&rsquo;t assume it.</li>
       <li><strong>But your prompts and responses are logged and stored</strong> inside the college&rsquo;s Microsoft 365 tenant (in Exchange), under the college&rsquo;s retention policies, and are reachable through administrator audit logging and eDiscovery. Not-used-for-training and not-visible-to-anyone are two different things.</li>
     </ul>
 
