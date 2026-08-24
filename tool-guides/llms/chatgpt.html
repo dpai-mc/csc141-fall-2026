@@ -212,37 +212,65 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
       <ol>
         <li>
-          <p><strong>Go to ChatGPT on the web.</strong> Open <code>chatgpt.com</code> in a browser tab and choose to sign up.</p>
+          <p><strong>Go to ChatGPT on the web.</strong> Open <code>chatgpt.com</code> in a browser tab. You can type into it straight away without an account &mdash; but it won&rsquo;t remember anything from one session to the next. To sign up, choose <strong>Sign up for free</strong>.</p>
           <figure>
-            <img src="images/chatgpt-01-signup.png"
-                 alt="The signup screen, personal email entered (not a student address).">
-            <figcaption>The signup screen, with a personal email entered &mdash; not a student address.</figcaption>
+            <img src="images/chatgpt-1-interface-start.png"
+                 alt="The chatgpt.com starting interface, usable without an account but with no memory between sessions, showing the Sign up for free button.">
+            <figcaption>Usable without an account &mdash; but it forgets you between sessions.</figcaption>
           </figure>
         </li>
         <li>
-          <p><strong>Sign up with your own email</strong>, or with a Google, Microsoft, or Apple sign-in. Use a personal address, not your <code>@student.mendocino.edu</code> one &mdash; a student address would create a personal OpenAI account that merely looks institutional.</p>
+          <p><strong>Choose how to sign up.</strong> ChatGPT offers four options: Continue with Google, Continue with Apple, Continue with phone, or an email address. <strong>Use a personal email address</strong> &mdash; not your <code>@student.mendocino.edu</code> one. A student address would create a personal OpenAI account that merely <em>looks</em> institutional.</p>
+          <figure>
+            <img src="images/chatgpt-2-email-signup.png"
+                 alt="The ChatGPT signup options &mdash; Continue with Google, Continue with Apple, Continue with phone, or an email address &mdash; with a non-college email address entered.">
+            <figcaption>Four ways in. &ldquo;Continue with phone&rdquo; is one option among four, not a requirement &mdash; signing up by email needed no phone number (checked 2026-08-24).</figcaption>
+          </figure>
         </li>
         <li>
-          <p><strong>Expect the screen to ask what it asks.</strong></p>
-          <p class="pending">Whether a phone number is required at signup is not stated in this guide: OpenAI has changed that requirement more than once, and it was not verified for this build. Trust whatever the signup screen actually asks.</p>
+          <p><strong>Enter the code from your email.</strong> After you continue, ChatGPT shows a <em>&ldquo;Check your inbox&rdquo;</em> page asking for the verification code it just sent. Fetch the code from your email and type it into the box labelled <strong>Code</strong>.</p>
+          <figure>
+            <img src="images/chatgpt-3-code-from-email.png"
+                 alt="The ChatGPT &ldquo;Check your inbox&rdquo; page, asking for the verification code just sent by email.">
+            <figcaption>A code goes to the address you entered.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Give your full name and age.</strong> Next you&rsquo;re asked for a <strong>Full name</strong> and an <strong>Age</strong>. This page also carries links to OpenAI&rsquo;s privacy policy and terms &mdash; <strong>clicking Continue is you agreeing to them.</strong> That is the moment the vendor relationship described above becomes yours.</p>
+          <figure>
+            <img src="images/chatgpt-4-name-age.png"
+                 alt="The ChatGPT signup page asking for Full name and Age, with links to OpenAI&rsquo;s privacy policy and terms that the user agrees to by clicking continue.">
+            <figcaption>Continue here is the click that accepts OpenAI&rsquo;s terms.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Read the disclaimer page.</strong> ChatGPT then shows a short reminder that it <strong>can make mistakes</strong>, and that <strong>chats may be reviewed and used for training</strong>. That second sentence is the product telling you, at signup, what <a href="#s6">Section 6</a> covers in detail. It is easy to click past; don&rsquo;t.</p>
+          <figure>
+            <img src="images/chatgpt-5-disclaimer.png"
+                 alt="The ChatGPT disclaimer page, reminding the user that ChatGPT can make mistakes and that chats may be reviewed and used for training.">
+            <figcaption>The training default, stated in-product, at the moment you sign up.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>You land in the chat interface.</strong> ChatGPT greets you by the name you gave and offers a starting menu &mdash; create an image, write, search the web, learn, get advice, wellness &mdash; alongside the input box. You can ignore the menu entirely and just type.</p>
+          <figure>
+            <img src="images/chatgpt-6-interface.png"
+                 alt="The ChatGPT chat interface after signup, greeting the user by name and offering starting options: create an image, write, search the web, learn, get advice, and wellness.">
+            <figcaption>You&rsquo;re in. The suggestion menu is optional &mdash; the input box is the whole tool.</figcaption>
+          </figure>
         </li>
         <li>
           <p><strong>Test it.</strong> Type <code>Say hello</code> and press Enter. If you get a response, you&rsquo;re set.</p>
-          <figure>
-            <img src="images/chatgpt-03-test.png"
-                 alt="A &ldquo;Say hello&rdquo; exchange showing a response.">
-            <figcaption>A response means you&rsquo;re in and working.</figcaption>
-          </figure>
         </li>
       </ol>
     </details>
 
     <h3>Age</h3>
-    <p>ChatGPT is not open to all ages. OpenAI runs an <strong>age-prediction</strong> system that routes accounts it estimates to be under 18 into a restricted &ldquo;ChatGPT for Teens&rdquo; experience with content safeguards and some feature limits; the account stays active. An adult wrongly flagged verifies through Settings &rarr; Account &rarr; &ldquo;Verify age,&rdquo; handled by a third-party verification company that may ask for a live selfie or government-issued ID (OpenAI Help Center, <em>Age prediction in ChatGPT</em>, verified 2026-08-19).</p>
+    <p>The signup form asks your age outright (step 4 above), but the number you type isn&rsquo;t the end of it. ChatGPT is not open to all ages. OpenAI runs an <strong>age-prediction</strong> system that routes accounts it estimates to be under 18 into a restricted &ldquo;ChatGPT for Teens&rdquo; experience with content safeguards and some feature limits; the account stays active. An adult wrongly flagged verifies through Settings &rarr; Account &rarr; &ldquo;Verify age,&rdquo; handled by a third-party verification company that may ask for a live selfie or government-issued ID (OpenAI Help Center, <em>Age prediction in ChatGPT</em>, verified 2026-08-19).</p>
 
     <div class="callout callout--caution">
       <span class="label">Caution</span>
-      <p>Some students in this class are under 18, and dual-enrollment students routinely are. <strong>You do not need ChatGPT for anything in CSC 141.</strong> If you&rsquo;re under 18, or you&rsquo;d rather not hand a government ID to a third-party verification vendor to use a chatbot, use <a href="gemini.html" target="_blank" rel="noopener">Gemini</a> or Copilot &mdash; both are college-provided and cover every activity in the course.</p>
+      <p>Some students in this class are under 18, and dual-enrollment students routinely are. <strong>You do not need ChatGPT for anything in CSC 141.</strong> If you&rsquo;re under 18, or you&rsquo;d rather not hand a government ID to a third-party verification vendor to use a chatbot, use Gemini or Copilot &mdash; both are college-provided and cover every activity in the course.</p>
     </div>
   </section>
 
@@ -255,70 +283,37 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <p>This is a short tour of the screen a student actually lands on &mdash; enough to work the course activities, not an exhaustive feature tour. You&rsquo;ll still see buttons for GPTs, Projects, Canvas and other features; naming them is fine, walking through them is out of scope here.</p>
 
-    <figure>
-      <img src="images/chatgpt-02-home.png"
-           alt="The chat home screen with the input field visible.">
-      <figcaption>The chat home screen, with the input field visible.</figcaption>
-    </figure>
+    <p>Your <strong>account information</strong> sits behind your login name in the lower left-hand corner &mdash; the same place Copilot puts it. What ChatGPT has no equivalent of is Copilot&rsquo;s green shield: there is <strong>no on-screen indicator of how your data is being handled</strong>. That absence is why Section 6 sends you to a settings page instead of pointing at an icon.</p>
 
     <details>
       <summary>Interface tour &mdash; seven things worth finding</summary>
 
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>We walk through the live interface together in class.</strong> This section names the parts so you know what you are looking at; the screens themselves are quicker to learn by being shown than by reading. The signup screens in Section 2 are captured because you go through those alone, before class.</p>
+      </div>
+
+
       <h3>The prompt input box</h3>
-      <p>The single text field where you type what you want. Everything you do with ChatGPT starts here.</p>
-      <figure>
-        <img src="images/chatgpt-06-input.png"
-             alt="The ChatGPT prompt input box, the text field where a question is typed.">
-        <figcaption>The prompt input box.</figcaption>
-      </figure>
+      <p>The single text field where you type what you want. Everything you do with ChatGPT starts here &mdash; you have already seen it, waiting for you, in <a href="#s2">step 6 of Getting access</a>.</p>
 
       <h3>The conversation thread</h3>
       <p>Your prompts and ChatGPT&rsquo;s responses in sequence. Everything above the current message is context the conversation still carries.</p>
-      <figure>
-        <img src="images/chatgpt-07-thread.png"
-             alt="A ChatGPT conversation thread showing prompts and responses in sequence.">
-        <figcaption>The conversation thread.</figcaption>
-      </figure>
 
       <h3>Starting a new chat vs. continuing one</h3>
       <p>Starting a new chat opens an empty thread with no memory of the previous one; continuing in the current thread keeps its context. When to do which is Activity 3 in Section 4.</p>
-      <figure>
-        <img src="images/chatgpt-08-new-chat.png"
-             alt="The New Chat control in ChatGPT, used to start an empty conversation thread.">
-        <figcaption>New chat starts an empty thread.</figcaption>
-      </figure>
 
       <h3>Chat history</h3>
       <p>Previous conversations, listed and reachable again later. Temporary Chat is the exception &mdash; it never appears here.</p>
-      <figure>
-        <img src="images/chatgpt-09-history.png"
-             alt="The ChatGPT chat history list showing previous conversations.">
-        <figcaption>Chat history holds previous conversations.</figcaption>
-      </figure>
 
       <h3>The model selector</h3>
       <p>A control for choosing which model handles your conversation. Remember from Section 1: the app decides which model you get, and it can switch without you asking &mdash; a known quirk covered in Section 7.</p>
-      <figure>
-        <img src="images/chatgpt-10-model-selector.png"
-             alt="The model selector menu in ChatGPT, used to choose which model handles a conversation.">
-        <figcaption>The model selector.</figcaption>
-      </figure>
 
       <h3>Attaching a file or image</h3>
       <p>An attach control near the input box lets you add a document or image and then ask questions about it. The free tier limits this &mdash; see Section 5.</p>
-      <figure>
-        <img src="images/chatgpt-11-attach.png"
-             alt="The attach control near the ChatGPT input box, used to add a file or image to a prompt.">
-        <figcaption>Attaching a file or image to a prompt.</figcaption>
-      </figure>
 
       <h3>Where Temporary Chat lives</h3>
       <p>An icon at the top right of the chat screen starts a <strong>Temporary Chat</strong> &mdash; a conversation kept out of your history, out of memory, and out of model training. Section 6 explains what that means.</p>
-      <figure>
-        <img src="images/chatgpt-12-temporary-chat.png"
-             alt="The Temporary Chat icon at the top right of the ChatGPT chat screen.">
-        <figcaption>The Temporary Chat control, top right of the chat screen.</figcaption>
-      </figure>
     </details>
   </section>
 
@@ -455,18 +450,8 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     <ul>
       <li><strong>Training is on by default</strong> on personal accounts. OpenAI: <em>&ldquo;When you use our services for individuals such as ChatGPT and Codex, we may use your content to train our models.&rdquo;</em> (<a href="https://help.openai.com/en/articles/5722486-how-your-data-is-used-to-improve-model-performance" target="_blank" rel="noopener">OpenAI Help Center, <em>How your data is used to improve model performance</em></a>, verified 2026-08-19.)</li>
       <li><strong>How to turn it off.</strong> In ChatGPT, open Settings &rarr; Data Controls and find the toggle labelled <em>&ldquo;Improve the model for everyone&rdquo;</em> &mdash; turning it off stops your new conversations being used for training. You can also opt out through OpenAI&rsquo;s privacy portal by selecting <em>&ldquo;do not train on my content.&rdquo;</em> The menu moves, so if you can&rsquo;t find it where this guide says, look for a setting about improving or training the model &mdash; what it does matters more than where it sits.
-        <figure>
-          <img src="images/chatgpt-05-data-controls.png"
-               alt="The Data Controls settings screen showing the training toggle.">
-          <figcaption>The Data Controls settings screen, with the training toggle.</figcaption>
-        </figure>
       </li>
       <li><strong>Temporary Chat.</strong> OpenAI: chats from Temporary Chat <em>&ldquo;won&rsquo;t appear in history, use or create memories, or be used to train our models.&rdquo;</em> It&rsquo;s reached from the icon at the top right of the chat screen. This is the fastest privacy control in the product, and worth naming explicitly.
-        <figure>
-          <img src="images/chatgpt-04-temporary-chat.png"
-               alt="The Temporary Chat control, circled.">
-          <figcaption>The Temporary Chat control, top right of the chat screen.</figcaption>
-        </figure>
       </li>
       <li><strong>What deleting does and doesn&rsquo;t do.</strong> Deleting a conversation removes it from your history. What happens to it after that, OpenAI doesn&rsquo;t say: the model-training article states no retention periods, and the <a href="https://help.openai.com/en/articles/7730893-data-controls-faq" target="_blank" rel="noopener">Data Controls FAQ</a> (verified 2026-08-19) does not publish a retention window for ordinary deleted conversations. Temporary Chats are the exception to all of it &mdash; they never enter history, memory, or training in the first place.</li>
     </ul>
@@ -484,7 +469,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     <p>With a college account on Copilot or Gemini, the vendor commits not to train on your data and the college is party to the arrangement; here, training is on until you turn it off and there is no institution in between.</p>
 
     <ul>
-      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; how this compares to the other tools in the course.</li>
+      <li>Your Data and Your Account &mdash; how this compares to the other tools in the course.</li>
       <li><strong>Module 1, Lesson 5 (M1L5)</strong> &mdash; why any of it matters.</li>
     </ul>
 
@@ -536,10 +521,9 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <h3>Elsewhere in the tool guides</h3>
     <ul>
-      <li><a href="gemini.html" target="_blank" rel="noopener">Gemini</a> &mdash; the course baseline tool.</li>
-      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; the cross-tool comparison.</li>
+      <li>Gemini &mdash; the course baseline tool.</li>
+      <li>Your Data and Your Account &mdash; the cross-tool comparison.</li>
       <li>Other guides: Copilot &middot; Claude.</li>
-      <li><a href="../../index.html" target="_blank" rel="noopener">Back to the CSC 141 course home</a>.</li>
     </ul>
 
     <p class="totop"><a href="#top">&uarr; Back to top</a></p>

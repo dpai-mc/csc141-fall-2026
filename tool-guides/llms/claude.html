@@ -210,7 +210,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     <div class="callout callout--caution">
       <span class="label">Caution</span>
       <p><strong>You must be 18 to use Claude.</strong> Anthropic&rsquo;s own wording: <em>&ldquo;We require all users to be at least 18 years old to create and use a Claude account.&rdquo;</em> On phones and tablets, app-store age information is used to enforce this, and an account identified as under 18 is blocked from signing in on the mobile app. Anthropic can&rsquo;t change that information itself &mdash; a student who believes it&rsquo;s wrong has to fix it with Apple or Google support. (Anthropic Help Center, <em>Minimum age requirement access restriction</em>, published 2026-03-16; verified 2026-08-19.)</p>
-      <p><strong>If you&rsquo;re under 18, use <a href="gemini.html" target="_blank" rel="noopener">Gemini</a> or Copilot.</strong> Both are college-provided, both cover every activity in CSC 141, and you lose nothing by skipping this tool.</p>
+      <p><strong>If you&rsquo;re under 18, use Gemini or Copilot.</strong> Both are college-provided, both cover every activity in CSC 141, and you lose nothing by skipping this tool.</p>
     </div>
 
     <details open>
@@ -218,26 +218,83 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
       <ol>
         <li>
-          <p><strong>Go to Claude on the web.</strong> Open Claude&rsquo;s website in a browser tab and choose to sign up.</p>
+          <p><strong>Go to Claude on the web and create an account.</strong> Open <code>claude.ai</code> in a browser tab. You can sign up with Google, with Apple, or with an email address. <strong>Use a personal email address</strong>, not your <code>@student.mendocino.edu</code> one &mdash; a student address would create a personal Anthropic account that merely <em>looks</em> institutional, and would put coursework under a vendor relationship the college has no agreement with.</p>
           <figure>
-            <img src="images/claude-01-signup.png"
-                 alt="The signup screen, personal email entered (not a student address).">
-            <figcaption>The signup screen, with a personal email entered &mdash; not a student address.</figcaption>
+            <img src="images/claude-1-signup.png"
+                 alt="The claude.ai account-creation page, offering sign-up with Google, with Apple, or with an email address.">
+            <figcaption>Three ways in. Take the email option, with a personal address.</figcaption>
           </figure>
         </li>
         <li>
-          <p><strong>Sign up with your own email</strong>, or with Google sign-in. Use a personal address, not your <code>@student.mendocino.edu</code> one &mdash; a student address would create a personal Anthropic account that merely looks institutional, and would put coursework under a vendor relationship the college has no agreement with.</p>
-        </li>
-        <li>
-          <p><strong>Expect the screen to ask what it asks.</strong></p>
-          <p class="pending">Whether a phone number is required at signup is not stated in this guide; it was not verified for this build. Trust whatever the signup screen actually asks.</p>
-        </li>
-        <li>
-          <p><strong>Test it.</strong> Type <code>Say hello</code> and press Enter. If you get a response, you&rsquo;re set.</p>
+          <p><strong>Enter the verification code.</strong> Claude sends a code to the address you gave and asks you to type it in.</p>
           <figure>
-            <img src="images/claude-03-test.png"
-                 alt="A &ldquo;Say hello&rdquo; exchange showing a response.">
-            <figcaption>A response means you&rsquo;re in and working.</figcaption>
+            <img src="images/claude-2-verify.png"
+                 alt="The Claude verification page, asking for the code sent to the email address entered.">
+            <figcaption>A code goes to the address you entered.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Fetch the code from your email.</strong> The link in the email opens a new browser tab showing the code with a <strong>Copy code</strong> button &mdash; use it, then paste the code into the verification page from the previous step.</p>
+          <figure>
+            <img src="images/claude-3-code.png"
+                 alt="A browser tab opened from the verification email, showing the code and a Copy code button.">
+            <figcaption>Copy the code here, paste it there.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Accept the terms.</strong> Once your email is verified you have to agree to Anthropic&rsquo;s <strong>Terms</strong> and <strong>acceptable use policy</strong>. <strong>That agreement is what creates the account</strong> &mdash; it is the moment the vendor relationship described above becomes yours.</p>
+          <figure>
+            <img src="images/claude-4-accept.png"
+                 alt="The Claude page requiring agreement to Anthropic&rsquo;s Terms and acceptable use policy in order to create the account.">
+            <figcaption>Agreeing here is what creates the account.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Choose the free plan.</strong> Claude asks you to pick a plan. <strong>Select the free plan.</strong> Nothing in CSC 141 asks you to pay for anything.</p>
+          <figure>
+            <img src="images/claude-5-select-free-plan.png"
+                 alt="The Claude plan-selection page, with the free plan being selected.">
+            <figcaption>Free is enough for everything this course does.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Skip the desktop app.</strong> Claude offers a page headed &ldquo;Get the most out of Claude on your Desktop.&rdquo; You don&rsquo;t need it &mdash; choose <strong>Skip</strong>. The web version does everything this course requires.</p>
+          <figure>
+            <img src="images/claude-6-skip-desktop.png"
+                 alt="The &ldquo;Get the most out of Claude on your Desktop&rdquo; page, with Skip selected instead of downloading the desktop app.">
+            <figcaption>Skip is fine. Web is enough.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Make the privacy choice &mdash; this is the one that matters.</strong> Before your first chat, Claude asks whether you will allow your chats and coding sessions to be used to train and improve its models. <strong>This is the opt-in described above, and you are making it right now</strong> &mdash; your answer also sets how long your conversations are kept. <a href="#s6">Section 6</a> explains what each answer means. Read this screen rather than clicking through it.</p>
+          <figure>
+            <img src="images/claude-7-select-privacy.png"
+                 alt="The Claude signup screen asking whether to allow chats and coding sessions to be used to train and improve Anthropic&rsquo;s models.">
+            <figcaption>The training choice happens here, during signup &mdash; not buried in a settings menu you have to go looking for.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Give a name.</strong> Claude asks what to call you.</p>
+          <figure>
+            <img src="images/claude-8-chose-name.png"
+                 alt="The Claude signup screen asking for a name to call the user by.">
+            <figcaption>Whatever you want to be called.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>Skip the &ldquo;kind of work&rdquo; question.</strong> Claude asks what sort of work you do so it can tailor your experience. <strong>Set up later</strong> is a perfectly good answer.</p>
+          <figure>
+            <img src="images/claude-9-kind-of-work.png"
+                 alt="The Claude signup screen asking what kind of work the user does, with Set up later selected.">
+            <figcaption>&ldquo;Set up later&rdquo; costs you nothing.</figcaption>
+          </figure>
+        </li>
+        <li>
+          <p><strong>You land in the chat interface.</strong> Claude greets you by the name you gave and invites you to start. The layout will look familiar if you have already set up Copilot or ChatGPT &mdash; an input box, and not much else you need on day one.</p>
+          <figure>
+            <img src="images/claude-10-interface.png"
+                 alt="The Claude web interface after signup, greeting the user by name and inviting them to start with a problem, an idea, or something to write.">
+            <figcaption>You&rsquo;re in. Type into the box.</figcaption>
           </figure>
         </li>
       </ol>
@@ -255,62 +312,31 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <p>This is a short tour of the screen a student actually lands on &mdash; enough to work the course activities, not an exhaustive feature tour. You&rsquo;ll still see buttons for Projects, Artifacts and other features; naming them is fine, walking through them is out of scope here.</p>
 
-    <figure>
-      <img src="images/claude-02-home.png"
-           alt="The chat home screen with the input field visible.">
-      <figcaption>The chat home screen, with the input field visible.</figcaption>
-    </figure>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>We walk through the live interface together in class.</strong> This section names the parts so you know what you are looking at; the screens themselves are quicker to learn by being shown than by reading. The signup screens above are captured because you go through those alone, before class.</p>
+    </div>
 
     <details>
       <summary>Interface tour &mdash; six things worth finding</summary>
 
       <h3>The prompt input box</h3>
       <p>The single text field where you type what you want. Everything you do with Claude starts here.</p>
-      <figure>
-        <img src="images/claude-06-input.png"
-             alt="The Claude prompt input box, the text field where a question is typed.">
-        <figcaption>The prompt input box.</figcaption>
-      </figure>
 
       <h3>The conversation thread</h3>
       <p>Your prompts and Claude&rsquo;s responses in sequence. Everything above the current message is context the conversation still carries.</p>
-      <figure>
-        <img src="images/claude-07-thread.png"
-             alt="A Claude conversation thread showing prompts and responses in sequence.">
-        <figcaption>The conversation thread.</figcaption>
-      </figure>
 
       <h3>Starting a new chat vs. continuing one</h3>
       <p>Starting a new chat opens an empty thread with no memory of the previous one; continuing in the current thread keeps its context. When to do which is Activity 3 in Section 4.</p>
-      <figure>
-        <img src="images/claude-08-new-chat.png"
-             alt="The New Chat control in Claude, used to start an empty conversation thread.">
-        <figcaption>New chat starts an empty thread.</figcaption>
-      </figure>
 
       <h3>Chat history</h3>
       <p>Previous conversations, listed and reachable again later.</p>
-      <figure>
-        <img src="images/claude-09-history.png"
-             alt="The Claude chat history list showing previous conversations.">
-        <figcaption>Chat history holds previous conversations.</figcaption>
-      </figure>
 
       <h3>The model selector</h3>
       <p>A control for choosing which model handles your conversation.</p>
-      <figure>
-        <img src="images/claude-10-model-selector.png"
-             alt="The model selector menu in Claude, used to choose which model handles a conversation.">
-        <figcaption>The model selector.</figcaption>
-      </figure>
 
       <h3>Attaching a file or image</h3>
       <p>An attach control near the input box lets you add a document or image and then ask questions about it.</p>
-      <figure>
-        <img src="images/claude-11-attach.png"
-             alt="The attach control near the Claude input box, used to add a file or image to a prompt.">
-        <figcaption>Attaching a file or image to a prompt.</figcaption>
-      </figure>
     </details>
   </section>
 
@@ -406,12 +432,6 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
       <p>This is a different shape of limit than a message counter, and it&rsquo;s worth noticing: you can&rsquo;t plan around &ldquo;20 messages a day&rdquo; because that isn&rsquo;t the unit. A long, complex conversation costs more of your window than several short ones. If you hit the limit mid-assignment, the wait is until the window rolls over &mdash; which is a good argument for not starting graded work on a free tier an hour before it&rsquo;s due.</p>
     </div>
 
-    <figure>
-      <img src="images/claude-05-usage-limit.png"
-           alt="The usage-limit message a free user sees when the window is exhausted.">
-      <figcaption>The usage-limit message a free user sees when the window is exhausted.</figcaption>
-    </figure>
-
     <p class="totop"><a href="#top">&uarr; Back to top</a></p>
   </section>
 
@@ -430,7 +450,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
         <dt>Training on your inputs</dt>
         <dd>
-          <strong>No, unless you opt in.</strong> You&rsquo;re asked once; the setting lives in Privacy Settings.
+          <strong>No, unless you opt in.</strong> You&rsquo;re asked once &mdash; during signup, before your first chat &mdash; and the setting lives in Privacy Settings afterwards.
           <span class="src">Anthropic, verified 2026-08-19</span>
         </dd>
 
@@ -445,16 +465,16 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     <h3>The detail</h3>
 
     <ul>
-      <li><strong>Training is opt-in, not on by default.</strong> Consumer users get an in-app notification asking whether to share chats and coding sessions for model improvement; the preference lives in <strong>Privacy Settings</strong> and can be changed at any time.
+      <li><strong>Training is opt-in, not on by default.</strong> Consumer users are asked whether to share chats and coding sessions for model improvement &mdash; on a new account that question arrives <strong>during signup, before the first chat</strong> (step 7 of <a href="#s2">Getting access</a>), and existing accounts were asked in an in-app notification. Either way the preference then lives in <strong>Privacy Settings</strong> and can be changed at any time.
         <figure>
-          <img src="images/claude-04-privacy-settings.png"
-               alt="The Privacy Settings screen showing the training preference.">
-          <figcaption>The Privacy Settings screen, with the training preference.</figcaption>
+          <img src="images/claude-7-select-privacy.png"
+               alt="The Claude signup screen asking whether to allow chats and coding sessions to be used to train and improve Anthropic&rsquo;s models.">
+          <figcaption>Where most people actually meet this choice: during signup, as step 7 of Getting access. The same preference lives in Privacy Settings afterwards.</figcaption>
         </figure>
       </li>
       <li><strong>Retention depends on that choice:</strong> decline and chats fall under the existing 30-day retention period; agree and retention for new or resumed chats extends to five years. Conversations with no further activity from before the change aren&rsquo;t used for training.</li>
       <li><strong>The dates matter here:</strong> the change rolled out from <strong>2025-08-28</strong>, with existing users required to choose by <strong>2025-10-08</strong> to keep using Claude.</li>
-      <li><strong>Where the controls are.</strong> The training preference lives in Privacy Settings, and you can change it at any time. The current menu path was not verified for this build &mdash; if you can&rsquo;t find it where this guide says, look for a setting about privacy or training.</li>
+      <li><strong>Where the controls are.</strong> The training preference lives in Privacy Settings, and you can change it at any time. The exact menu path inside Settings was not verified for this build &mdash; if you can&rsquo;t find it where this guide says, look for a setting about privacy or training. What it does matters more than where it sits.</li>
     </ul>
 
     <div class="callout callout--verify">
@@ -468,7 +488,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
     </div>
 
     <ul>
-      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; how this compares to the other tools in the course.</li>
+      <li>Your Data and Your Account &mdash; how this compares to the other tools in the course.</li>
       <li><strong>Module 1, Lesson 5 (M1L5)</strong> &mdash; why any of it matters.</li>
     </ul>
 
@@ -521,10 +541,9 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 
     <h3>Elsewhere in the tool guides</h3>
     <ul>
-      <li><a href="gemini.html" target="_blank" rel="noopener">Gemini</a> &mdash; the course baseline tool.</li>
-      <li><a href="data-privacy.html" target="_blank" rel="noopener">Your Data and Your Account</a> &mdash; the cross-tool comparison.</li>
+      <li>Gemini &mdash; the course baseline tool.</li>
+      <li>Your Data and Your Account &mdash; the cross-tool comparison.</li>
       <li>Other guides: Copilot &middot; ChatGPT.</li>
-      <li><a href="../../index.html" target="_blank" rel="noopener">Back to the CSC 141 course home</a>.</li>
     </ul>
 
     <p class="totop"><a href="#top">&uarr; Back to top</a></p>
