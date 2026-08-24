@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>Portfolio Checklist | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from the approved m1l3.html, plus the
+   --c-verify-* / --c-try-* tokens added in m1l5.html.
+   Page-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* ---------- page-specific ---------- */
+
+/* The two remaining approved callout types, from the tool-guide track's tokens.
+   SHARED, not page-specific — keep them when copying this block forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+/* live status readout */
+.status-box { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.status-box > :first-child { margin-top: 0; }
+.status-headline { font-size: 1.3rem; font-weight: 700; color: var(--c-primary-dark); margin: 0; max-width: none; }
+.status-detail { margin: var(--s-2) 0 0; }
+.status-missing { margin: var(--s-3) 0 0; }
+.status-missing ul { margin: var(--s-2) 0 0 1.5rem; }
+
+/* checklist items */
+.items { list-style: none; margin: var(--s-4) 0; padding: 0; }
+.items > li { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; max-width: none; }
+.items > li.is-filed { border-color: var(--c-primary); border-width: 2px; padding: calc(var(--s-3) - 1px); }
+.item-head { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; }
+.item-num { font-family: var(--mono); font-size: 1.25rem; font-weight: 700; color: var(--c-primary-dark); flex: none; }
+.item-title { font-size: 1.05rem; font-weight: 700; color: var(--c-primary-dark); margin: 0; flex: 1 1 16rem; }
+.item-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); margin: var(--s-2) 0 0; font-size: .9rem; color: var(--c-text-muted); }
+.item-desc { margin: var(--s-2) 0 0; max-width: var(--measure); }
+.item-file { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; margin: var(--s-3) 0 0; }
+.item-file code { font-family: var(--mono); font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border);
+                  border-radius: var(--radius); padding: .25rem .5rem; word-break: break-all; }
+.item-check { display: flex; gap: var(--s-2); align-items: flex-start; margin: var(--s-3) 0 0;
+              border-top: 1px solid var(--c-border); padding-top: var(--s-3); font-weight: 600; }
+.item-check input { margin-top: .25rem; flex: none; width: 1.1rem; height: 1.1rem; }
+
+/* graded / ungraded markers — never colour alone */
+.mark { display: inline-block; font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+        padding: .1rem .45rem; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+.mark--graded { background: var(--c-note-bg); border-color: var(--c-note-bd); color: var(--c-note-tx); }
+.mark--ungraded { background: var(--c-surface); border-color: var(--c-border); color: var(--c-text-muted); }
+
+/* export panel internals */
+.export-panel h3 { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-1); }
+.export-panel .rec-list { list-style: none; margin: var(--s-2) 0 var(--s-3); padding: 0; }
+.export-panel .rec-list li { margin: .3rem 0; max-width: none; font-family: var(--mono); font-size: .95rem; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (the status record only)
+   Boxes are removed, not merely hidden: `visibility: hidden`
+   leaves the layout in flow and pads the export with blank pages.
+   Chain: body > main > #record > #export-panel.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+
+  body > *:not(main)              { display: none !important; }
+  main > *:not(#record)           { display: none !important; }
+  #record > *:not(#export-panel)  { display: none !important; }
+
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Semester portfolio</p>
+    <h1>Portfolio Checklist</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#status">Where you stand</a></li>
+      <li><a href="#list">The checklist</a></li>
+      <li><a href="#coming">Still to come</a></li>
+      <li><a href="#record">Save a status record</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section aria-labelledby="intro-h">
+    <h2 id="intro-h" class="visually-hidden">About this checklist</h2>
+
+    <p>This is the running list of everything that should be in your <code>CSC141-portfolio</code> folder. <strong>It grows as the course does</strong> &mdash; each time a new artifact is assigned, it appears here with its number and its filename. Come back whenever you want to know where you stand.</p>
+
+    <p>Open your portfolio folder next to this page, tick off what's actually in there, and the summary below tells you what's missing. If you're not sure what any of this means yet, start with <a href="portfolio.html" target="_blank" rel="noopener">What your portfolio is</a>.</p>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>This page doesn't remember your ticks.</strong> Nothing you do here is saved, sent anywhere, or seen by your instructor &mdash; close the tab and it resets. That's on purpose: the list is what matters, not the checkboxes. If you want a record of where you stood on a given day, use <a href="#record">Save a status record</a> at the bottom.</p>
+    </div>
+  </section>
+
+  <!-- ================= STATUS ================= -->
+  <section id="status" aria-labelledby="status-h">
+    <div class="section-head">
+      <h2 id="status-h">Where You Stand</h2>
+      <p class="sub">Updates as you tick items below.</p>
+    </div>
+
+    <div class="status-box">
+      <p class="status-headline" id="status-headline" role="status" aria-live="polite">Nothing ticked yet &mdash; 2 items to check.</p>
+      <p class="status-detail" id="status-detail">Tick each item below that's actually sitting in your portfolio folder right now.</p>
+      <div class="status-missing" id="status-missing"></div>
+    </div>
+  </section>
+
+  <!-- ================= THE CHECKLIST ================= -->
+  <section id="list" aria-labelledby="list-h">
+    <div class="section-head">
+      <h2 id="list-h">The Checklist</h2>
+      <p class="sub">Two items so far. Each one's number is fixed &mdash; if you didn't do it, that number stays empty.</p>
+    </div>
+
+    <ul class="items" id="items">
+      <li data-item data-num="01" data-file="01-ten-things-baseline.pdf" data-name="10 Things baseline list">
+        <div class="item-head">
+          <span class="item-num" aria-hidden="true">01</span>
+          <h3 class="item-title">"10 Things AI can help me do in my daily life" &mdash; your baseline list</h3>
+          <span class="mark mark--ungraded">Ungraded</span>
+        </div>
+        <p class="item-meta">
+          <span>Week 1</span>
+          <span>From <a href="../modules/M1/student-content/m1l1.html" target="_blank" rel="noopener">Module 1 Lesson 1</a>, activity M1L1-A2</span>
+        </p>
+        <p class="item-desc">The list you wrote in the first session, before you'd been taught anything about how these tools work. It's ungraded on purpose &mdash; an honest starting point is worth more here than a polished one. You'll come back to it in the final week and see how much of it you'd now write differently.</p>
+        <p class="item-file">
+          <span>File name:</span>
+          <code id="f01">01-ten-things-baseline.pdf</code>
+          <button type="button" class="btn btn--secondary" id="c01" data-copies="f01">Copy</button>
+          <span id="c01-status" role="status" aria-live="polite"></span>
+        </p>
+        <p class="item-check">
+          <input type="checkbox" id="chk01" data-check-item>
+          <label for="chk01">This file is in my portfolio folder</label>
+        </p>
+      </li>
+
+      <li data-item data-num="02" data-file="02-m1-bias-analysis.pdf" data-name="Module 1 bias analysis">
+        <div class="item-head">
+          <span class="item-num" aria-hidden="true">02</span>
+          <h3 class="item-title">Module 1 dataset bias &amp; representation analysis</h3>
+          <span class="mark mark--graded">Graded</span>
+        </div>
+        <p class="item-meta">
+          <span>Week 3</span>
+          <span>From the <a href="../modules/M1/student-content/m1-q02.html" target="_blank" rel="noopener">week-3 studio</a> (M1-Q02)</span>
+        </p>
+        <p class="item-desc">Your four-part analysis of a dataset for bias and representation gaps &mdash; the first graded artifact of the course. <strong>One PDF, three things inside it:</strong> the analysis itself, your M1L5-A1 privacy-policy outline as an appendix, and your Module 1 reflection. The privacy outline and the reflection don't get numbers of their own; they're part of <code>02</code>.</p>
+        <p class="item-file">
+          <span>File name:</span>
+          <code id="f02">02-m1-bias-analysis.pdf</code>
+          <button type="button" class="btn btn--secondary" id="c02" data-copies="f02">Copy</button>
+          <span id="c02-status" role="status" aria-live="polite"></span>
+        </p>
+        <p class="item-check">
+          <input type="checkbox" id="chk02" data-check-item>
+          <label for="chk02">This file is in my portfolio folder</label>
+        </p>
+      </li>
+    </ul>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>A number with nothing under it is a gap, not a mistake to fix.</strong> If you never completed an artifact, its number simply stays empty &mdash; don't move a later file up to fill the hole. The empty slot is how you and your instructor can both see what's missing.</p>
+    </div>
+  </section>
+
+  <!-- ================= COMING ================= -->
+  <section id="coming" aria-labelledby="coming-h">
+    <div class="section-head">
+      <h2 id="coming-h">Still to Come</h2>
+      <p class="sub">Roughly one artifact per module, plus the final assembly.</p>
+    </div>
+
+    <p>Modules 2 through 6 each produce at least one portfolio artifact, and the final week adds a revisit of your "10 Things" list plus a synthesis reflection tying the whole semester together. <strong>Each will be added to this page with its number and filename when it's assigned</strong> &mdash; so if it isn't listed above, there's nothing you're behind on.</p>
+
+    <p>Check back at the start of each module, and again before you submit at the end of the term.</p>
+  </section>
+
+  <!-- ================= RECORD ================= -->
+  <section id="record" aria-labelledby="record-h">
+    <div class="section-head">
+      <h2 id="record-h">Save a Status Record</h2>
+      <p class="sub">Optional &mdash; a dated snapshot of what you'd ticked.</p>
+    </div>
+
+    <p>Because this page forgets your ticks, you may want a record of where things stood &mdash; useful if you're checking in with me about your progress, or just to keep alongside the portfolio itself.</p>
+
+    <label class="field" for="pf-name">Your name</label>
+    <input type="text" id="pf-name" placeholder="First Last">
+
+    <p><button type="button" class="btn" id="build-btn">Build my status record</button> <span id="build-status" role="status" aria-live="polite"></span></p>
+
+    <div class="export-panel" id="export-panel" hidden>
+      <div class="export-head">
+        <p><strong>CSC 141: AI Literacy</strong> &mdash; Portfolio Status Record</p>
+      </div>
+      <div class="export-meta">
+        <span><strong>Name:</strong> <span id="out-name"></span></span>
+        <span><strong>Date:</strong> <span id="out-date"></span></span>
+        <span><strong>Status:</strong> <span id="out-status"></span></span>
+      </div>
+      <h3>In the portfolio</h3>
+      <div id="out-have"></div>
+      <h3>Not yet in the portfolio</h3>
+      <div id="out-missing"></div>
+      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+      <p class="no-print sub">"Save as PDF" prints the record only &mdash; not the checklist itself.</p>
+    </div>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a> &middot; <a href="portfolio.html" target="_blank" rel="noopener">What your portfolio is</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Portfolio checklist</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l2.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  /* ===== Live status. Nothing persisted — ticks are for this sitting only. ===== */
+  var itemEls = Array.prototype.slice.call(document.querySelectorAll("[data-item]"));
+
+  function readItems() {
+    return itemEls.map(function (li) {
+      return {
+        num: li.getAttribute("data-num"),
+        file: li.getAttribute("data-file"),
+        name: li.getAttribute("data-name"),
+        filed: li.querySelector("[data-check-item]").checked
+      };
+    });
+  }
+
+  function updateStatus() {
+    var items = readItems();
+    var total = items.length;
+    var have = items.filter(function (i) { return i.filed; });
+    var missing = items.filter(function (i) { return !i.filed; });
+
+    itemEls.forEach(function (li) {
+      li.classList.toggle("is-filed", li.querySelector("[data-check-item]").checked);
+    });
+
+    var headline = document.getElementById("status-headline");
+    var detail = document.getElementById("status-detail");
+    var missBox = document.getElementById("status-missing");
+
+    if (have.length === 0) {
+      headline.textContent = "Nothing ticked yet — " + total + " item" + (total === 1 ? "" : "s") + " to check.";
+      detail.textContent = "Tick each item below that's actually sitting in your portfolio folder right now.";
+    } else if (missing.length === 0) {
+      headline.textContent = "Complete — all " + total + " of " + total + " filed.";
+      detail.textContent = "Your portfolio is up to date with everything assigned so far. Check back when the next module opens.";
+    } else {
+      headline.textContent = have.length + " of " + total + " filed — " +
+        missing.length + " still missing.";
+      detail.textContent = "Everything below that isn't ticked needs to go into your CSC141-portfolio folder.";
+    }
+
+    missBox.textContent = "";
+    if (missing.length > 0 && have.length > 0) {
+      var p = document.createElement("p");
+      p.innerHTML = "<strong>Still to file:</strong>";
+      var ul = document.createElement("ul");
+      missing.forEach(function (i) {
+        var li = document.createElement("li");
+        li.textContent = i.num + " — " + i.name;
+        ul.appendChild(li);
+      });
+      missBox.appendChild(p);
+      missBox.appendChild(ul);
+    }
+  }
+
+  document.querySelectorAll("[data-check-item]").forEach(function (cb) {
+    cb.addEventListener("change", updateStatus);
+  });
+  if (itemEls.length) { updateStatus(); }
+
+  /* ===== Status record. Built from the ticks; stores nothing. ===== */
+  function fillList(id, rows, emptyText) {
+    var host = document.getElementById(id);
+    host.textContent = "";
+    if (rows.length === 0) {
+      var p = document.createElement("p");
+      p.textContent = emptyText;
+      host.appendChild(p);
+      return;
+    }
+    var ul = document.createElement("ul");
+    ul.className = "rec-list";
+    rows.forEach(function (r) {
+      var li = document.createElement("li");
+      li.textContent = r.file;
+      ul.appendChild(li);
+    });
+    host.appendChild(ul);
+  }
+
+  var buildBtn = document.getElementById("build-btn");
+  if (buildBtn) {
+    buildBtn.addEventListener("click", function () {
+      var items = readItems();
+      var have = items.filter(function (i) { return i.filed; });
+      var missing = items.filter(function (i) { return !i.filed; });
+
+      document.getElementById("out-name").textContent =
+        document.getElementById("pf-name").value.trim() || "(name not entered)";
+      document.getElementById("out-date").textContent =
+        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+      document.getElementById("out-status").textContent =
+        have.length + " of " + items.length + " filed";
+
+      fillList("out-have", have, "Nothing ticked.");
+      fillList("out-missing", missing, "Nothing missing — the portfolio is up to date.");
+
+      var panel = document.getElementById("export-panel");
+      panel.hidden = false;
+      document.getElementById("build-status").textContent = " Built below.";
+      panel.scrollIntoView({ block: "start" });
+    });
+  }
+
+  /* Chrome uses document.title as the default PDF filename. */
+  var savedTitle = document.title;
+  window.addEventListener("beforeprint", function () {
+    var el = document.getElementById("pf-name");
+    var last = el && el.value.trim() ? el.value.trim().split(/\s+/).pop() : "YourLastName";
+    document.title = "Portfolio-Status-" + last.replace(/[^A-Za-z0-9-]/g, "");
+  });
+  window.addEventListener("afterprint", function () { document.title = savedTitle; });
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>
