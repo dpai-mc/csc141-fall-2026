@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only light">
+<title>M1-Q02 — Dataset Bias &amp; Representation Analysis | CSC 141: AI Literacy</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied verbatim from the approved m1l3.html, plus the
+   --c-verify-* / --c-try-* tokens added in m1l5.html.
+   Assignment-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+/* comparison card grid — identical section order in every card */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+/* The two remaining approved callout types. These complete the pattern
+   library's fixed four (Note / Try this / Caution / Verify) and use the
+   tool-guide track's exact values — SHARED, not page-specific: keep them
+   when copying this block forward even if a given page uses only two. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+/* ---------- assignment-specific ---------- */
+
+/* dataset browser */
+.ds-controls { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); align-items: flex-end; margin: var(--s-3) 0; }
+.ds-controls > div { flex: 0 1 14rem; }
+.ds-controls label { display: block; font-weight: 600; margin-bottom: var(--s-1); font-size: .95rem; }
+.ds-controls select { width: 100%; }
+.ds-status { font-size: .95rem; color: var(--c-text-muted); margin: var(--s-2) 0 0; }
+.ds-wrap { max-height: 30rem; overflow: auto; border: 1px solid var(--c-border); border-radius: var(--radius); }
+.ds-wrap table { margin: 0; }
+.ds-wrap thead th { position: sticky; top: 0; z-index: 1; background: var(--c-surface); }
+.ds-wrap td.num { text-align: right; width: 3rem; color: var(--c-text-muted); }
+th .sort {
+  font: inherit; font-weight: 700; color: var(--c-primary-dark); background: none;
+  border: 0; padding: 0; cursor: pointer; display: inline-flex; align-items: center; gap: .35rem;
+}
+th .sort:hover { text-decoration: underline; }
+th .sort .arrow { font-size: .8em; }
+th[aria-sort="none"] .sort .arrow { opacity: .35; }
+
+/* studio blocks */
+.studio { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.studio > :first-child { margin-top: 0; }
+.studio-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.studio-meta h3 { margin: 0; font-size: 1.2rem; }
+
+/* writing areas */
+.part { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.part h4 { margin-top: 0; }
+.part textarea { min-height: 9rem; }
+.wordcount { font-size: .95rem; color: var(--c-text-muted); margin-top: var(--s-2); }
+.wordcount strong { color: var(--c-text); }
+
+/* export checklist */
+.checklist { list-style: none; margin: var(--s-3) 0 var(--s-3) 0; padding: 0; }
+.checklist li { margin: var(--s-2) 0; max-width: var(--measure); }
+.checklist label { display: flex; gap: var(--s-2); align-items: flex-start; }
+.checklist input { margin-top: .3rem; flex: none; }
+
+/* export panel internals */
+.export-panel h3 { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-1); }
+.export-panel .out-part { white-space: pre-wrap; }
+.export-panel .out-empty { color: var(--c-text-muted); font-style: italic; }
+.namefields { display: flex; flex-wrap: wrap; gap: var(--s-3); }
+.namefields > div { flex: 1 1 16rem; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT
+   The submitted PDF is exactly three things, in this order: the
+   four-part bias analysis, the M1L5-A1 privacy outline appendix,
+   and the M1 module reflection. Everything else — the dataset
+   table, the rubric, the studio timings, every control — is
+   removed from the page, not merely made invisible.
+   Chain: body > main > #export > #export-panel.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#export)                { display: none !important; }
+  #export > *:not(#export-panel)       { display: none !important; }
+
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li, #export-panel .out-part { max-width: none; }
+  #export-panel h3 { break-after: avoid; page-break-after: avoid; }
+  a[href]::after { content: ""; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &middot; Module 1 &middot; Module Artifact</p>
+    <h1>M1-Q02 &mdash; Dataset Bias &amp; Representation Analysis</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#overview">What you'll do</a></li>
+      <li><a href="#dataset">Choose a dataset</a></li>
+      <li><a href="#browse">Browse Option A</a></li>
+      <li><a href="#rubric">How it's graded</a></li>
+      <li><a href="#studio">The studio session</a></li>
+      <li><a href="#export">Export &amp; submit</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <!-- ================= OVERVIEW ================= -->
+  <section id="overview" aria-labelledby="overview-h">
+    <div class="section-head">
+      <h2 id="overview-h">Overview</h2>
+      <p class="sub">Your first portfolio artifact &mdash; 100 points, due Sunday, September 6.</p>
+    </div>
+
+    <p>In this module, you learned how AI models are trained on datasets &mdash; and how the data going in shapes what the model can (and cannot) do well. In this assignment, you'll put those ideas to work by analyzing a real dataset for bias and representation gaps, then proposing practical strategies to fix them.</p>
+
+    <p>This is your first portfolio artifact. It demonstrates that you can <strong>evaluate AI-generated content and training data for accuracy, bias, and appropriateness using established criteria</strong> (LO-03).</p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This assignment draws directly on two lessons: <a href="m1l4.html" target="_blank" rel="noopener">M1L4</a>, where bias enters a dataset, and <a href="m1l5.html" target="_blank" rel="noopener">M1L5</a>, on data protection. Both are worth having open while you work.</p>
+    </div>
+
+    <h3>What You'll Do</h3>
+
+    <p>You will analyze a dataset &mdash; either one provided below or one you find on your own &mdash; and produce a written analysis covering four parts:</p>
+
+    <div class="part">
+      <h4>Part 1 &mdash; Describe the dataset</h4>
+      <p>In 1&ndash;2 paragraphs, explain what the dataset contains, where it comes from, and what kind of AI task it could be used for (classification, prediction, recommendation, etc.). Be accurate about its origin: if you're using Option A, say that it's a constructed teaching dataset with fictional outlets, not collected news. If you use an AI tool to help summarize or explore it, note that in your work.</p>
+    </div>
+
+    <div class="part">
+      <h4>Part 2 &mdash; Detect bias</h4>
+      <p>Examine at least three samples or categories from the dataset and identify specific biases or representation gaps. For each one, explain:</p>
+      <ul>
+        <li>What group, perspective, or category is underrepresented, misrepresented, or missing?</li>
+        <li>What evidence from the data supports this? (Quote or describe actual entries.)</li>
+        <li>What real-world harm could result if an AI model trained on this data were deployed?</li>
+      </ul>
+    </div>
+
+    <div class="part">
+      <h4>Part 3 &mdash; Propose mitigation strategies</h4>
+      <p>For each bias you identified, suggest at least one practical strategy to reduce it. Strategies might include collecting more representative data, reweighting samples, adding missing categories, or changing how the data was labeled. Explain why your strategy would work.</p>
+    </div>
+
+    <div class="part">
+      <h4>Part 4 &mdash; Reflect on ethical implications</h4>
+      <p>In a final paragraph (at least 150 words), reflect on what this exercise teaches you about trusting AI systems. Consider: If you didn't know the dataset was biased, would you have caught it when using the AI tool? What responsibility do developers and users share when bias is found?</p>
+    </div>
+
+    <h3>Format &amp; Length</h3>
+    <ul>
+      <li>Written analysis, approximately <strong>500&ndash;800 words total</strong> across all four parts.</li>
+      <li>Clear headings for each part.</li>
+      <li>When you reference specific data entries, quote or describe them directly.</li>
+    </ul>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>Save your work as you go.</strong> This page doesn't save automatically or remember your work between visits. Keep this browser tab open for the whole studio session, and click <strong>Save as PDF</strong> as soon as you finish &mdash; don't wait until the very end of Work Block 2 to export for the first time.</p>
+    </div>
+  </section>
+
+  <!-- ================= DATASET OPTIONS ================= -->
+  <section id="dataset" aria-labelledby="dataset-h">
+    <div class="section-head">
+      <h2 id="dataset-h">Dataset Options</h2>
+      <p class="sub">Choose one.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Option A &mdash; Provided dataset</h3>
+        <p>Use the 50-headline news dataset embedded in this page, tagged by topic and source. Browse it with the interactive table below.</p>
+        <p><strong>It's a teaching dataset, not a scrape</strong> &mdash; the eight outlets are fictional and the headlines were written for this assignment. The patterns in it are real patterns, deliberately built in; your job is to find and name them, and to say in Part 1 that this is a constructed dataset rather than a live feed.</p>
+      </div>
+      <div class="card">
+        <h3>Option B &mdash; Your own dataset</h3>
+        <p>Find a small, public dataset in an area you care about (sports stats, movie reviews, product ratings, census tables, etc.) and explore it with an AI tool. Include a link to your source in your submission.</p>
+        <p>A few hundred rows is plenty &mdash; big enough to show a pattern, small enough that you can actually look at it.</p>
+      </div>
+    </div>
+
+    <div class="callout callout--caution">
+      <span class="label">Caution</span>
+      <p><strong>What not to put into an AI tool.</strong> If you pick your own dataset, use public data only. Don't paste in anything containing real people's personal information, anything from a job, internship, or volunteer role, or anything a classmate made. That's the data-minimization principle from <a href="m1l5.html" target="_blank" rel="noopener">M1L5</a> applied to your own work: the fastest way to create a privacy problem is to hand someone else's information to a tool on their behalf. When in doubt, pick a different dataset &mdash; or use Option A.</p>
+    </div>
+
+    <h3>Tools</h3>
+    <p>You may use <strong>Gemini</strong> (your college Google account) plus up to two other free AI tools of your choice to explore the dataset, generate summaries, or brainstorm mitigation ideas. Gemini is the baseline everyone has; the other two are your call, and you can skip them entirely. If you want a guide: <a href="../../../tool-guides/llms/gemini.html" target="_blank" rel="noopener">Gemini</a> and <a href="../../../tool-guides/llms/copilot.html" target="_blank" rel="noopener">Copilot</a> are free with your college login; <a href="../../../tool-guides/llms/chatgpt.html" target="_blank" rel="noopener">ChatGPT</a> and <a href="../../../tool-guides/llms/claude.html" target="_blank" rel="noopener">Claude</a> (18+) need a personal account. Before you sign in to any of them, <a href="../../../tool-guides/llms/data-privacy.html" target="_blank" rel="noopener">How the tools handle your data</a> sets out what each one does with what you type.</p>
+
+    <p><strong>Whatever you use, note it.</strong> Include brief notes on which prompts you ran and what came back. That shows your process &mdash; it isn't a confession, and it isn't a shortcut. Part of what's being graded is whether you checked the tool's claims against the actual data rather than repeating them.</p>
+  </section>
+
+  <!-- ================= DATASET BROWSER ================= -->
+  <section id="browse" aria-labelledby="browse-h">
+    <div class="section-head">
+      <h2 id="browse-h">Option A &mdash; The Provided Dataset</h2>
+      <p class="sub">50 headlines, eight fictional outlets, six topics. Sort by any column; filter by topic or source.</p>
+    </div>
+
+    <p>A constructed teaching dataset: 50 headlines attributed to eight <strong>fictional</strong> news outlets, tagged by topic and source.</p>
+
+    <div class="ds-controls">
+      <div>
+        <label for="filter-topic">Filter by topic</label>
+        <select id="filter-topic">
+          <option value="">All topics</option>
+        </select>
+      </div>
+      <div>
+        <label for="filter-source">Filter by source</label>
+        <select id="filter-source">
+          <option value="">All sources</option>
+        </select>
+      </div>
+      <div>
+        <button type="button" class="btn btn--secondary" id="ds-reset">Reset table</button>
+      </div>
+    </div>
+
+    <p class="ds-status" id="ds-status" role="status" aria-live="polite">Showing all 50 of 50 headlines.</p>
+
+    <div class="ds-wrap">
+      <table id="ds-table">
+        <caption class="visually-hidden">The 50-headline teaching dataset, sortable by number, headline, topic or source</caption>
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="ascending" data-key="n"><button type="button" class="sort">#<span class="arrow" aria-hidden="true">&#9650;</span></button></th>
+            <th scope="col" aria-sort="none" data-key="headline"><button type="button" class="sort">Headline<span class="arrow" aria-hidden="true">&#9650;</span></button></th>
+            <th scope="col" aria-sort="none" data-key="topic"><button type="button" class="sort">Topic<span class="arrow" aria-hidden="true">&#9650;</span></button></th>
+            <th scope="col" aria-sort="none" data-key="source"><button type="button" class="sort">Source<span class="arrow" aria-hidden="true">&#9650;</span></button></th>
+          </tr>
+        </thead>
+        <tbody id="ds-body">
+          <tr data-topic="Politics" data-source="NewsWire Daily"><td class="num">1</td><td>Senate Passes Infrastructure Bill After Weeks of Debate</td><td>Politics</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Politics" data-source="The Capital Ledger"><td class="num">2</td><td>Governor Signs New Housing Reform Package</td><td>Politics</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Politics" data-source="NewsWire Daily"><td class="num">3</td><td>City Council Votes to Expand Public Transit Funding</td><td>Politics</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Politics" data-source="The National Herald"><td class="num">4</td><td>Neighboring Nation Declares State of Emergency After Flooding</td><td>Politics</td><td>The National Herald</td></tr>
+          <tr data-topic="Politics" data-source="NewsWire Daily"><td class="num">5</td><td>Congress Debates Budget Deadline as Shutdown Looms</td><td>Politics</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Politics" data-source="The Capital Ledger"><td class="num">6</td><td>Local Election Turnout Hits Ten-Year High</td><td>Politics</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Politics" data-source="The National Herald"><td class="num">7</td><td>Lawmakers Clash Over Proposed Tax Reform</td><td>Politics</td><td>The National Herald</td></tr>
+          <tr data-topic="Politics" data-source="The Capital Ledger"><td class="num">8</td><td>State Legislature Approves New Education Funding Formula</td><td>Politics</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Politics" data-source="NewsWire Daily"><td class="num">9</td><td>Mayor Unveils Plan to Address Downtown Homelessness</td><td>Politics</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Politics" data-source="The National Herald"><td class="num">10</td><td>Ceasefire Talks Stall Amid Renewed Border Clashes Overseas</td><td>Politics</td><td>The National Herald</td></tr>
+          <tr data-topic="Politics" data-source="NewsWire Daily"><td class="num">11</td><td>Political Analysts Weigh In on Upcoming Primary Race</td><td>Politics</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Politics" data-source="The Capital Ledger"><td class="num">12</td><td>Committee Advances Bill on Campaign Finance Reform</td><td>Politics</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Politics" data-source="The National Herald"><td class="num">13</td><td>International Aid Groups Respond to Earthquake in Distant Region</td><td>Politics</td><td>The National Herald</td></tr>
+          <tr data-topic="Politics" data-source="NewsWire Daily"><td class="num">14</td><td>City Approves Redistricting Map Ahead of Next Election</td><td>Politics</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Politics" data-source="The Capital Ledger"><td class="num">15</td><td>Governor&#x27;s Approval Rating Slips Amid Budget Fight</td><td>Politics</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Business" data-source="Global Business Times"><td class="num">16</td><td>Tech Giant Reports Record Quarterly Earnings</td><td>Business</td><td>Global Business Times</td></tr>
+          <tr data-topic="Business" data-source="NewsWire Daily"><td class="num">17</td><td>Retail Chain Announces Store Closures Nationwide</td><td>Business</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Business" data-source="Global Business Times"><td class="num">18</td><td>Stock Market Rallies on Interest Rate News</td><td>Business</td><td>Global Business Times</td></tr>
+          <tr data-topic="Business" data-source="Global Business Times"><td class="num">19</td><td>Startup Raises $50 Million in Series B Funding</td><td>Business</td><td>Global Business Times</td></tr>
+          <tr data-topic="Business" data-source="The Capital Ledger"><td class="num">20</td><td>Manufacturing Sector Sees Slowdown in New Orders</td><td>Business</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Business" data-source="Global Business Times"><td class="num">21</td><td>Airline Industry Faces Rising Fuel Costs</td><td>Business</td><td>Global Business Times</td></tr>
+          <tr data-topic="Business" data-source="The Capital Ledger"><td class="num">22</td><td>Local Bank Merges with Regional Competitor</td><td>Business</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Business" data-source="NewsWire Daily"><td class="num">23</td><td>Housing Market Cools as Mortgage Rates Climb</td><td>Business</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Business" data-source="Global Business Times"><td class="num">24</td><td>Major Automaker Announces Shift to Electric Vehicles</td><td>Business</td><td>Global Business Times</td></tr>
+          <tr data-topic="Business" data-source="The Capital Ledger"><td class="num">25</td><td>Small Businesses Struggle with Rising Rent Costs</td><td>Business</td><td>The Capital Ledger</td></tr>
+          <tr data-topic="Business" data-source="Global Business Times"><td class="num">26</td><td>Energy Company Posts Higher Profits Amid Price Surge</td><td>Business</td><td>Global Business Times</td></tr>
+          <tr data-topic="Business" data-source="NewsWire Daily"><td class="num">27</td><td>Consumer Spending Rises Ahead of Holiday Season</td><td>Business</td><td>NewsWire Daily</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">28</td><td>New AI Chatbot Sparks Debate Over Job Displacement</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">29</td><td>Social Media Platform Rolls Out New Privacy Controls</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">30</td><td>Cybersecurity Firm Warns of Rising Ransomware Attacks</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">31</td><td>Smartphone Maker Unveils Next-Generation Device</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">32</td><td>Researchers Develop Faster Battery Charging Technology</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">33</td><td>Streaming Service Adds AI-Generated Recommendations</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="Global Business Times"><td class="num">34</td><td>Tech Company Faces Antitrust Investigation</td><td>Technology</td><td>Global Business Times</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">35</td><td>Wearable Device Tracks New Health Metrics</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">36</td><td>Software Update Fixes Major Security Flaw</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Technology" data-source="TechPulse"><td class="num">37</td><td>Robotics Firm Demonstrates Warehouse Automation System</td><td>Technology</td><td>TechPulse</td></tr>
+          <tr data-topic="Sports" data-source="SportsCentral"><td class="num">38</td><td>Local Team Clinches Division Title in Final Game</td><td>Sports</td><td>SportsCentral</td></tr>
+          <tr data-topic="Sports" data-source="SportsCentral"><td class="num">39</td><td>Star Player Signs Record-Breaking Contract</td><td>Sports</td><td>SportsCentral</td></tr>
+          <tr data-topic="Sports" data-source="SportsCentral"><td class="num">40</td><td>College Team Advances to National Championship</td><td>Sports</td><td>SportsCentral</td></tr>
+          <tr data-topic="Sports" data-source="SportsCentral"><td class="num">41</td><td>City Prepares to Host Regional Marathon</td><td>Sports</td><td>SportsCentral</td></tr>
+          <tr data-topic="Sports" data-source="SportsCentral"><td class="num">42</td><td>Coach Announces Retirement After Twenty Seasons</td><td>Sports</td><td>SportsCentral</td></tr>
+          <tr data-topic="Sports" data-source="SportsCentral"><td class="num">43</td><td>Youth Sports League Sees Record Enrollment</td><td>Sports</td><td>SportsCentral</td></tr>
+          <tr data-topic="Entertainment" data-source="Culture Now"><td class="num">44</td><td>Popular Streaming Series Renewed for Third Season</td><td>Entertainment</td><td>Culture Now</td></tr>
+          <tr data-topic="Entertainment" data-source="Culture Now"><td class="num">45</td><td>Local Theater Company Stages Original Production</td><td>Entertainment</td><td>Culture Now</td></tr>
+          <tr data-topic="Entertainment" data-source="Culture Now"><td class="num">46</td><td>Music Festival Announces Lineup for Summer Event</td><td>Entertainment</td><td>Culture Now</td></tr>
+          <tr data-topic="Entertainment" data-source="Culture Now"><td class="num">47</td><td>Award-Winning Film Director Announces New Project</td><td>Entertainment</td><td>Culture Now</td></tr>
+          <tr data-topic="Health/Science" data-source="HealthLine Report"><td class="num">48</td><td>Researchers Report Progress on New Vaccine Trial</td><td>Health/Science</td><td>HealthLine Report</td></tr>
+          <tr data-topic="Health/Science" data-source="HealthLine Report"><td class="num">49</td><td>Study Finds Link Between Sleep and Heart Health</td><td>Health/Science</td><td>HealthLine Report</td></tr>
+          <tr data-topic="Health/Science" data-source="HealthLine Report"><td class="num">50</td><td>Local Hospital Opens New Community Health Clinic</td><td>Health/Science</td><td>HealthLine Report</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="sub">All source and outlet names are fictional; no real news organizations are referenced.</p>
+
+    <h3>Distribution &mdash; counted from the 50 rows above</h3>
+    <p>These counts are provided so you can check your own. You are still expected to cite specific entries as evidence, not just repeat these totals.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="table-scroll">
+          <table>
+            <caption>Headlines by topic</caption>
+            <thead><tr><th scope="col">Topic</th><th scope="col">Count</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Politics</th><td>15</td></tr>
+              <tr><th scope="row">Business</th><td>12</td></tr>
+              <tr><th scope="row">Technology</th><td>10</td></tr>
+              <tr><th scope="row">Sports</th><td>6</td></tr>
+              <tr><th scope="row">Entertainment</th><td>4</td></tr>
+              <tr><th scope="row">Health/Science</th><td>3</td></tr>
+              <tr><th scope="row">Total</th><td><strong>50</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-scroll">
+          <table>
+            <caption>Headlines by source</caption>
+            <thead><tr><th scope="col">Source</th><th scope="col">Count</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">NewsWire Daily</th><td>9</td></tr>
+              <tr><th scope="row">TechPulse</th><td>9</td></tr>
+              <tr><th scope="row">The Capital Ledger</th><td>8</td></tr>
+              <tr><th scope="row">Global Business Times</th><td>7</td></tr>
+              <tr><th scope="row">SportsCentral</th><td>6</td></tr>
+              <tr><th scope="row">The National Herald</th><td>4</td></tr>
+              <tr><th scope="row">Culture Now</th><td>4</td></tr>
+              <tr><th scope="row">HealthLine Report</th><td>3</td></tr>
+              <tr><th scope="row">Total</th><td><strong>50</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RUBRIC ================= -->
+  <section id="rubric" aria-labelledby="rubric-h">
+    <div class="section-head">
+      <h2 id="rubric-h">How It's Graded</h2>
+      <p class="sub">100 points, reviewed by your instructor against the rubric below. Nothing on this page is scored automatically.</p>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <caption>M1-Q02 rubric &mdash; 100 points total</caption>
+        <thead>
+          <tr>
+            <th scope="col">Dimension</th>
+            <th scope="col">Excellent (full points)</th>
+            <th scope="col">Adequate (partial points)</th>
+            <th scope="col">Needs Work (minimal points)</th>
+            <th scope="col">Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Depth of bias detection in dataset samples</th>
+            <td>Meets the three-gap minimum or exceeds it, and <strong>every</strong> gap is supported by specific evidence from actual entries (counts, quoted headlines, named sources) and tied to a concrete AI-task consequence.</td>
+            <td>Three gaps are present, but support is <strong>uneven</strong> &mdash; some carry real evidence, others are asserted, or the AI-impact link is vague.</td>
+            <td>Fewer than three gaps, or gaps are generic ("data can be biased") without dataset-specific evidence.</td>
+            <td>30</td>
+          </tr>
+          <tr>
+            <th scope="row">Clarity of representation gap explanations</th>
+            <td>Each gap is explained clearly: which group/category is affected, how it shows up in the data, and why it matters. Language is precise and accessible.</td>
+            <td>Gaps are identified but explanations are uneven &mdash; some clear, some unclear or missing the "why it matters" connection.</td>
+            <td>Representation gaps are listed without explanation, or the student confuses bias with general data quality issues.</td>
+            <td>25</td>
+          </tr>
+          <tr>
+            <th scope="row">Practicality of suggested mitigation strategies</th>
+            <td>Strategies are specific, actionable, and matched to each identified bias; shows understanding of how data collection or labeling could be improved.</td>
+            <td>Strategies are present but some are vague ("collect more data") without explaining how or what kind.</td>
+            <td>Fewer than one strategy per gap, or strategies are unrealistic or unrelated to the biases identified.</td>
+            <td>25</td>
+          </tr>
+          <tr>
+            <th scope="row">Reflection on ethical implications</th>
+            <td>Thoughtful reflection (150+ words) that connects personal findings to broader questions about AI trust, developer/user responsibility, and real-world consequences. Shows genuine engagement.</td>
+            <td>Reflection meets length requirement but stays at a surface level &mdash; restates assignment findings without deeper insight.</td>
+            <td>Reflection is under 150 words, missing, or does not address ethical implications meaningfully.</td>
+            <td>20</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Total: 100 points.</strong> Submitted to Canvas as a PDF file upload; gradebook category is Module artifacts.</p>
+  </section>
+
+
+  <!-- ================= STUDIO ================= -->
+  <section id="studio" aria-labelledby="studio-h">
+    <div class="section-head">
+      <h2 id="studio-h">The Week-3 Studio Session</h2>
+      <p class="sub">Ninety minutes, four blocks. Your writing goes in the boxes below and collects into one PDF at the end.</p>
+    </div>
+
+    <div class="namefields">
+      <div>
+        <label class="field" for="student-name">Your name (appears on the exported PDF)</label>
+        <input type="text" id="student-name" placeholder="First Last">
+      </div>
+      <div>
+        <label class="field" for="dataset-choice">Which dataset are you using?</label>
+        <select id="dataset-choice">
+          <option value="Option A — provided teaching dataset">Option A &mdash; provided teaching dataset</option>
+          <option value="Option B — my own dataset">Option B &mdash; my own dataset</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- OPENER -->
+    <div class="studio">
+      <div class="studio-meta">
+        <h3>Opener &mdash; M1L5-A1: Privacy Policy Outline</h3>
+        <span class="badge">20 minutes</span>
+      </div>
+      <p>Before working on the bias analysis, complete the M1L5-A1 activity: outline a privacy policy for a hypothetical AI app using Gemini (or another tool if you prefer). Produce 3&ndash;5 bullet commitments covering data minimization, user consent, and transparency. This is a warm-up that connects the data protection concepts from <a href="m1l5.html" target="_blank" rel="noopener">M1L5</a> to the bias analysis work ahead.</p>
+      <p>Your outline is included as an <strong>appendix</strong> in your M1-Q02 PDF. It isn't separately graded, but it's required for completeness.</p>
+      <label class="field" for="appendix">Your 3&ndash;5 privacy commitments (one per line)</label>
+      <textarea id="appendix" placeholder="&ndash; We will collect only&hellip;&#10;&ndash; We will never&hellip;&#10;&ndash; You can delete&hellip;"></textarea>
+      <p class="sub">If you already drafted this in M1L5, paste it in here.</p>
+    </div>
+
+    <!-- WORK BLOCK 1 -->
+    <div class="studio">
+      <div class="studio-meta">
+        <h3>Work Block 1 &mdash; Parts 1 &amp; 2</h3>
+        <span class="badge">30 minutes</span>
+      </div>
+      <p>Choose your dataset, explore it with your AI tools, and draft Parts 1 and 2. The sortable table above is your evidence &mdash; filter it by topic or by source and see what the counts tell you.</p>
+
+      <p><strong>A prompt to get you started:</strong></p>
+      <div class="prompt">
+        <pre id="p-explore">Look at these 50 headlines and tell me which topics are overrepresented.</pre>
+        <button type="button" class="btn btn--secondary" id="copy-explore" data-copies="p-explore">Copy this prompt</button>
+        <span id="copy-explore-status" role="status" aria-live="polite"></span>
+      </div>
+
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p>Whatever the tool tells you, check it against the table before you write it down. Part of the grade is whether you verified the tool's claims against actual entries rather than repeating them.</p>
+      </div>
+
+      <div class="part">
+        <h4>Part 1 &mdash; Describe the dataset</h4>
+        <label class="field" for="part1">1&ndash;2 paragraphs: what it contains, where it comes from, what AI task it could serve.</label>
+        <textarea id="part1" data-counted></textarea>
+      </div>
+
+      <div class="part">
+        <h4>Part 2 &mdash; Detect bias</h4>
+        <label class="field" for="part2">At least three gaps. For each: who is missing, what evidence shows it, and what harm could follow.</label>
+        <textarea id="part2" data-counted></textarea>
+      </div>
+    </div>
+
+    <!-- WORK BLOCK 2 -->
+    <div class="studio">
+      <div class="studio-meta">
+        <h3>Work Block 2 &mdash; Parts 3 &amp; 4</h3>
+        <span class="badge">20 minutes</span>
+      </div>
+      <p>Draft your mitigation strategies and the ethical reflection. These two parts carry 45 of the 100 rubric points, so give them the time.</p>
+
+      <p><strong>A prompt to get you started &mdash; a starting point, not a replacement for your own analysis:</strong></p>
+      <div class="prompt">
+        <pre id="p-mitigate">Here is a bias I found in a dataset: [describe it in one sentence]. Suggest two practical ways a data scientist could reduce it, and explain what each one would actually change about the data.</pre>
+        <button type="button" class="btn btn--secondary" id="copy-mitigate" data-copies="p-mitigate">Copy this prompt</button>
+        <span id="copy-mitigate-status" role="status" aria-live="polite"></span>
+      </div>
+
+      <p><strong>Before you write, check your draft against the four rubric dimensions:</strong></p>
+      <ul>
+        <li><strong>Depth of bias detection</strong> &mdash; does every gap carry specific evidence and a concrete consequence?</li>
+        <li><strong>Clarity of explanations</strong> &mdash; is it clear who is affected and why it matters?</li>
+        <li><strong>Practicality of mitigations</strong> &mdash; is each one specific enough to act on?</li>
+        <li><strong>Reflection</strong> &mdash; 150+ words, and does it go past restating your findings?</li>
+      </ul>
+
+      <div class="part">
+        <h4>Part 3 &mdash; Propose mitigation strategies</h4>
+        <label class="field" for="part3">At least one practical strategy per gap, with why it would work.</label>
+        <textarea id="part3" data-counted></textarea>
+      </div>
+
+      <div class="part">
+        <h4>Part 4 &mdash; Reflect on ethical implications</h4>
+        <label class="field" for="part4">At least 150 words on trusting AI systems, and who is responsible when bias is found.</label>
+        <textarea id="part4" data-counted></textarea>
+        <p class="wordcount" id="wc-part4" role="status" aria-live="polite">Part 4: <strong>0</strong> words.</p>
+      </div>
+
+      <p class="wordcount" id="wc-total" role="status" aria-live="polite">Parts 1&ndash;4 together: <strong>0</strong> words. The target is 500&ndash;800.</p>
+      <p class="sub">The counter is a guide, not a gate &mdash; nothing here blocks your export, and your instructor grades the writing, not the number.</p>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="studio">
+      <div class="studio-meta">
+        <h3>Closing &mdash; M1 Module Reflection</h3>
+        <span class="badge">20 minutes</span>
+      </div>
+      <p>This reflection becomes part of your semester portfolio and is appended to your PDF as a final section.</p>
+
+      <blockquote class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>M1 Module Reflection:</strong> Looking back at everything you did in this module &mdash; setting up your AI tools, learning how ML models work, analyzing data for bias, and outlining a privacy policy &mdash; answer the following in 3&ndash;5 sentences:</p>
+        <ol>
+          <li>What surprised you most about how AI systems are trained?</li>
+          <li>How has your understanding of "AI getting things wrong" changed since Week 1?</li>
+          <li>What is one thing you'll pay attention to the next time you use an AI tool, based on what you learned in this module?</li>
+        </ol>
+      </blockquote>
+
+      <label class="field" for="reflection">Your module reflection (3&ndash;5 sentences)</label>
+      <textarea id="reflection"></textarea>
+    </div>
+  </section>
+
+  <!-- ================= EXPORT ================= -->
+  <section id="export" aria-labelledby="export-h">
+    <div class="section-head">
+      <h2 id="export-h">Export &amp; Submit</h2>
+      <p class="sub">One PDF, three sections, uploaded to Canvas by Sunday, September 6.</p>
+    </div>
+
+    <div class="part">
+      <h4>Two more fields for the PDF</h4>
+      <label class="field" for="source-link">Dataset source link <span class="sub">(required only if you chose Option B)</span></label>
+      <input type="text" id="source-link" placeholder="https://&hellip;">
+      <label class="field" for="tool-notes">AI tool usage notes &mdash; which prompts you ran and what came back</label>
+      <textarea id="tool-notes" placeholder="Which tools, which prompts, what they said, and what you checked against the data."></textarea>
+    </div>
+
+    <h3>Export checklist</h3>
+    <p>Tick these off before you export. Nothing here is submitted or scored &mdash; it's a check for you.</p>
+    <ul class="checklist">
+      <li><label><input type="checkbox"> Part 1: Dataset description (1&ndash;2 paragraphs)</label></li>
+      <li><label><input type="checkbox"> Part 2: At least 3 bias/representation gaps with evidence</label></li>
+      <li><label><input type="checkbox"> Part 3: Mitigation strategy for each gap</label></li>
+      <li><label><input type="checkbox"> Part 4: Ethical reflection (150+ words)</label></li>
+      <li><label><input type="checkbox"> Appendix: M1L5-A1 privacy policy outline (3&ndash;5 bullets)</label></li>
+      <li><label><input type="checkbox"> Module Reflection: 3&ndash;5 sentences answering all three prompts</label></li>
+      <li><label><input type="checkbox"> Word count visible; total 500&ndash;800 words (excluding appendix and reflection)</label></li>
+      <li><label><input type="checkbox"> PDF exported and saved locally</label></li>
+    </ul>
+
+    <p><button type="button" class="btn" id="build-btn">Build my PDF</button> <span id="build-status" role="status" aria-live="polite"></span></p>
+
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>Before you close this page &mdash; your week-4 discussion.</strong></p>
+      <p><strong>Monday, September 7 is Labor Day, so there's no Zoom session that week.</strong> Week 4's discussion runs on the Canvas discussion board instead, and it counts as that week's discussion credit (credit/no-credit). It's also Module 1's wrap-up conversation.</p>
+      <p><strong>Post one finding</strong> from the bias analysis you just finished. One paragraph or two &mdash; specific beats broad:</p>
+      <ul>
+        <li>which gap you found, and how you knew (a count, a quoted headline, a source pattern);</li>
+        <li>who it would affect if a real tool were trained on data like this;</li>
+        <li>one thing you'd change about how the data was collected or labeled.</li>
+      </ul>
+      <p><strong>Then reply to two classmates.</strong> Not "good point" &mdash; pick one of these:</p>
+      <ul>
+        <li>connect their finding to something in your own analysis (agreement <em>or</em> contradiction &mdash; contradictions are more interesting);</li>
+        <li>ask what would have to be true for their mitigation to actually work;</li>
+        <li>offer a gap they didn't look for.</li>
+      </ul>
+      <p><strong>Post and both replies are due Sunday, September 13 at 11:59 PM.</strong> We'll open the September 14 session with a short live wrap-up before starting Module 2.</p>
+    </div>
+
+    <div class="export-panel" id="export-panel" hidden>
+      <div class="export-head">
+        <p><strong>CSC 141: AI Literacy</strong> &mdash; M1-Q02, Dataset Bias &amp; Representation Analysis</p>
+      </div>
+      <div class="export-meta">
+        <span><strong>Name:</strong> <span id="out-name"></span></span>
+        <span><strong>Date:</strong> <span id="out-date"></span></span>
+        <span><strong>Dataset:</strong> <span id="out-choice"></span></span>
+      </div>
+      <div id="out-source"></div>
+
+      <h3>Part 1 &mdash; Describe the dataset</h3>
+      <div class="out-part" id="out-part1"></div>
+      <h3>Part 2 &mdash; Detect bias</h3>
+      <div class="out-part" id="out-part2"></div>
+      <h3>Part 3 &mdash; Propose mitigation strategies</h3>
+      <div class="out-part" id="out-part3"></div>
+      <h3>Part 4 &mdash; Reflect on ethical implications</h3>
+      <div class="out-part" id="out-part4"></div>
+
+      <div id="out-tools"></div>
+
+      <h3>Appendix &mdash; M1L5-A1 Privacy Policy Outline</h3>
+      <div class="out-part" id="out-appendix"></div>
+
+      <h3>Module Reflection</h3>
+      <div class="out-part" id="out-reflection"></div>
+
+      <p id="out-wordcount"></p>
+
+      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+      <p class="no-print sub">Save it as <code>M1-Q02-YourLastName-BiasAnalysis.pdf</code> and upload it to Canvas. "Save as PDF" prints these sections only &mdash; not the dataset table, the rubric, or the studio timings.</p>
+    </div>
+
+    <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 1 artifact, due Sunday, September 6</p>
+  </div>
+</footer>
+
+<script>
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l2.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  /* ===== Dataset browser: sort + filter, client-side, nothing persisted. ===== */
+  var tbody = document.getElementById("ds-body");
+  if (tbody) {
+    var allRows = Array.prototype.slice.call(tbody.querySelectorAll("tr"));
+    var headers = Array.prototype.slice.call(document.querySelectorAll("#ds-table thead th[data-key]"));
+    var topicSel = document.getElementById("filter-topic");
+    var sourceSel = document.getElementById("filter-source");
+    var statusEl = document.getElementById("ds-status");
+    var sortKey = "n", sortDir = 1;
+
+    function uniq(attr) {
+      var seen = {};
+      allRows.forEach(function (tr) { seen[tr.getAttribute(attr)] = true; });
+      return Object.keys(seen).sort();
+    }
+    function fill(sel, values) {
+      values.forEach(function (v) {
+        var o = document.createElement("option");
+        o.value = v; o.textContent = v;
+        sel.appendChild(o);
+      });
+    }
+    fill(topicSel, uniq("data-topic"));
+    fill(sourceSel, uniq("data-source"));
+
+    function cellValue(tr, key) {
+      var idx = { n: 0, headline: 1, topic: 2, source: 3 }[key];
+      var t = tr.children[idx].textContent.trim();
+      return key === "n" ? parseInt(t, 10) : t.toLowerCase();
+    }
+
+    function render() {
+      var topic = topicSel.value, source = sourceSel.value;
+      var shown = allRows.filter(function (tr) {
+        return (!topic || tr.getAttribute("data-topic") === topic) &&
+               (!source || tr.getAttribute("data-source") === source);
+      });
+      shown.sort(function (a, b) {
+        var av = cellValue(a, sortKey), bv = cellValue(b, sortKey);
+        if (av < bv) { return -1 * sortDir; }
+        if (av > bv) { return 1 * sortDir; }
+        return cellValue(a, "n") - cellValue(b, "n");
+      });
+      tbody.textContent = "";
+      shown.forEach(function (tr) { tbody.appendChild(tr); });
+
+      var bits = [];
+      if (topic) { bits.push("topic “" + topic + "”"); }
+      if (source) { bits.push("source “" + source + "”"); }
+      statusEl.textContent = "Showing " + shown.length + " of 50 headlines" +
+        (bits.length ? ", filtered by " + bits.join(" and ") : "") + ".";
+
+      headers.forEach(function (th) {
+        var key = th.getAttribute("data-key");
+        var arrow = th.querySelector(".arrow");
+        if (key === sortKey) {
+          th.setAttribute("aria-sort", sortDir === 1 ? "ascending" : "descending");
+          arrow.innerHTML = sortDir === 1 ? "&#9650;" : "&#9660;";
+        } else {
+          th.setAttribute("aria-sort", "none");
+          arrow.innerHTML = "&#9650;";
+        }
+      });
+    }
+
+    headers.forEach(function (th) {
+      th.querySelector(".sort").addEventListener("click", function () {
+        var key = th.getAttribute("data-key");
+        if (key === sortKey) { sortDir = -sortDir; } else { sortKey = key; sortDir = 1; }
+        render();
+      });
+    });
+    topicSel.addEventListener("change", render);
+    sourceSel.addEventListener("change", render);
+    document.getElementById("ds-reset").addEventListener("click", function () {
+      topicSel.value = ""; sourceSel.value = ""; sortKey = "n"; sortDir = 1; render();
+    });
+    render();
+  }
+
+  /* ===== Word count. A guide, never a gate — nothing here blocks the export. ===== */
+  function words(s) {
+    s = (s || "").trim();
+    return s ? s.split(/\s+/).length : 0;
+  }
+  var counted = Array.prototype.slice.call(document.querySelectorAll("textarea[data-counted]"));
+  var wcTotal = document.getElementById("wc-total");
+  var wcPart4 = document.getElementById("wc-part4");
+  function updateCounts() {
+    var total = counted.reduce(function (n, t) { return n + words(t.value); }, 0);
+    var p4 = words(document.getElementById("part4").value);
+    wcTotal.innerHTML = "Parts 1&ndash;4 together: <strong>" + total +
+      "</strong> word" + (total === 1 ? "" : "s") + ". The target is 500&ndash;800.";
+    wcPart4.innerHTML = "Part 4: <strong>" + p4 + "</strong> word" + (p4 === 1 ? "" : "s") +
+      (p4 >= 150 ? " — meets the 150-word minimum." : " — the minimum is 150.");
+  }
+  counted.forEach(function (t) { t.addEventListener("input", updateCounts); });
+  if (counted.length) { updateCounts(); }
+
+  /* ===== Build the export. Populates the panel; scores nothing. ===== */
+  function setText(id, value, fallback) {
+    var el = document.getElementById(id);
+    el.textContent = "";
+    var p = document.createElement("p");
+    if (value) {
+      p.className = "out-part";
+      p.textContent = value;
+    } else {
+      p.className = "out-empty";
+      p.textContent = fallback;
+    }
+    el.appendChild(p);
+  }
+
+  var buildBtn = document.getElementById("build-btn");
+  if (buildBtn) {
+    buildBtn.addEventListener("click", function () {
+      var name = document.getElementById("student-name").value.trim();
+      var choice = document.getElementById("dataset-choice").value;
+      var link = document.getElementById("source-link").value.trim();
+      var tools = document.getElementById("tool-notes").value.trim();
+
+      document.getElementById("out-name").textContent = name || "(name not entered)";
+      document.getElementById("out-choice").textContent = choice;
+      document.getElementById("out-date").textContent =
+        new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+
+      var srcEl = document.getElementById("out-source");
+      srcEl.textContent = "";
+      if (link) {
+        var sp = document.createElement("p");
+        sp.innerHTML = "<strong>Dataset source:</strong> ";
+        sp.appendChild(document.createTextNode(link));
+        srcEl.appendChild(sp);
+      }
+
+      ["part1", "part2", "part3", "part4"].forEach(function (id) {
+        setText("out-" + id, document.getElementById(id).value.trim(), "(not written yet)");
+      });
+
+      var toolsEl = document.getElementById("out-tools");
+      toolsEl.textContent = "";
+      if (tools) {
+        var h = document.createElement("h3");
+        h.textContent = "AI tool usage notes";
+        var tp = document.createElement("p");
+        tp.className = "out-part";
+        tp.textContent = tools;
+        toolsEl.appendChild(h); toolsEl.appendChild(tp);
+      }
+
+      setText("out-appendix", document.getElementById("appendix").value.trim(), "(not written yet)");
+      setText("out-reflection", document.getElementById("reflection").value.trim(), "(not written yet)");
+
+      var total = counted.reduce(function (n, t) { return n + words(t.value); }, 0);
+      document.getElementById("out-wordcount").innerHTML =
+        "<strong>Word count, Parts 1&ndash;4:</strong> " + total +
+        " (target 500&ndash;800; appendix and module reflection are not counted).";
+
+      var panel = document.getElementById("export-panel");
+      panel.hidden = false;
+      document.getElementById("build-status").textContent =
+        " Built below. Check it over, then Save as PDF.";
+      panel.scrollIntoView({ block: "start" });
+    });
+  }
+
+  /* Chrome uses document.title as the default PDF filename, so name it for them. */
+  var savedTitle = document.title;
+  window.addEventListener("beforeprint", function () {
+    var name = document.getElementById("student-name");
+    var last = name && name.value.trim() ? name.value.trim().split(/\s+/).pop() : "YourLastName";
+    document.title = "M1-Q02-" + last.replace(/[^A-Za-z0-9-]/g, "") + "-BiasAnalysis";
+  });
+  window.addEventListener("afterprint", function () { document.title = savedTitle; });
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>
