@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Tools in This Course — CSC 141</title>
+<style>
+  :root{
+    --ink:#1f2430;
+    --ink-soft:#4a5262;
+    --bg:#ffffff;
+    --panel:#f6f8fa;
+    --rule:#d5dbe3;
+    --accent:#1c4f8b;
+    --accent-bg:#eaf0f8;
+    --maxw:78rem;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 1.25rem 3rem;}
+
+  /* ---------- compact banner ---------- */
+  .banner{border-bottom:2px solid var(--rule);padding:1.1rem 0 .9rem;margin-bottom:1.1rem;}
+  .banner h1{font-size:1.4rem;line-height:1.25;margin:0 0 .3rem;letter-spacing:-.01em;}
+  .banner .eyebrow{
+    font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;
+    color:var(--ink-soft);font-weight:700;margin:0 0 .35rem;
+  }
+  .banner p{margin:0;max-width:62ch;color:var(--ink-soft);font-size:.95rem;}
+
+  /* ---------- intro ---------- */
+  .intro{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:.9rem 1.05rem;margin-bottom:1.15rem;}
+  .intro p{margin:0 0 .55rem;max-width:74ch;font-size:.93rem;}
+  .intro p:last-child{margin-bottom:0;}
+  .stamp{font-size:.82rem;color:var(--ink-soft);}
+
+  /* ---------- tier tags ---------- */
+  .tag{
+    display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.04em;
+    text-transform:uppercase;padding:.16rem .45rem;border-radius:3px;
+    border:1px solid transparent;white-space:nowrap;
+  }
+  .tag-college{background:#e4efe5;color:#1d4a23;border-color:#bcd4be;}
+  .tag-personal{background:#fbeedd;color:#71430a;border-color:#e3cba6;}
+  .tag-local{background:#eae8f5;color:#3c3275;border-color:#c6c0e0;}
+  .tag-case{background:#eeece8;color:#474034;border-color:#d3ccc0;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:.45rem 1.1rem;margin:.75rem 0 0;padding:0;list-style:none;}
+  .legend li{font-size:.84rem;color:var(--ink-soft);display:flex;gap:.4rem;align-items:baseline;}
+
+  /* ---------- tabs ---------- */
+  .tabs{display:flex;flex-wrap:wrap;gap:.3rem;border-bottom:2px solid var(--rule);margin-bottom:1.15rem;}
+  .tabs button{
+    font:inherit;font-size:.9rem;font-weight:600;
+    background:none;border:none;border-bottom:3px solid transparent;
+    margin-bottom:-2px;padding:.55rem .8rem;cursor:pointer;color:var(--ink-soft);
+  }
+  .tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);}
+  .tabs button:hover{color:var(--ink);}
+  .tabs button:focus-visible{outline:3px solid var(--accent);outline-offset:-3px;border-radius:3px 3px 0 0;}
+  [role="tabpanel"]:focus{outline:none;}
+
+  /* ---------- module accordions ---------- */
+  details.mod{border:1px solid var(--rule);border-radius:6px;margin-bottom:.6rem;background:var(--bg);}
+  details.mod[open]{background:var(--bg);}
+  details.mod > summary{
+    cursor:pointer;padding:.7rem .9rem;list-style:none;
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:.15rem .7rem;
+  }
+  details.mod > summary::-webkit-details-marker{display:none;}
+  /* Decorative disclosure chevron. The expanded/collapsed state is carried by
+     <details>/<summary> semantics for assistive tech; this is a sighted-user affordance only. */
+  details.mod > summary::before{
+    content:"";flex:0 0 auto;width:.46rem;height:.46rem;margin-right:.15rem;
+    border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);
+    transform:rotate(-45deg) translate(-1px,-1px);transition:transform .12s ease;
+  }
+  details.mod[open] > summary::before{transform:rotate(45deg) translate(-1px,-1px);}
+  @media (prefers-reduced-motion:reduce){details.mod > summary::before{transition:none;}}
+  details.mod > summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:5px;}
+  .mod-id{font-size:.74rem;font-weight:800;letter-spacing:.07em;color:var(--accent);text-transform:uppercase;}
+  .mod-title{font-weight:700;font-size:1rem;}
+  .mod-weeks{font-size:.82rem;color:var(--ink-soft);margin-left:auto;}
+  .mod-body{padding:0 .9rem 1rem;border-top:1px solid var(--rule);}
+
+  .tool{padding:.75rem 0;border-bottom:1px dashed var(--rule);}
+  .tool:last-child{border-bottom:none;padding-bottom:0;}
+  .tool-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;margin-bottom:.2rem;}
+  .tool-name{font-weight:700;font-size:.98rem;}
+  .tool p{margin:.2rem 0 0;font-size:.91rem;max-width:76ch;color:var(--ink);}
+  .tool .where{font-size:.85rem;color:var(--ink-soft);margin-top:.25rem;}
+  .none{font-size:.92rem;color:var(--ink-soft);margin:.75rem 0 0;max-width:70ch;font-style:normal;}
+
+  a{color:var(--accent);}
+  a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:2px;}
+  .site{font-size:.85rem;white-space:nowrap;}
+
+  /* ---------- table ---------- */
+  .tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;}
+  table{border-collapse:collapse;width:100%;min-width:44rem;font-size:.89rem;}
+  caption{text-align:left;font-size:.88rem;color:var(--ink-soft);padding:.7rem .8rem;border-bottom:1px solid var(--rule);background:var(--panel);}
+  th,td{text-align:left;vertical-align:top;padding:.6rem .8rem;border-bottom:1px solid var(--rule);}
+  thead th{background:var(--panel);font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);border-bottom:2px solid var(--rule);}
+  tbody tr:last-child td{border-bottom:none;}
+  td.name{font-weight:700;}
+  td.premise{min-width:17rem;}
+  td:last-child{word-break:break-word;}
+  td:last-child a{font-size:.84rem;}
+
+  /* ---------- callout ---------- */
+  .callout{border:1px solid var(--rule);border-left:4px solid var(--accent);background:var(--accent-bg);border-radius:0 6px 6px 0;padding:.75rem .95rem;margin:1.1rem 0 0;}
+  .callout .label{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.2rem;}
+  .callout p{margin:0;font-size:.91rem;max-width:76ch;}
+
+  h2.sec{font-size:1.05rem;margin:0 0 .2rem;}
+  p.sub{margin:0 0 .9rem;font-size:.9rem;color:var(--ink-soft);max-width:72ch;}
+
+  @media (max-width:640px){
+    .mod-weeks{margin-left:0;width:100%;}
+    .banner h1{font-size:1.22rem;}
+  }
+
+  /* ---------- print: everything visible ---------- */
+  @media print{
+    body{font-size:11pt;}
+    .tabs,.mod-weeks{display:none !important;}
+    [role="tabpanel"][hidden]{display:block !important;}
+    details.mod > summary{list-style:none;}
+    .mod-body{display:block !important;}
+    .tablewrap{overflow:visible;border:none;}
+    table{min-width:0;}
+    a[href^="http"]::after{content:" (" attr(href) ")";font-size:9pt;color:#333;word-break:break-all;}
+    .intro,.callout{background:none;}
+    details.mod{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="banner">
+    <p class="eyebrow">CSC 141 &middot; AI Literacy</p>
+    <h1>AI Tools in This Course</h1>
+    <p>Every AI tool the course names, which module it comes up in, and what it was built to be.</p>
+  </header>
+
+  <div class="intro">
+    <p><strong>This is a map, not a ranking.</strong> Most of the tools below are general-purpose assistants, and the differences you notice between them come mostly from the product built around the model rather than from a fixed list of powers. Module 3 is where the course takes that distinction apart. Read &ldquo;what it&rsquo;s built to be&rdquo; as a starting premise, not a scorecard.</p>
+    <p><strong>Gemini is your baseline</strong> &mdash; the one tool everyone in the class has, so demonstrations and screenshots use it. Past that, the choice is yours unless an activity names a tool and says why. <strong>You will never need an account outside the college to finish this course.</strong></p>
+    <ul class="legend">
+      <li><span class="tag tag-college">College-provided</span> free with your student login</li>
+      <li><span class="tag tag-personal">Personal account</span> optional, your own signup</li>
+      <li><span class="tag tag-local">Your own hardware</span> downloaded, not a service</li>
+      <li><span class="tag tag-case">Case study</span> discussed, never required</li>
+    </ul>
+    <p class="stamp" style="margin-top:.7rem;">Accurate as of <strong>August 2026</strong>. Access terms and web addresses change fast &mdash; if something here doesn&rsquo;t match what you see, tell your instructor. For what each tool does with your data, see <em>How the tools handle your data</em> in the course menu.</p>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Views of the tool list">
+    <button type="button" role="tab" id="tab-mod" aria-controls="panel-mod" aria-selected="true">By module</button>
+    <button type="button" role="tab" id="tab-all" aria-controls="panel-all" aria-selected="false" tabindex="-1">All tools at a glance</button>
+    <button type="button" role="tab" id="tab-more" aria-controls="panel-more" aria-selected="false" tabindex="-1">Beyond this course</button>
+  </div>
+
+  <!-- ============ BY MODULE ============ -->
+  <section role="tabpanel" id="panel-mod" aria-labelledby="tab-mod" tabindex="0">
+    <h2 class="sec">Where each tool comes up</h2>
+    <p class="sub">Select a module to open it. A tool is listed in the module that introduces it; once introduced, it stays available to you for the rest of the semester.</p>
+
+    <details class="mod">
+      <summary>
+        <span class="mod-id">Module 1</span>
+        <span class="mod-title">How AI Actually Works</span>
+        <span class="mod-weeks">Weeks 1&ndash;3</span>
+      </summary>
+      <div class="mod-body">
+        <p class="none">Module 1 introduces the whole landscape at once, so you know what exists before the course starts asking you to compare things.</p>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Gemini</span> <span class="tag tag-college">College-provided</span>
+            <a class="site" href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a></div>
+          <p>Google&rsquo;s general-purpose assistant. It is the course <strong>baseline</strong> because every student already has it through the college Google Workspace account &mdash; which is the only reason a step-by-step instruction can mean the same thing to everybody.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Microsoft Copilot</span> <span class="tag tag-college">College-provided</span>
+            <a class="site" href="https://copilot.microsoft.com" target="_blank" rel="noopener">copilot.microsoft.com</a></div>
+          <p>Microsoft&rsquo;s general-purpose assistant, reached with the same college sign-in. Web only on the student tier. This is the course&rsquo;s fallback if you cannot get into Gemini &mdash; every activity here can be done in it.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">NotebookLM</span> <span class="tag tag-college">College-provided</span>
+            <a class="site" href="https://notebooklm.google.com" target="_blank" rel="noopener">notebooklm.google.com</a></div>
+          <p>Built to answer <em>only</em> from sources you upload, rather than from whatever it absorbed in training. That single design choice makes it behave quite differently from a general chatbot. Requires you to be 18 or older, even on the college account.</p>
+          <p class="where">Named in Module 1; the course returns to it when we reach source-grounded research.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">ChatGPT</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://chatgpt.com" target="_blank" rel="noopener">chatgpt.com</a></div>
+          <p>OpenAI&rsquo;s general-purpose assistant &mdash; the product that put this whole category in front of the public in late 2022.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Claude</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a></div>
+          <p>Anthropic&rsquo;s general-purpose assistant. Appears in the course as a named alternate where comparing two tools teaches something. Requires you to be 18 or older.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Perplexity</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://www.perplexity.ai" target="_blank" rel="noopener">perplexity.ai</a></div>
+          <p>Built retrieval-first: it searches by default and puts its sources in front of you. That is a difference in <em>default posture</em>, not a difference in kind &mdash; the other assistants search too.</p>
+          <p class="where">Introduced in Module 1; worked through properly in Module 3.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Grok</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://grok.com" target="_blank" rel="noopener">grok.com</a></div>
+          <p>A general-purpose assistant from SpaceXAI, built with direct access to live posts on X.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">DeepSeek</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://www.deepseek.com" target="_blank" rel="noopener">deepseek.com</a></div>
+          <p>A general-purpose assistant notable for publishing the weights of several of its models openly &mdash; unusual among the hosted services on this list. It is developed and operated outside the United States, so the rules its data sits under are different ones; the course&rsquo;s data page covers what that means.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mod">
+      <summary>
+        <span class="mod-id">Module 2</span>
+        <span class="mod-title">Generative AI &amp; the Art of the Prompt</span>
+        <span class="mod-weeks">Weeks 4&ndash;6</span>
+      </summary>
+      <div class="mod-body">
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Open-weight / local models</span> <span class="tag tag-local">Your own hardware</span></div>
+          <p>Not one product but a category: models whose weights are published, so they can be downloaded and run on hardware you control instead of being reached through somebody else&rsquo;s service. <strong>Llama</strong> (<a href="https://www.llama.com" target="_blank" rel="noopener">llama.com</a>) and <strong>Mistral</strong> (<a href="https://mistral.ai" target="_blank" rel="noopener">mistral.ai</a>) are two you will run into.</p>
+          <p class="where">Module 2 is where you compare this category against the frontier models on capability, privacy, cost and control &mdash; you will build that comparison yourself, so it is deliberately not filled in here.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mod">
+      <summary>
+        <span class="mod-id">Module 3</span>
+        <span class="mod-title">AI as a Learning Partner &mdash; Honestly</span>
+        <span class="mod-weeks">Weeks 7&ndash;8</span>
+      </summary>
+      <div class="mod-body">
+        <p class="none">No new tools to sign up for. Module 3 is where the tools you already have get taken apart &mdash; what a model is, what the product around it adds, and how an answer actually got assembled.</p>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Perplexity</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://www.perplexity.ai" target="_blank" rel="noopener">perplexity.ai</a></div>
+          <p>Returns here as the worked example of a retrieval-first product, contrasted with how the same question travels through a general assistant.</p>
+        </div>
+
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Comet</span> <span class="tag tag-personal">Personal account</span>
+            <a class="site" href="https://www.perplexity.ai/comet" target="_blank" rel="noopener">perplexity.ai/comet</a></div>
+          <p>Perplexity&rsquo;s web browser with an assistant built in that can act on a page rather than only answer questions about it. Mentioned here in passing; tools that take actions on your behalf are a Module 6 topic.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mod">
+      <summary>
+        <span class="mod-id">Module 4</span>
+        <span class="mod-title">When AI Gets It Wrong: Bias, Privacy &amp; Security</span>
+        <span class="mod-weeks">Weeks 9&ndash;11</span>
+      </summary>
+      <div class="mod-body">
+        <div class="tool">
+          <div class="tool-head"><span class="tool-name">Latimer</span> <span class="tag tag-case">Case study</span>
+            <a class="site" href="https://www.latimer.ai" target="_blank" rel="noopener">latimer.ai</a></div>
+          <p>Built on a deliberately curated training corpus &mdash; including licensed archives such as the <em>New York Amsterdam News</em>, which has been published since long before the web &mdash; on the premise that what a model was trained on determines whose history it is able to represent. Module 4 uses it to make one idea concrete: the record existed, but its digitizing and indexing did not happen evenly, and a model trained by scraping the open web inherits that unevenness.</p>
+          <p class="where">Read about and discussed in Module 4. You are not asked to create an account.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="mod">
+      <summary>
+        <span class="mod-id">Module 5</span>
+        <span class="mod-title">AI in Your World: Work &amp; Your Field</span>
+        <span class="mod-weeks">Weeks 12&ndash;14</span>
+      </summary>
+      <div class="mod-body">
+        <p class="none"><strong>No new tools.</strong> By Module 5 you have met everything the course is going to hand you. This module is about putting what you already have into a real workflow in your own field &mdash; which is a different skill from collecting more tools.</p>
+      </div>
+    </details>
+
+    <details class="mod">
+      <summary>
+        <span class="mod-id">Module 6</span>
+        <span class="mod-title">Governing AI &amp; Owning Your Future</span>
+        <span class="mod-weeks">Weeks 15&ndash;17</span>
+      </summary>
+      <div class="mod-body">
+        <p class="none">No new sign-ups. Module 6 looks forward at categories of tool rather than at particular products &mdash; including systems that take actions on your behalf, which is where <strong>Comet</strong> and tools like it are properly discussed.</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ ALL TOOLS ============ -->
+  <section role="tabpanel" id="panel-all" aria-labelledby="tab-all" tabindex="0" hidden>
+    <h2 class="sec">All tools at a glance</h2>
+    <p class="sub">The same list as the module view, sorted so you can scan it.</p>
+    <div class="tablewrap">
+      <table>
+        <caption>AI tools named in CSC 141, with the module that introduces each. Accurate as of August 2026.</caption>
+        <thead>
+          <tr>
+            <th scope="col">Tool</th>
+            <th scope="col">Access</th>
+            <th scope="col">Introduced</th>
+            <th scope="col">What it&rsquo;s built to be</th>
+            <th scope="col">Site</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">Gemini</td><td><span class="tag tag-college">College</span></td><td>Module 1</td><td class="premise">General-purpose assistant. The course baseline, because every student has it through the college account.</td><td><a href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a></td></tr>
+          <tr><td class="name">Microsoft Copilot</td><td><span class="tag tag-college">College</span></td><td>Module 1</td><td class="premise">General-purpose assistant on the same college sign-in; web only on the student tier. The documented fallback if Gemini won&rsquo;t let you in.</td><td><a href="https://copilot.microsoft.com" target="_blank" rel="noopener">copilot.microsoft.com</a></td></tr>
+          <tr><td class="name">NotebookLM</td><td><span class="tag tag-college">College</span></td><td>Module 1</td><td class="premise">Answers only from sources you upload, not from the open web. 18+, even on the college account.</td><td><a href="https://notebooklm.google.com" target="_blank" rel="noopener">notebooklm.google.com</a></td></tr>
+          <tr><td class="name">ChatGPT</td><td><span class="tag tag-personal">Personal</span></td><td>Module 1</td><td class="premise">General-purpose assistant from OpenAI; the product that made the category mainstream.</td><td><a href="https://chatgpt.com" target="_blank" rel="noopener">chatgpt.com</a></td></tr>
+          <tr><td class="name">Claude</td><td><span class="tag tag-personal">Personal</span></td><td>Module 1</td><td class="premise">General-purpose assistant from Anthropic; a named alternate in demonstrations. 18+.</td><td><a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a></td></tr>
+          <tr><td class="name">Perplexity</td><td><span class="tag tag-personal">Personal</span></td><td>Module 1, worked in Module 3</td><td class="premise">Retrieval-first by default: searches and foregrounds sources. A difference in posture, not in kind.</td><td><a href="https://www.perplexity.ai" target="_blank" rel="noopener">perplexity.ai</a></td></tr>
+          <tr><td class="name">Grok</td><td><span class="tag tag-personal">Personal</span></td><td>Module 1</td><td class="premise">General-purpose assistant from SpaceXAI, built with direct access to live posts on X.</td><td><a href="https://grok.com" target="_blank" rel="noopener">grok.com</a></td></tr>
+          <tr><td class="name">DeepSeek</td><td><span class="tag tag-personal">Personal</span></td><td>Module 1</td><td class="premise">General-purpose assistant that publishes open weights for several of its models; developed and operated outside the US, so different data rules apply.</td><td><a href="https://www.deepseek.com" target="_blank" rel="noopener">deepseek.com</a></td></tr>
+          <tr><td class="name">Open-weight / local models</td><td><span class="tag tag-local">Own hardware</span></td><td>Module 2</td><td class="premise">A category, not a product: published weights you can download and run yourself. Llama and Mistral are two examples.</td><td><a href="https://www.llama.com" target="_blank" rel="noopener">llama.com</a><br><a href="https://mistral.ai" target="_blank" rel="noopener">mistral.ai</a></td></tr>
+          <tr><td class="name">Comet</td><td><span class="tag tag-personal">Personal</span></td><td>Module 3 mention, Module 6 topic</td><td class="premise">A web browser with an assistant that can act on a page, not only answer about it.</td><td><a href="https://www.perplexity.ai/comet" target="_blank" rel="noopener">perplexity.ai/comet</a></td></tr>
+          <tr><td class="name">Latimer</td><td><span class="tag tag-case">Case study</span></td><td>Module 4</td><td class="premise">Built on a deliberately curated corpus including licensed archives, on the premise that training data determines whose history a model can represent.</td><td><a href="https://www.latimer.ai" target="_blank" rel="noopener">latimer.ai</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <span class="label">Verify</span>
+      <p>Everything in the last column is a claim about how a tool was designed, not a promise about what it will do for you today. Products change monthly. The skill this course is actually after is reading capability off an answer you are looking at &mdash; not memorizing a table like this one.</p>
+    </div>
+  </section>
+
+  <!-- ============ BEYOND ============ -->
+  <section role="tabpanel" id="panel-more" aria-labelledby="tab-more" tabindex="0" hidden>
+    <h2 class="sec">Beyond this course</h2>
+    <p class="sub">Special-purpose AI tools you might find useful, which the course does not cover.</p>
+    <div class="intro">
+      <p><strong>Coming later this semester.</strong> This section will collect tools built for one particular job &mdash; making diagrams, drafting slides, that kind of thing &mdash; rather than the general-purpose assistants above. Nothing here will ever be required for an assignment; it is a starting point for your own exploration once you have the fundamentals.</p>
+      <p class="stamp">Check back after Module 2. Have a suggestion? Bring it to a Monday session.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var panels = tabs.map(function(t){ return document.getElementById(t.getAttribute("aria-controls")); });
+
+  function select(i, focus){
+    tabs.forEach(function(t, j){
+      var on = (i === j);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      panels[j].hidden = !on;
+    });
+    if (focus) { tabs[i].focus(); }
+  }
+
+  tabs.forEach(function(tab, i){
+    tab.addEventListener("click", function(){ select(i, false); });
+    tab.addEventListener("keydown", function(e){
+      var k = e.key, n = tabs.length, next = null;
+      if (k === "ArrowRight") { next = (i + 1) % n; }
+      else if (k === "ArrowLeft") { next = (i - 1 + n) % n; }
+      else if (k === "Home") { next = 0; }
+      else if (k === "End") { next = n - 1; }
+      if (next !== null) { e.preventDefault(); select(next, true); }
+    });
+  });
+
+  // Print: reveal every panel and expand every accordion, then restore.
+  var restore = null;
+  function expandAll(){
+    restore = {
+      hidden: panels.map(function(p){ return p.hidden; }),
+      open: Array.prototype.map.call(document.querySelectorAll("details.mod"), function(d){ return d.open; })
+    };
+    panels.forEach(function(p){ p.hidden = false; });
+    Array.prototype.forEach.call(document.querySelectorAll("details.mod"), function(d){ d.open = true; });
+  }
+  function restoreAll(){
+    if (!restore) { return; }
+    panels.forEach(function(p, j){ p.hidden = restore.hidden[j]; });
+    Array.prototype.forEach.call(document.querySelectorAll("details.mod"), function(d, j){ d.open = restore.open[j]; });
+    restore = null;
+  }
+  window.addEventListener("beforeprint", expandAll);
+  window.addEventListener("afterprint", restoreAll);
+  if (window.matchMedia) {
+    var mq = window.matchMedia("print");
+    var handler = function(m){ if (m.matches) { expandAll(); } else { restoreAll(); } };
+    if (mq.addEventListener) { mq.addEventListener("change", handler); }
+    else if (mq.addListener) { mq.addListener(handler); }
+  }
+})();
+</script>
+</body>
+</html>
