@@ -108,10 +108,6 @@ footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding:
 .video-frame { position: relative; aspect-ratio: 16 / 9; width: 100%; max-width: 56rem; margin: var(--s-4) 0; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); overflow: hidden; }
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 
-/* Marks text that is still a placeholder. Delete this rule together with the
-   last .pending element — if it renders in Canvas, the page shipped unfinished. */
-.pending { background: #fdebd0; outline: 2px dashed #b9770e; color: #6b4708; font-weight: 700; }
-
 @media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } }
 @media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
 @media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
@@ -135,25 +131,41 @@ footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding:
       <h2>Start here</h2>
     </div>
 
-    <p>A short orientation for week 4 &mdash; what we&rsquo;re starting, and what&rsquo;s due. About <span class="pending">[runtime]</span> minutes.</p>
+    <p>A short orientation for week 4 &mdash; what we&rsquo;re starting, and what&rsquo;s due. About 8 minutes.</p>
 
     <!-- ============================================================
-         REPLACE BEFORE PUBLISHING — YouTube video ID.
-         Swap VIDEO_ID_PLACEHOLDER in BOTH the iframe src below and the
-         fallback link that follows it. Video must be UNLISTED (not
-         Private) with embedding enabled. Do not switch the host to
-         youtube.com — youtube-nocookie.com is the condition the
-         STANDARDS v2.7 exception is granted on.
+         VIDEO ID — w9ZFukdB1o8. It appears in exactly TWO places:
+         the iframe src below and the fallback link that follows it.
+         A re-recording is those two swaps plus the transcript.
+         Video must stay UNLISTED (not Private) with embedding on.
+         Do NOT switch the host to youtube.com — youtube-nocookie.com
+         is the condition the STANDARDS v2.7 exception is granted on.
          ============================================================ -->
     <div class="video-frame">
-      <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID_PLACEHOLDER"
+      <iframe src="https://www.youtube-nocookie.com/embed/w9ZFukdB1o8"
               title="Week 4 Orientation &mdash; CSC 141: AI Literacy"
               loading="lazy"
               referrerpolicy="strict-origin-when-cross-origin"
               allowfullscreen></iframe>
     </div>
 
-    <p>Can&rsquo;t play the video here? <a href="https://www.youtube.com/watch?v=VIDEO_ID_PLACEHOLDER" target="_blank" rel="noopener">Watch it on YouTube</a> &mdash; or read the full transcript at the bottom of this page. Everything in the video is also written out below, so you&rsquo;re not missing anything either way.</p>
+    <p>Can&rsquo;t play the video here? <a href="https://www.youtube.com/watch?v=w9ZFukdB1o8" target="_blank" rel="noopener">Watch it on YouTube</a> &mdash; or read the full transcript at the bottom of this page. Everything in the video is also written out below, so you&rsquo;re not missing anything either way.</p>
+  </section>
+
+  <section id="in-the-video">
+    <div class="section-head">
+      <h2>What&rsquo;s in the video</h2>
+      <p class="sub">A map of the recording, so you can skip to what you need &mdash; or skip it and read this page.</p>
+    </div>
+
+    <ul>
+      <li><strong>Where we are.</strong> Module 1 is finished except for its discussion. Module 2 &mdash; generative AI and the art of the prompt &mdash; opens now and runs <strong>three weeks</strong>: this one plus two more.</li>
+      <li><strong>What a prompt is.</strong> The term &ldquo;prompt engineering&rdquo; has faded; the question under it hasn&rsquo;t. How do you get a better answer than the one you just got?</li>
+      <li><strong>A walk through M2L1 and M2L2.</strong> A tour of each lesson&rsquo;s sections, not a lecture on them. The one-line version: Module 1 was AI that sorts, Module 2 is AI that makes.</li>
+      <li><strong>M2L1&rsquo;s practice, demonstrated.</strong> Ask a model why sourdough needs a starter, then ask it what kind of model wrote that. Use my prompt or write your own.</li>
+      <li><strong>Why your answer won&rsquo;t match the lesson.</strong> The field moves faster than the writing, which is why the lessons carry dates. The mismatch is the point &mdash; note where it diverged and bring it to the 14th.</li>
+      <li><strong>The discussion, and how to reach me.</strong> Post before the weekend, replies over the weekend. If you analyzed a different dataset than the provided 50 headlines, that&rsquo;s fine &mdash; the discussion page says how to answer. If you&rsquo;re struggling, book time on my calendar rather than waiting for Monday.</li>
+    </ul>
   </section>
 
   <section id="week">
@@ -230,13 +242,31 @@ footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding:
     <details>
       <summary>Full transcript of the video</summary>
       <!-- ============================================================
-           REPLACE BEFORE PUBLISHING — corrected transcript.
-           Short paragraphs, sentence case, real punctuation. NOT a
-           caption dump: no timestamps, no speaker labels, no all-caps.
-           This block is the accessibility fallback AND the
-           network fallback and may never be trimmed for height.
+           CORRECTED TRANSCRIPT — corrected prose from
+           csc141-wk4-intro.vtt, not a caption dump. This block is the
+           accessibility fallback AND the network fallback and may
+           never be trimmed for height. Re-recording replaces it whole.
            ============================================================ -->
-      <p class="pending">[Transcript goes here once the video is recorded and its captions are corrected.]</p>
+      <p>Hello, and welcome to week four.</p>
+      <p>Before we get into this week, let me go back and look at the syllabus for a second so we can orient ourselves to where we are in the course. Looking at the course outline: Module 1, how AI actually works &mdash; we&rsquo;ve completed that, and we do have an assignment that will finish it off. Module 2 is generative AI and the art of the prompt.</p>
+      <p>So this week, week four, is basically an introduction to what generative AI is. That&rsquo;s what we&rsquo;ll do this week, and then we&rsquo;ll start looking at how to prompt. A prompt is when you ask the AI for a response &mdash; you ask a question of the AI. How do you get a better response? That&rsquo;s what a prompt is. There&rsquo;s a thing called prompt engineering, which has kind of fallen by the wayside as a term, but it&rsquo;s really about how I get the best information, the best response, out of the AI that I can.</p>
+      <p>So that&rsquo;s where we&rsquo;re at. We&rsquo;re in Module 2. We have three weeks &mdash; this week plus two more &mdash; to finish this module before we move on to the next phase of the class.</p>
+      <p>All right, so: what is generative AI? I&rsquo;m not going to walk through all of it here, but I have it broken into sections &mdash; from sorting to making, what it means, large language models, how it produces text, two stages, not just text, practice, and check yourself. Each of those sections is just a couple of paragraphs about what that thing means.</p>
+      <p>For instance, in Module 1 we mostly sorted things. We had a spam filter, things like that. In this module we&rsquo;re talking about how we generate things that didn&rsquo;t exist before. That&rsquo;s generative AI.</p>
+      <p>So it&rsquo;s broken up into small sections: what does generative AI mean, large language models, how you actually produce text, where the model&rsquo;s knowledge comes from, and then not just text &mdash; text, images, audio, and video. We&rsquo;ll talk more about all of that in lesson two this week.</p>
+      <p>Then there&rsquo;s a little assignment for you to work on. It&rsquo;s optional, but you should do it, just to get a feel for how generative AI works and what it does. This one has a prompt that says: write a short paragraph explaining why sourdough bread needs a starter. Or make up your own prompt &mdash; you don&rsquo;t have to use mine. Then ask it what kind of model produced that paragraph and how it works.</p>
+      <p>Everybody will get different answers depending on which AI you use. The lesson says to use Gemini. Gemini will give you an answer that falls partially in line with what&rsquo;s written above it in the lesson, because these things are evolving. Large language models and generative AI are evolving. So: where did it match? What did the lesson say? How was it different? Where&rsquo;s the mismatch?</p>
+      <p>And then check yourself &mdash; ask yourself those questions, see how well you understood the material from before, and then move on to lesson two.</p>
+      <p>Lesson two is about those four things: text, images, audio, and video. That&rsquo;s called multimodal AI, meaning it can do more than one thing. A lot of them will do multimodal now. Some of them do not &mdash; Copilot doesn&rsquo;t really do multimodal. ChatGPT will. Claude will, but you typically have to use separate tools. Gemini will, but you have to call a separate tool, that kind of thing.</p>
+      <p>Lesson two just explains what they are, and it&rsquo;s built essentially the same way as lesson one: text, images, audio, video, where it falls over, what it costs you, some practice, and check yourself.</p>
+      <p>I don&rsquo;t feel like I have to go through every piece of it. I did put some dates down, because everything is changing so fast, and you&rsquo;ll see that in the practice. If you did the practice for lesson one, you&rsquo;ll see it in the response you get when you ask those questions of the AI &mdash; it won&rsquo;t match up exactly with what the lesson says. We&rsquo;ll talk about that a little bit the next time we get together and meet.</p>
+      <p>It also talks about some different paths you can take with this stuff. And then, again, check yourself: a little three-question quiz. How did you do? How well do you understand it?</p>
+      <p>And then that&rsquo;s the new material for this week. That&rsquo;s the stuff we&rsquo;re working on this week.</p>
+      <p>Then we do have an assignment, which is a discussion assignment that kind of wraps up Module 1. And I&rsquo;m assuming everybody used the provided dataset &mdash; this question works with the provided dataset. But if you did not use the provided dataset, don&rsquo;t worry about it. Just answer the question based on the dataset you used.</p>
+      <p>So try to do your post before the weekend, and then do two replies over the weekend. Both are due Sunday the 13th. And there are some examples of strong and weak posts &mdash; here&rsquo;s a gap I found, how I knew, who it would affect, what I changed about the data. You could start with that as a kind of prompt to create your post.</p>
+      <p>All right, so that&rsquo;s this week. Generative AI: what is generative AI?</p>
+      <p>So if you have questions, make sure to reach out. If you&rsquo;re struggling, make an appointment on my calendar, and we can get together and talk about whatever issues you may or may not be having.</p>
+      <p>And we will see you next Monday, the 14th. All right? Thanks.</p>
     </details>
   </section>
 
