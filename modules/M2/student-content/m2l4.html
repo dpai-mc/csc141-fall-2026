@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M2L4 &mdash; Iterative Refinement &amp; Domain-Specific Strategies | CSC 141</title>
+<style>
+
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4) ---------- */
+.cards--wide { grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr)); }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+#primer { margin-top: var(--s-6); }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M2L4-A1 refinement log only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 2, Lesson 4</p>
+    <h1>Iterative Refinement &amp; Domain-Specific Strategies</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">One conversation, not four</a></li>
+      <li><a href="#s2">Four moves</a></li>
+      <li><a href="#s3">Knowing when to stop</a></li>
+      <li><a href="#s4">Adapting to the work</a></li>
+      <li><a href="#s5">Prompts worth keeping</a></li>
+      <li><a href="#s6">When to switch tools</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>One Conversation Instead of Four</h2>
+      <p class="sub">The opposite of what M2L3 asked you to do, and on purpose.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Last lesson you wrote four separate prompts and ran each in its own chat, deliberately keeping them from contaminating one another. That was a controlled comparison, and it answered a specific question: which construction was worth the effort.</p>
+        <p>This lesson does the opposite on purpose.</p>
+        <p>Here you send one prompt, read what comes back, and then <strong>keep going in the same conversation</strong> &mdash; because the answer you get is information you didn&rsquo;t have when you wrote the prompt. You now know what it assumed, what it over-explained, what it skipped, and where it went generic. Every one of those is something to say next.</p>
+
+        <figure>
+          <div class="figure-scroll">
+            <svg viewBox="0 0 720 366" role="presentation" focusable="false" aria-hidden="true">
+              <rect x="4" y="8" width="344" height="350" rx="8" fill="#f4f6f7" stroke="#b0b8bd"/>
+              <rect x="372" y="8" width="344" height="350" rx="8" fill="#f4f6f7" stroke="#b0b8bd"/>
+              <text x="20" y="36" font-family="sans-serif" font-size="15" font-weight="700" fill="#0e3a56">This lesson: one chat</text>
+              <text x="388" y="36" font-family="sans-serif" font-size="15" font-weight="700" fill="#0e3a56">Last lesson: four chats</text>
+
+              <line x1="34" y1="56" x2="34" y2="334" stroke="#1d6690" stroke-width="2"/>
+
+              <rect x="48" y="52" width="284" height="26" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="60" y="70" font-family="sans-serif" font-size="12" fill="#1a1a1a">your prompt</text>
+              <rect x="48" y="88" width="284" height="26" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="60" y="106" font-family="sans-serif" font-size="12" fill="#14304a">answer</text>
+              <rect x="48" y="124" width="284" height="26" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="60" y="142" font-family="sans-serif" font-size="12" fill="#1a1a1a">turn 2 &#8212; revise</text>
+              <rect x="48" y="160" width="284" height="26" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="60" y="178" font-family="sans-serif" font-size="12" fill="#14304a">answer</text>
+              <rect x="48" y="196" width="284" height="26" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="60" y="214" font-family="sans-serif" font-size="12" fill="#1a1a1a">turn 3 &#8212; narrow</text>
+              <rect x="48" y="232" width="284" height="26" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="60" y="250" font-family="sans-serif" font-size="12" fill="#14304a">answer</text>
+              <rect x="48" y="268" width="284" height="26" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="60" y="286" font-family="sans-serif" font-size="12" fill="#1a1a1a">turn 4 &#8212; critique</text>
+              <rect x="48" y="304" width="284" height="26" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="60" y="322" font-family="sans-serif" font-size="12" fill="#14304a">answer</text>
+              <text x="48" y="348" font-family="sans-serif" font-size="12" fill="#4a4a4a">Every turn can see every turn above it.</text>
+
+              <rect x="388" y="52" width="312" height="62" rx="5" fill="#ffffff" stroke="#b0b8bd" stroke-dasharray="5 4"/>
+              <text x="400" y="72" font-family="sans-serif" font-size="11" font-weight="700" fill="#4a4a4a">new chat</text>
+              <rect x="400" y="80" width="288" height="24" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="412" y="97" font-family="sans-serif" font-size="12" fill="#1a1a1a">version 1</text>
+
+              <rect x="388" y="124" width="312" height="62" rx="5" fill="#ffffff" stroke="#b0b8bd" stroke-dasharray="5 4"/>
+              <text x="400" y="144" font-family="sans-serif" font-size="11" font-weight="700" fill="#4a4a4a">new chat</text>
+              <rect x="400" y="152" width="288" height="24" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="412" y="169" font-family="sans-serif" font-size="12" fill="#1a1a1a">version 2</text>
+
+              <rect x="388" y="196" width="312" height="62" rx="5" fill="#ffffff" stroke="#b0b8bd" stroke-dasharray="5 4"/>
+              <text x="400" y="216" font-family="sans-serif" font-size="11" font-weight="700" fill="#4a4a4a">new chat</text>
+              <rect x="400" y="224" width="288" height="24" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="412" y="241" font-family="sans-serif" font-size="12" fill="#1a1a1a">version 3</text>
+
+              <rect x="388" y="268" width="312" height="62" rx="5" fill="#ffffff" stroke="#b0b8bd" stroke-dasharray="5 4"/>
+              <text x="400" y="288" font-family="sans-serif" font-size="11" font-weight="700" fill="#4a4a4a">new chat</text>
+              <rect x="400" y="296" width="288" height="24" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="412" y="313" font-family="sans-serif" font-size="12" fill="#1a1a1a">version 4</text>
+
+              <text x="388" y="348" font-family="sans-serif" font-size="12" fill="#4a4a4a">No turn can see any other. That was the point.</text>
+            </svg>
+          </div>
+          <figcaption>Diagram 1 &mdash; the two activities, side by side. <strong>This lesson (left):</strong> one chat, in which your first prompt is followed by an answer, then turn 2 (revise), an answer, turn 3 (narrow), an answer, turn 4 (critique) and an answer &mdash; every turn able to see every turn above it. <strong>Last lesson (right):</strong> four separate new chats, one per prompt version, none of which could see any of the others. That isolation was the point there; the accumulation is the point here.</figcaption>
+        </figure>
+
+        <p>The reframe worth taking from this lesson is small and it changes how the whole thing feels: <strong>the first answer is not the deliverable. It is the first draft, and you are the editor.</strong> Most people treat a disappointing first answer as a verdict on the tool. It is closer to a rough draft handed to you by someone who has never met you and did not know what you were working on.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Four Moves</h2>
+      <p class="sub">More options than &ldquo;try again.&rdquo;</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>When an answer isn&rsquo;t right, you have more options than &ldquo;try again.&rdquo;</p>
+
+        <div class="cards cards--wide">
+          <div class="card">
+            <h4>Revise</h4>
+            <p><strong>What it does:</strong> names what to change, specifically, and leaves the rest alone.</p>
+            <p><strong>What it sounds like:</strong> &ldquo;Keep the structure but cut it by half.&rdquo; &ldquo;Same content, but write it for someone who has never taken a statistics course.&rdquo;</p>
+            <p><strong>When to reach for it:</strong> the answer is close and you can name the gap.</p>
+          </div>
+          <div class="card">
+            <h4>Narrow</h4>
+            <p><strong>What it does:</strong> takes one part of the answer and goes deeper on it.</p>
+            <p><strong>What it sounds like:</strong> &ldquo;Expand the third paragraph into its own section and drop the rest.&rdquo;</p>
+            <p><strong>When to reach for it:</strong> long answers are often one good paragraph surrounded by filler; narrowing is how you find out which paragraph it was.</p>
+          </div>
+          <div class="card">
+            <h4>Branch</h4>
+            <p><strong>What it does:</strong> asks for alternatives rather than an improvement.</p>
+            <p><strong>What it sounds like:</strong> &ldquo;Give me three different openings for this, in three different tones.&rdquo;</p>
+            <p><strong>When to reach for it:</strong> you don&rsquo;t yet know what you want and would recognize it if you saw it &mdash; or the first answer was fine but felt inevitable.</p>
+          </div>
+          <div class="card">
+            <h4>Critique</h4>
+            <p><strong>What it does:</strong> asks it to turn on its own output.</p>
+            <p><strong>What it sounds like:</strong> &ldquo;What&rsquo;s the weakest part of this?&rdquo; &ldquo;What would an unconvinced reader push back on first?&rdquo; &ldquo;What did I ask for that you didn&rsquo;t quite deliver?&rdquo;</p>
+            <p><strong>When to reach for it:</strong> structural gaps, missing coverage and tonal problems &mdash; the things that are hard to see in your own draft.</p>
+          </div>
+        </div>
+
+        <p><strong>Revise</strong> is the workhorse, and the specificity you practiced in M2L3 applies here too &mdash; &ldquo;make it better&rdquo; is as vague in round three as it was in round one. <strong>Branch</strong> is the one most people forget they have: three options tell you whether the first answer was actually the obvious choice or just the first one. And <strong>critique</strong> works better than it has any right to for finding the shape problems in a draft.</p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>A critique is another answer, not a check.</strong> When you ask a tool what&rsquo;s wrong with its own output, what comes back is generated the same way the output was. That makes it genuinely useful for structure, coverage and tone &mdash; and it is not evidence that anything in the draft is <em>true</em>. Module 3 is about that second question, and it deserves the whole module it gets.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Knowing When to Stop</h2>
+      <p class="sub">Iteration is not free and it is not monotonic.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>More rounds do not reliably mean a better result, and there are two failure shapes worth recognizing while you are in one.</p>
+        <p><strong>The conversation drifts.</strong> Ten turns in, the answer has accumulated every adjustment you asked for and no longer resembles anything you would have wanted from the start. Each individual change was an improvement; the sum is a camel. When this happens, the move is not another round &mdash; it is to write one fresh prompt containing everything you have learned you wanted, and start clean.</p>
+        <p><strong>The returns flatten.</strong> Rounds four through eight produce differently-worded versions of the same answer. That usually means the request has been fully specified and you have what this approach is going to give you. Recognizing that moment is a skill, and it is the one that saves the most time.</p>
+        <p>Both of these are worth writing down when they happen to you, because &ldquo;round three made it worse&rdquo; is a genuine finding about your own process, not a failure to report.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>Adapting to the Work</h2>
+      <p class="sub">The five parts don&rsquo;t change between fields. What you put in them does.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>The differences are more specific than &ldquo;be professional.&rdquo;</p>
+
+        <div class="cards cards--wide">
+          <div class="card">
+            <h4>Academic writing</h4>
+            <p>The heavy lifting is in <strong>context</strong> and <strong>constraints</strong>: the audience&rsquo;s level, the argument you are actually making, the evidence you are supplying yourself, and what you do not want assumed.</p>
+            <p class="sub">What you disclose about AI assistance, and how you cite it, is Module 3&rsquo;s subject &mdash; not a prompting question, and it is treated properly there.</p>
+          </div>
+          <div class="card">
+            <h4>Technical documentation</h4>
+            <p>Precision about the reader is everything: what they already know, what they must not be assumed to know, and what happens if they follow a step wrong.</p>
+            <p><strong>Format</strong> carries unusual weight here &mdash; numbered steps, prerequisites first, expected result stated after each action.</p>
+          </div>
+          <div class="card">
+            <h4>Creative work</h4>
+            <p><strong>Constraints</strong> do more than they do anywhere else, and the useful ones are usually negative: what to avoid, what has been done to death, which register to stay out of.</p>
+            <p>Branching is the natural move in creative work; revising a single line toward &ldquo;better&rdquo; rarely is.</p>
+          </div>
+          <div class="card">
+            <h4>Data analysis</h4>
+            <p>Describe the <strong>shape</strong> of what you have in words &mdash; how many rows, what each column means, where the gaps are &mdash; before asking anything.</p>
+            <p>Ask for the approach before the answer: &ldquo;What would you look at first, and why?&rdquo; is a better opening than &ldquo;what does this data show?&rdquo;, which invites a confident answer built on a structure you never saw.</p>
+            <p><strong>What you paste into a tool is a decision, and you already have the framework for it from M1L5.</strong></p>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>Prompts Worth Keeping</h2>
+      <p class="sub">The practical payoff of everything in this module.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>When a conversation finally lands somewhere good, you are holding two things: a result, and a <em>recipe</em>. The result you use once. The recipe you keep.</p>
+        <p>Take everything the conversation accumulated and collapse it into one standalone prompt &mdash; the one you would have written at the start if you had known. That collapsed prompt is a <strong>template</strong>, and it is reusable in a way the conversation is not.</p>
+
+        <div class="prompt">
+<pre id="p1">Role: You are [who this should be written as].
+Task: [the verb, and what it acts on].
+Context: [what you would have to tell a new colleague before they could start].
+Constraints: [length, reading level, what to include, what to avoid].
+Format: [the shape of the answer].</pre>
+          <button type="button" class="btn btn--secondary" id="copy-p1" data-copies="p1">Copy</button>
+          <span id="copy-p1-status" role="status"></span>
+        </div>
+
+        <p>Filled in, from a conversation that took six rounds to get right:</p>
+
+        <div class="prompt">
+<pre id="p2">Role: You are an academic advisor who has worked with first-generation college
+students for years.
+Task: Write a reply to a student email asking whether to drop a class they are
+failing at midterm.
+Context: The student is in their first semester, taking twelve units, and works
+about twenty-five hours a week. They have not said which class or why. Our
+withdrawal deadline is in nine days.
+Constraints: Under 200 words. Warm but not soft - do not reassure them that it
+will be fine. Ask the two questions I would need answered before advising either
+way. Do not recommend dropping or staying.
+Format: An email, no subject line, no salutation placeholder.</pre>
+          <button type="button" class="btn btn--secondary" id="copy-p2" data-copies="p2">Copy</button>
+          <span id="copy-p2-status" role="status"></span>
+        </div>
+
+        <p>Notice that almost nothing in the filled-in version could have been guessed. The nine-day deadline, the twenty-five hours, the refusal to recommend &mdash; those came out of the conversation, one at a time, and the template is where they end up. <strong>This is the shape of the thing you should be saving.</strong> Not the answers. The requests that produced them.</p>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>Save the request, not the reply.</strong> A good answer solves today. A good prompt solves the next twenty times you need this. If you keep one thing from Module 2, keep a file of prompts that worked.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s6">
+    <div class="section-head">
+      <h2>When to Switch Tools</h2>
+      <p class="sub">Three situations, none of which is about one product being better than another.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Sometimes the right move isn&rsquo;t another round in this conversation.</p>
+        <p><strong>The thread has gone stale.</strong> You have drifted or flattened out, as above. <strong>The cheapest fix is a new conversation in the same tool</strong>, using your collapsed prompt &mdash; and it is the one to try first, because most of the value of &ldquo;switching&rdquo; is really the value of starting clean.</p>
+        <p><strong>You want an attempt that hasn&rsquo;t seen any of this.</strong> Everything in your thread is now context, including your false starts. Running your collapsed prompt somewhere with no history of the conversation tells you what the prompt does on its own.</p>
+        <p><strong>You want to know whether a result is an artifact of one tool.</strong> If two tools given the identical prompt produce recognizably similar answers, that is worth something. If they produce very different ones, that is worth more &mdash; and it is a question about your prompt at least as often as it is about them.</p>
+        <p><strong>What is not on this list is &ldquo;because tool X is better at Y.&rdquo;</strong> Which of these tools does what, and how well, changes on a timescale of months, and anything you read about it &mdash; here included &mdash; is out of date faster than you would think. What doesn&rsquo;t go stale is the habit: run the same prompt in two places and read the difference yourself.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M2L4-A1 &mdash; One task, one conversation, one keeper</h2>
+        <span class="badge">35 minutes</span>
+        <span class="badge badge--quiet">Optional export</span>
+      </div>
+      <p><strong>Take one real task through a conversation, collapse what you learn into a single prompt, and see what that prompt does somewhere else.</strong></p>
+
+      <h3>Step 1 &mdash; pick a real task</h3>
+      <p>Choose something from your <strong>&ldquo;10 Things AI can help me do in my daily life&rdquo;</strong> list &mdash; the one you drafted in our first session &mdash; or a task from your own field or coursework. It has to be something you actually want done; a made-up task produces a made-up conversation and there is nothing to learn from it.</p>
+      <p class="sub">Your 10-Things list is yours and stays yours. You are not turning it in or revising it here &mdash; we come back to it at the end of the semester.</p>
+
+      <h3>Step 2 &mdash; write your opening prompt</h3>
+      <p>Use M2L3&rsquo;s five parts. You do not need all five. You do need to have decided about each of them.</p>
+
+      <h3>Step 3 &mdash; three rounds, <em>one</em> conversation</h3>
+      <p>Run your prompt in <strong>Gemini</strong> (or another tool if you prefer), then keep going <strong>in that same conversation</strong> for at least three more turns, using the four moves. Mix them &mdash; three revisions in a row is one move used three times, not three moves.</p>
+      <p>For each round, record <strong>what you asked for</strong> and <strong>what actually changed</strong>. &ldquo;Nothing changed&rdquo; and &ldquo;it got worse&rdquo; are real answers and are worth more than a polite &ldquo;it improved.&rdquo; If a round made it worse, say which move it was and what happened.</p>
+
+      <h3>Step 4 &mdash; collapse it</h3>
+      <p>Write the single standalone prompt you would use if you were starting this task over, knowing everything the conversation taught you. This is your <strong>consolidated prompt</strong>. It should be able to stand alone with no conversation behind it.</p>
+
+      <h3>Step 5 &mdash; run it somewhere else</h3>
+      <p>Open the <strong>other AI tool your college account gives you</strong> &mdash; you have access to it through your <code>@student.mendocino.edu</code> email &mdash; and run your consolidated prompt there, in a fresh conversation.</p>
+      <p class="sub">Or any free tool you already use, if you prefer. Nothing in this course requires you to open an account with a company outside the college.</p>
+
+      <h3>Step 6 &mdash; compare the two outputs</h3>
+      <p>In two or three sentences: how did the second result differ from where your conversation ended up, and what does that difference tell you about <strong>your prompt</strong>?</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Compare the two outputs, not the two products.</strong> You ran one prompt twice. What that tells you is how much of your result came from the prompt and how much came from the six turns of conversation behind it &mdash; which is a fact about your work, and portable. Whether one tool is &ldquo;better&rdquo; is a much bigger claim than one prompt can support, and it would be out of date by the time you finished writing it down.</p>
+      </div>
+
+      <form id="refine-form">
+        <label class="field" for="task">The task</label>
+        <input type="text" id="task" name="task">
+        <label class="field" for="opening">Opening prompt</label>
+        <textarea id="opening" name="opening"></textarea>
+        <label class="field" for="r1">Round 1 &mdash; what I asked for, and what changed</label>
+        <textarea id="r1" name="r1" rows="3"></textarea>
+        <label class="field" for="r2">Round 2</label>
+        <textarea id="r2" name="r2" rows="3"></textarea>
+        <label class="field" for="r3">Round 3</label>
+        <textarea id="r3" name="r3" rows="3"></textarea>
+        <label class="field" for="consolidated">Consolidated prompt</label>
+        <textarea id="consolidated" name="consolidated"></textarea>
+        <label class="field" for="second">What the second run told me</label>
+        <textarea id="second" name="second"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="refine-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M2L4, Refinement Log</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <h3>The task</h3>
+        <p id="out-task"></p>
+        <h3>Opening prompt</h3>
+        <p id="out-opening"></p>
+        <h3>Round 1</h3>
+        <p id="out-r1"></p>
+        <h3>Round 2</h3>
+        <p id="out-r2"></p>
+        <h3>Round 3</h3>
+        <p id="out-r3"></p>
+        <h3>Consolidated prompt</h3>
+        <p id="out-consolidated"></p>
+        <h3>What the second run told me</h3>
+        <p id="out-second"></p>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print sub">This one is for your own records &mdash; there&rsquo;s nothing to submit for this activity. Worth keeping, though: this log is the kind of raw material next week&rsquo;s studio draws on.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. You&rsquo;ve been refining in one conversation for ten turns. The answer now contains every adjustment you asked for and no longer resembles anything you&rsquo;d have wanted at the start. What&rsquo;s the move?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) Another round, asking it to simplify.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) Write one fresh prompt containing everything you&rsquo;ve learned you wanted, and start a new conversation.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Switch to a different tool and paste the whole conversation in.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) Accept it &mdash; ten rounds of refinement is more work than one prompt, so it must be closer.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. The conversation drifted, and another turn inherits the drift. What you gained from those ten turns is knowledge about what you want &mdash; put it in one clean prompt and use it.</p></template>
+          <template data-no><p>The answer is B. Another round (A) carries the drift with it, and pasting the thread elsewhere (C) carries it to a new address. More effort doesn&rsquo;t mean closer (D) &mdash; the accumulated adjustments are the problem.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>2. You ask a tool &ldquo;what&rsquo;s the weakest part of this draft?&rdquo; and it gives you a thoughtful critique. What have you learned?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Which parts of the draft are factually wrong.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) That the draft has been checked, since it reviewed its own work.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Something useful about the draft&rsquo;s structure, coverage and tone &mdash; generated the same way the draft was.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Nothing &mdash; a tool can&rsquo;t say anything useful about its own output.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes. It&rsquo;s genuinely useful for the shape of a piece, and it is another answer rather than a check. Whether the content is <em>true</em> is a different question, and it&rsquo;s Module 3&rsquo;s.</p></template>
+          <template data-no><p>The answer is C. It isn&rsquo;t nothing (D) &mdash; critique is one of the more useful refinement moves. But it also isn&rsquo;t verification (A, B): what comes back was produced the same way the draft was.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>3. Your conversation finally produced a result you&rsquo;re happy with. What&rsquo;s worth saving?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) The final answer.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) The whole conversation, so you can replay it next time.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) A single standalone prompt containing everything the conversation taught you you wanted.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) The name of the tool, so you use the same one next time.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; the collapsed prompt is the reusable part. The answer solves today; the request solves the next twenty times.</p></template>
+          <template data-no><p>The answer is C. The answer itself (A) is single-use, a whole transcript (B) can&rsquo;t be re-run cleanly, and the tool (D) isn&rsquo;t what made it work. What you&rsquo;re keeping is the recipe.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <div class="callout callout--note" id="primer">
+    <span class="label">Note</span>
+    <p><strong>What this week asks of you.</strong> <strong>M2L3 and M2L4 are the new material</strong> &mdash; both lessons and both activities, finished by Sunday. <strong>There is nothing to submit this week.</strong></p>
+    <p><strong>For our Zoom session on Monday, September 21:</strong> bring your best refinement from M2L4-A1 &mdash; <em>what was the original prompt, what did you change, and why did it improve the result?</em> Have the actual wording in front of you, not a summary of it; the specific change is the interesting part. A round that made things <em>worse</em> is just as good to bring, and usually better to talk about.</p>
+    <p><strong>One heads-up so it isn&rsquo;t a surprise:</strong> that Monday also opens Module 2&rsquo;s studio week, which is the busiest week in this module &mdash; the prompt casebook and the Module 2 reflection are both due Sunday, September 27, and Friday the 25th is a holiday, so plan the work Monday through Thursday. Everything you need for it comes on the 21st.</p>
+  </div>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 2, Lesson 4</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m1l2.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+
+
+
+
+/* ===== M2L4-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  var form = document.getElementById("refine-form");
+  if (!form) { return; }
+  var ids = ["task", "opening", "r1", "r2", "r3", "consolidated", "second"];
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var vals = {};
+    ids.forEach(function (id) { vals[id] = document.getElementById(id).value.trim(); });
+    var status = document.getElementById("refine-status");
+    if (!vals.opening && !vals.r1 && !vals.consolidated) {
+      status.textContent = " Fill in at least the opening prompt, one round, or the consolidated prompt before building the copy.";
+      return;
+    }
+    ids.forEach(function (id) {
+      document.getElementById("out-" + id).textContent = vals[id] || "(not recorded)";
+    });
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this activity.";
+  });
+})();
+</script>
+</body>
+</html>
