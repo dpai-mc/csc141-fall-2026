@@ -159,6 +159,10 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
 .card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
 .card h4 { margin-top: 0; font-size: 1.05rem; }
+/* Card headings are h3, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
 .card p, .card li { max-width: none; }
 
 
@@ -297,25 +301,25 @@ code { font-family: var(--mono); font-size: .95em; background: var(--c-surface);
 
         <div class="cards cards--wide">
           <div class="card">
-            <h4>Revise</h4>
+            <h3>Revise</h3>
             <p><strong>What it does:</strong> names what to change, specifically, and leaves the rest alone.</p>
             <p><strong>What it sounds like:</strong> &ldquo;Keep the structure but cut it by half.&rdquo; &ldquo;Same content, but write it for someone who has never taken a statistics course.&rdquo;</p>
             <p><strong>When to reach for it:</strong> the answer is close and you can name the gap.</p>
           </div>
           <div class="card">
-            <h4>Narrow</h4>
+            <h3>Narrow</h3>
             <p><strong>What it does:</strong> takes one part of the answer and goes deeper on it.</p>
             <p><strong>What it sounds like:</strong> &ldquo;Expand the third paragraph into its own section and drop the rest.&rdquo;</p>
             <p><strong>When to reach for it:</strong> long answers are often one good paragraph surrounded by filler; narrowing is how you find out which paragraph it was.</p>
           </div>
           <div class="card">
-            <h4>Branch</h4>
+            <h3>Branch</h3>
             <p><strong>What it does:</strong> asks for alternatives rather than an improvement.</p>
             <p><strong>What it sounds like:</strong> &ldquo;Give me three different openings for this, in three different tones.&rdquo;</p>
             <p><strong>When to reach for it:</strong> you don&rsquo;t yet know what you want and would recognize it if you saw it &mdash; or the first answer was fine but felt inevitable.</p>
           </div>
           <div class="card">
-            <h4>Critique</h4>
+            <h3>Critique</h3>
             <p><strong>What it does:</strong> asks it to turn on its own output.</p>
             <p><strong>What it sounds like:</strong> &ldquo;What&rsquo;s the weakest part of this?&rdquo; &ldquo;What would an unconvinced reader push back on first?&rdquo; &ldquo;What did I ask for that you didn&rsquo;t quite deliver?&rdquo;</p>
             <p><strong>When to reach for it:</strong> structural gaps, missing coverage and tonal problems &mdash; the things that are hard to see in your own draft.</p>
@@ -360,22 +364,22 @@ code { font-family: var(--mono); font-size: .95em; background: var(--c-surface);
 
         <div class="cards cards--wide">
           <div class="card">
-            <h4>Academic writing</h4>
+            <h3>Academic writing</h3>
             <p>The heavy lifting is in <strong>context</strong> and <strong>constraints</strong>: the audience&rsquo;s level, the argument you are actually making, the evidence you are supplying yourself, and what you do not want assumed.</p>
             <p class="sub">What you disclose about AI assistance, and how you cite it, is Module 3&rsquo;s subject &mdash; not a prompting question, and it is treated properly there.</p>
           </div>
           <div class="card">
-            <h4>Technical documentation</h4>
+            <h3>Technical documentation</h3>
             <p>Precision about the reader is everything: what they already know, what they must not be assumed to know, and what happens if they follow a step wrong.</p>
             <p><strong>Format</strong> carries unusual weight here &mdash; numbered steps, prerequisites first, expected result stated after each action.</p>
           </div>
           <div class="card">
-            <h4>Creative work</h4>
+            <h3>Creative work</h3>
             <p><strong>Constraints</strong> do more than they do anywhere else, and the useful ones are usually negative: what to avoid, what has been done to death, which register to stay out of.</p>
             <p>Branching is the natural move in creative work; revising a single line toward &ldquo;better&rdquo; rarely is.</p>
           </div>
           <div class="card">
-            <h4>Data analysis</h4>
+            <h3>Data analysis</h3>
             <p>Describe the <strong>shape</strong> of what you have in words &mdash; how many rows, what each column means, where the gaps are &mdash; before asking anything.</p>
             <p>Ask for the approach before the answer: &ldquo;What would you look at first, and why?&rdquo; is a better opening than &ldquo;what does this data show?&rdquo;, which invites a confident answer built on a structure you never saw.</p>
             <p><strong>What you paste into a tool is a decision, and you already have the framework for it from M1L5.</strong></p>

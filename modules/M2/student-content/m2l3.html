@@ -159,6 +159,10 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
 .card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
 .card h4 { margin-top: 0; font-size: 1.05rem; }
+/* Card headings are h3, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
 .card p, .card li { max-width: none; }
 
 
@@ -167,7 +171,7 @@ figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2
 .ladder > li { margin: 0 0 var(--s-5); max-width: none; position: relative; }
 .ladder > li:last-child { margin-bottom: 0; }
 .ladder > li::before { content: ""; position: absolute; left: calc(-1 * var(--s-4) - 7px); top: .5rem; width: 11px; height: 11px; border-radius: 50%; background: var(--c-primary); }
-.ladder h4 { margin-top: 0; }
+.ladder h3 { margin-top: 0; font-size: 1rem; }  /* was h4; size pinned so the semantic fix changes no visuals */
 
 .cards--wide { grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr)); }
 code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
@@ -240,7 +244,7 @@ dl.anatomy dd { margin: var(--s-1) 0 0; }
 
         <div class="callout callout--note">
           <span class="label">Note</span>
-          <p><strong>Two lessons, one skill.</strong> Prompt engineering covers both building a request and refining what comes back. This lesson is the building half &mdash; how to write one good prompt before you send it. M2L4, later this week, is the refining half: what to do with the answer once you have it. The two activities are deliberately different shapes, so do this one as written rather than getting a head start.</p>
+          <p><strong>Two lessons, one skill.</strong> Prompt engineering covers both building a request and refining what comes back. This lesson is the building half &mdash; how to write one good prompt before you send it. M2L4, later this week, is the refining half: what to do with the answer once you have it. The two activities are deliberately different shapes, so do this one as written rather than getting a head start. A third short lesson, <strong>M2L4a</strong>, comes after them later in the week.</p>
         </div>
       </div>
     </details>
@@ -328,7 +332,7 @@ dl.anatomy dd { margin: var(--s-1) 0 0; }
 
         <ol class="ladder">
           <li>
-            <h4>Rung 1 &mdash; the vague version</h4>
+            <h3>Rung 1 &mdash; the vague version</h3>
             <div class="prompt">
 <pre id="p1">Write about volunteering.</pre>
               <button type="button" class="btn btn--secondary" id="copy-p1" data-copies="p1">Copy</button>
@@ -337,7 +341,7 @@ dl.anatomy dd { margin: var(--s-1) 0 0; }
             <p>Something will come back. It will be true, general, and useless to anybody in particular, because nothing in the request said who it was for or what it was supposed to do.</p>
           </li>
           <li>
-            <h4>Rung 2 &mdash; add the task and get specific about it</h4>
+            <h3>Rung 2 &mdash; add the task and get specific about it</h3>
             <div class="prompt">
 <pre id="p2">Write a short talk encouraging people to volunteer at a small-town animal shelter.</pre>
               <button type="button" class="btn btn--secondary" id="copy-p2" data-copies="p2">Copy</button>
@@ -346,7 +350,7 @@ dl.anatomy dd { margin: var(--s-1) 0 0; }
             <p>Now there is a verb and a subject. This is already a large improvement, and it is where most people stop.</p>
           </li>
           <li>
-            <h4>Rung 3 &mdash; add a role and context</h4>
+            <h3>Rung 3 &mdash; add a role and context</h3>
             <div class="prompt">
 <pre id="p3">You are the volunteer coordinator at a small-town animal shelter. Write a short
 talk encouraging people to sign up. The audience is a monthly community meeting
@@ -359,7 +363,7 @@ recruitment push brought in two people.</pre>
             <p>The audience, the history and the actual need are things the model had no way to know and could not have guessed. Notice that the last recruitment push bringing in two people is the kind of detail that would never occur to you to include, and is exactly what makes the talk sound like it came from someone who works there.</p>
           </li>
           <li>
-            <h4>Rung 4 &mdash; add constraints and format</h4>
+            <h3>Rung 4 &mdash; add constraints and format</h3>
             <div class="prompt">
 <pre id="p4">You are the volunteer coordinator at a small-town animal shelter. Write a short
 talk encouraging people to sign up. The audience is a monthly community meeting
@@ -429,7 +433,7 @@ Entry:</pre>
 
         <div class="cards cards--wide">
           <div class="card">
-            <h4>Ambiguity</h4>
+            <h3>Ambiguity</h3>
             <p><strong>What it is:</strong> the request has more than one reasonable reading.</p>
             <div class="prompt">
 <pre id="p6">Clean up my notes.</pre>
@@ -439,7 +443,7 @@ Entry:</pre>
             <p><strong>What you get instead:</strong> fix the typos? Reorganize into sections? Cut it by half? Rewrite it in full sentences? Every one of those is a defensible reading of &ldquo;clean up,&rdquo; and you will get exactly one of them.</p>
           </div>
           <div class="card">
-            <h4>Conflicting instructions</h4>
+            <h3>Conflicting instructions</h3>
             <p><strong>What it is:</strong> the request asks for two things that cannot both happen.</p>
             <div class="prompt">
 <pre id="p7">Write a thorough, comprehensive overview of the causes of the 2008 financial
@@ -450,7 +454,7 @@ crisis, covering all major perspectives, in exactly two sentences.</pre>
             <p><strong>What you get instead:</strong> &ldquo;comprehensive,&rdquo; &ldquo;all major perspectives&rdquo; and &ldquo;exactly two sentences&rdquo; cannot be satisfied at once. Something has to give, and you did not get to choose which.</p>
           </div>
           <div class="card">
-            <h4>Over-constraining</h4>
+            <h3>Over-constraining</h3>
             <p><strong>What it is:</strong> so many requirements that they crowd out the thing you wanted.</p>
             <div class="prompt">
 <pre id="p8">Write a 250-word paragraph - exactly 250 words - about renewable energy that
@@ -542,7 +546,7 @@ throughout.</pre>
         <p id="out-verdict"></p>
         <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
         <p class="no-print"><strong>This one goes in your portfolio.</strong> Save it as <code>03-m2l3-prompt-ladder.pdf</code> and move it into your <code>CSC141-portfolio</code> folder now, while it&rsquo;s in front of you. It has no grade of its own. What it has is a slot &mdash; and at the end of the term every slot is checked. Filed is credit; missing is not.</p>
-        <p class="no-print sub">Nothing goes to Canvas for this activity. Worth keeping for its own sake too: these four versions and your verdict are the kind of raw material next week&rsquo;s studio draws on.</p>
+        <p class="no-print sub">Nothing goes to Canvas for this activity.</p>
       </div>
     </div>
   </section>
