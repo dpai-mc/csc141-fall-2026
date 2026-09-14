@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M2L4a &mdash; Having the AI Write the Prompt | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M2L4a-A1 prompt draft log only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 2, Lesson 4a</p>
+    <h1>Having the AI Write the Prompt</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">A third way to get a prompt</a></li>
+      <li><a href="#s2">The job of prompt engineer</a></li>
+      <li><a href="#s3">Reading it like an editor</a></li>
+      <li><a href="#s4">When this is worth it</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>A Third Way to Get a Prompt</h2>
+      <p class="sub">You have done this two ways already. Here is the one most people never try.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>In M2L3 you wrote a prompt yourself, from five parts, and compared four versions of it. In M2L4 you sent one and then kept the conversation going until the answer was what you wanted.</p>
+        <p>There is a third route: <strong>hand the job of writing the prompt to the tool.</strong></p>
+        <p>It sounds circular &mdash; you need a good prompt to get a good prompt &mdash; and it mostly isn&rsquo;t, for one reason. Writing a prompt asks you to state things you often haven&rsquo;t decided yet: who the audience is, how long it should be, what to leave out. <strong>A tool asked to draft your prompt will ask you those questions, or answer them for you.</strong> Either way you find out what you hadn&rsquo;t decided.</p>
+
+        <p>Here is the whole week on one line:</p>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>M2L3: you write the prompt. M2L4: you refine the answer. This lesson: the model drafts the prompt, and you edit it.</strong></p>
+        </div>
+
+        <p>What is being generated is different in each case. That is the entire distinction, and it is worth holding on to, because the three are easy to blur together and they are genuinely different skills.</p>
+
+        <figure>
+          <div class="figure-scroll">
+            <svg viewBox="0 0 700 264" role="presentation" focusable="false" aria-hidden="true">
+              <defs>
+                <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 9 5 L 0 9 z" fill="#1d6690"/>
+                </marker>
+              </defs>
+
+              <text x="8" y="46" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">M2L3</text>
+              <text x="8" y="61" font-family="sans-serif" font-size="11" fill="#4a4a4a">you write it</text>
+              <rect x="112" y="30" width="96" height="40" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="122" y="47" font-family="sans-serif" font-size="11" fill="#1a1a1a">You write</text>
+              <text x="122" y="61" font-family="sans-serif" font-size="11" fill="#1a1a1a">the prompt</text>
+              <line x1="208" y1="50" x2="228" y2="50" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="232" y="30" width="96" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="242" y="54" font-family="sans-serif" font-size="11" fill="#14304a">An answer</text>
+              <text x="112" y="88" font-family="sans-serif" font-size="11" fill="#4a4a4a">What gets generated: the answer</text>
+
+              <text x="8" y="126" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">M2L4</text>
+              <text x="8" y="141" font-family="sans-serif" font-size="11" fill="#4a4a4a">you refine</text>
+              <text x="8" y="155" font-family="sans-serif" font-size="11" fill="#4a4a4a">the answer</text>
+              <rect x="112" y="110" width="96" height="40" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="122" y="134" font-family="sans-serif" font-size="11" fill="#1a1a1a">Your prompt</text>
+              <line x1="208" y1="130" x2="228" y2="130" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="232" y="110" width="96" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="242" y="134" font-family="sans-serif" font-size="11" fill="#14304a">An answer</text>
+              <line x1="328" y1="130" x2="348" y2="130" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="352" y="110" width="96" height="40" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="362" y="134" font-family="sans-serif" font-size="11" fill="#1a1a1a">You reply</text>
+              <line x1="448" y1="130" x2="468" y2="130" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="472" y="110" width="96" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="482" y="127" font-family="sans-serif" font-size="11" fill="#14304a">A better</text>
+              <text x="482" y="141" font-family="sans-serif" font-size="11" fill="#14304a">answer</text>
+              <text x="112" y="168" font-family="sans-serif" font-size="11" fill="#4a4a4a">What gets generated: a better answer, turn after turn</text>
+
+              <text x="8" y="206" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">M2L4a</text>
+              <text x="8" y="221" font-family="sans-serif" font-size="11" fill="#4a4a4a">it drafts</text>
+              <text x="8" y="235" font-family="sans-serif" font-size="11" fill="#4a4a4a">the prompt</text>
+              <rect x="112" y="190" width="96" height="40" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="122" y="207" font-family="sans-serif" font-size="11" fill="#1a1a1a">You ask for</text>
+              <text x="122" y="221" font-family="sans-serif" font-size="11" fill="#1a1a1a">a prompt</text>
+              <line x1="208" y1="210" x2="228" y2="210" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="232" y="190" width="96" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="242" y="207" font-family="sans-serif" font-size="11" fill="#14304a">Questions</text>
+              <text x="242" y="221" font-family="sans-serif" font-size="11" fill="#14304a">for you</text>
+              <line x1="328" y1="210" x2="348" y2="210" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="352" y="190" width="96" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="362" y="207" font-family="sans-serif" font-size="11" fill="#14304a">A drafted</text>
+              <text x="362" y="221" font-family="sans-serif" font-size="11" fill="#14304a">prompt</text>
+              <line x1="448" y1="210" x2="468" y2="210" stroke="#1d6690" stroke-width="2" marker-end="url(#ar)"/>
+              <rect x="472" y="190" width="96" height="40" rx="5" fill="#ffffff" stroke="#1a5276" stroke-width="2"/>
+              <text x="482" y="214" font-family="sans-serif" font-size="11" font-weight="700" fill="#1a1a1a">You edit it</text>
+              <text x="112" y="248" font-family="sans-serif" font-size="11" fill="#4a4a4a">What gets generated: the prompt itself &#8212; then you edit it</text>
+            </svg>
+          </div>
+          <figcaption><strong>Figure 1 &mdash; three routes to a prompt.</strong> Three rows, one per lesson. <strong>Row one (M2L3, &ldquo;you write it&rdquo;):</strong> you write the prompt, and what comes back is an answer &mdash; what gets generated is the answer. <strong>Row two (M2L4, &ldquo;you refine the answer&rdquo;):</strong> your prompt, an answer, your reply, another answer, and so on down one thread &mdash; what gets generated is a better answer, turn after turn. <strong>Row three (M2L4a, this lesson, &ldquo;it drafts the prompt&rdquo;):</strong> you ask for a prompt, it asks you questions, it gives you a drafted prompt, and the last step is yours &mdash; you edit it. What gets generated here is the prompt itself, not the answer. All three routes end somewhere similar: a prompt you own. Only the third one starts with a prompt you didn&rsquo;t write.</figcaption>
+        </figure>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Giving It the Job of Prompt Engineer</h2>
+      <p class="sub">The role element from M2L3, pointed somewhere unusual.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Instead of asking the tool to <em>be</em> an advisor, a technical writer or a tutor, you ask it to be the person who <em>writes the request</em> &mdash; and you make the request itself the thing it produces.</p>
+
+        <p>The weak version is the obvious one:</p>
+
+        <div class="prompt">
+<pre id="p1">Write me a good prompt for making a study guide.</pre>
+          <button type="button" class="btn btn--secondary" id="copy-p1" data-copies="p1">Copy</button>
+          <span id="copy-p1-status" role="status"></span>
+        </div>
+
+        <p>You will get something. It will be generic, because you were. Everything that would have made the prompt yours &mdash; the course, the exam, how much time you have, what you already understand &mdash; is missing, so the draft is a prompt anyone could have asked for.</p>
+
+        <p>The version worth learning does two things differently: it assigns the job explicitly, and <strong>it makes the tool ask before it writes.</strong></p>
+
+        <div class="prompt">
+<pre id="p2">Role: You are a prompt engineer. Your job is to write a prompt for me
+to use with an AI tool - not to do the task itself.
+Task: I want a prompt that will produce a study guide for me.
+Before you write anything, ask me the questions you need answered to
+write a good one. Ask them all at once, numbered, and stop there.
+Format: Once I answer, give me the finished prompt in a plain block I
+can copy, with nothing else around it.</pre>
+          <button type="button" class="btn btn--secondary" id="copy-p2" data-copies="p2">Copy</button>
+          <span id="copy-p2-status" role="status"></span>
+        </div>
+
+        <p>Two lines in there are doing the work. <strong>&ldquo;Not to do the task itself&rdquo;</strong> stops it from simply producing a study guide, which is what it will otherwise do. <strong>&ldquo;Stop there&rdquo;</strong> stops it from asking questions and then immediately answering them on your behalf &mdash; which it will also otherwise do, and which defeats the whole point.</p>
+
+        <p>What comes back is a list of questions about your own task. That list is the useful part even if you throw the prompt away. It is a fast way to discover that you hadn&rsquo;t decided what the study guide is <em>for</em>.</p>
+
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Read the questions before you answer them.</strong> When it comes back with a numbered list of questions about your task, read the whole list first. The questions you can&rsquo;t answer straight away are the ones worth thinking about &mdash; they are the parts of the job you hadn&rsquo;t pinned down yet, and they would have been guessed for you.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Reading It Like an Editor</h2>
+      <p class="sub">The part that matters, and what M2L3&rsquo;s five parts are for.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>The prompt that comes back is a draft of your request. It is not a discovery of what you want.</strong> Nobody on the other end of the conversation knows what you want &mdash; it has your answers to a handful of questions and it is filling in the rest with whatever is most typical. Your job is to read it like an editor reads a draft: as something to strike, correct and complete before it ships. You have the vocabulary for that from M2L3, and this is what it is for.</p>
+
+        <p>Three things to look for, every time:</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Specifics you never supplied</h3>
+            <p class="sub"><em>What it looks like:</em> the draft has quietly settled on a reading level, an audience, a length or a tone that you never mentioned.</p>
+            <p class="sub"><em>What to do about it:</em> every one of those is a requirement, and requirements belong to you &mdash; strike the ones you didn&rsquo;t choose, or choose them on purpose.</p>
+          </article>
+          <article class="card">
+            <h3>Padding that does nothing</h3>
+            <p class="sub"><em>What it looks like:</em> &ldquo;be thorough and accurate,&rdquo; &ldquo;use a professional tone,&rdquo; &ldquo;make it engaging&rdquo; &mdash; lines that read like instructions and narrow nothing.</p>
+            <p class="sub"><em>What to do about it:</em> delete any line that would not change the result if it weren&rsquo;t there. Nothing was ever going to aim for shallow and unprofessional.</p>
+          </article>
+          <article class="card">
+            <h3>Whatever you actually care about, missing</h3>
+            <p class="sub"><em>What it looks like:</em> an absence &mdash; <em>don&rsquo;t recommend a decision</em>, <em>no bullet points</em>, <em>assume no statistics background</em>, <em>under 200 words</em> is exactly the line that isn&rsquo;t there.</p>
+            <p class="sub"><em>What to do about it:</em> read the draft against the five parts and find the empty slot. This is the important one, and the easiest to miss.</p>
+          </article>
+        </div>
+
+        <p>The habit to take from this is small and it is the point of the lesson: <strong>a prompt you didn&rsquo;t write is a prompt you haven&rsquo;t decided on yet.</strong> Signing off on it is the work.</p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>A generated prompt is a draft of your request, not a discovery of what you want.</strong> It has your answers to a few questions and fills in the rest with whatever is most typical. Every specific in it that you did not choose is a decision made for you &mdash; and the decisions in a prompt are the part that makes the result yours.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>When This Is Worth It</h2>
+      <p class="sub">Not always &mdash; and knowing when is part of the skill.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>It earns its keep on a blank page</strong> &mdash; when you know roughly what you want and have no idea how to ask, which is the moment most people give up and type six words. It earns it again when <strong>you can&rsquo;t yet articulate the task</strong>, because the questions it asks you are more useful than the prompt it writes. And it is the fastest way to get a <strong>first draft of a reusable template</strong>, of the kind M2L4 had you build out of six rounds of conversation.</p>
+        <p><strong>It is not worth it when you can already write the prompt.</strong> Then this is two extra steps to arrive somewhere you could have gone directly. The technique is a way out of a blank page, not a replacement for knowing what you want.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M2L4a-A1 &mdash; Commission a prompt, then edit it</h2>
+        <span class="badge">15 minutes</span>
+        <span class="badge badge--quiet">Optional export</span>
+      </div>
+      <p><strong>Have a tool draft a prompt for you, then edit it into one you would actually send.</strong></p>
+
+      <h3>Step 1 &mdash; reuse a task you have already thought about</h3>
+      <p>Take the task you took through a conversation in <strong>M2L4-A1</strong>. You already have a consolidated prompt for it, which is what makes this a fair comparison.</p>
+      <p class="sub">If you would rather use a different real task &mdash; from your own field, or from your &ldquo;10 Things&rdquo; list &mdash; that works too. Your 10-Things list stays yours; nothing here is turned in.</p>
+
+      <h3>Step 2 &mdash; hand over the job</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) and start a <strong>new conversation</strong>. Send the prompt-engineer prompt from <em>Giving It the Job of Prompt Engineer</em> above, with your own task in place of the study guide. Answer its questions. Keep the finished prompt it gives you, <strong>exactly as it came back</strong>.</p>
+
+      <h3>Step 3 &mdash; edit it</h3>
+      <p>Read the draft against M2L3&rsquo;s five parts and against the three checks above. Find at least <strong>one specific it settled on that you never supplied</strong>, and at least <strong>one thing you care about that it left out</strong>. Then rewrite it into the prompt you would actually send.</p>
+
+      <h3>Step 4 &mdash; one run, one verdict</h3>
+      <p>Run <strong>your edited version</strong> once, in <strong>a fresh conversation</strong>. Then answer in one or two sentences: did it beat the consolidated prompt you wrote yourself in M2L4-A1 &mdash; and, either way, what does that tell you about which parts of a prompt actually carry the weight?</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>A tie is a real result.</strong> If the prompt you wrote yourself did just as well, you have learned something worth more than a better study guide: you can already do this part. The technique is for the tasks where you can&rsquo;t.</p>
+      </div>
+
+      <form id="draft-form">
+        <label class="field" for="task">The task</label>
+        <input type="text" id="task" name="task">
+        <label class="field" for="drafted">The prompt it drafted, as it came back</label>
+        <textarea id="drafted" name="drafted"></textarea>
+        <label class="field" for="edits">What I struck, changed or added &mdash; and why</label>
+        <textarea id="edits" name="edits" rows="3"></textarea>
+        <label class="field" for="edited">My edited prompt</label>
+        <textarea id="edited" name="edited"></textarea>
+        <label class="field" for="verdict">Better, worse, or a tie &mdash; and what that tells me</label>
+        <textarea id="verdict" name="verdict" rows="3"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="draft-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M2L4a, Prompt Draft Log</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <h3>The task</h3>
+        <p id="out-task"></p>
+        <h3>The prompt it drafted, as it came back</h3>
+        <p id="out-drafted"></p>
+        <h3>What I struck, changed or added &mdash; and why</h3>
+        <p id="out-edits"></p>
+        <h3>My edited prompt</h3>
+        <p id="out-edited"></p>
+        <h3>Better, worse, or a tie &mdash; and what that tells me</h3>
+        <p id="out-verdict"></p>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print sub">This one is for your own records &mdash; there&rsquo;s nothing to submit for this activity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. You ask a tool to write you a prompt and it hands you a finished study-guide prompt that specifies a tenth-grade reading level. You never mentioned a reading level. What is that?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) A reasonable default you can leave alone, since it had to pick something.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) A requirement that was decided for you &mdash; keep it only if it is what you want.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Evidence the tool misunderstood the task.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) A sign you should start over with a longer request.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. It isn&rsquo;t a mistake and it isn&rsquo;t a misunderstanding &mdash; it&rsquo;s a decision, and decisions about your own request are yours. Keep it on purpose or strike it.</p></template>
+          <template data-no><p>The answer is B. Nothing went wrong here (C, D) &mdash; it filled a gap you left, which is what it does. But leaving it alone because it had to pick something (A) means shipping a requirement you never chose.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>2. Which line in a prompt-engineer prompt is doing the most to stop the tool from just doing the task itself?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) &ldquo;Format: give me the finished prompt in a plain block I can copy.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) &ldquo;Your job is to write a prompt for me to use &mdash; not to do the task itself.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) &ldquo;Ask them all at once, numbered.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) &ldquo;Role: You are a prompt engineer.&rdquo;</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes. Without that line it will hand you the study guide instead of the prompt, because producing the thing is the more obvious reading of almost any request.</p></template>
+          <template data-no><p>The answer is B. The role line (D) sets up who is writing, the numbering (C) keeps the questions manageable, and the format line (A) shapes what you get back &mdash; but the instruction not to do the task is what keeps it writing a prompt at all.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>3. When is having a tool draft your prompt <em>least</em> worth doing?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) When you know roughly what you want but have no idea how to ask for it.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) When you can&rsquo;t yet describe the task clearly, even to yourself.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) When you already know exactly what the prompt should say.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) When you want a reusable template for something you will do many times.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; then it&rsquo;s two extra steps to somewhere you could have gone directly. This is a way out of a blank page, not a replacement for knowing what you want.</p></template>
+          <template data-no><p>The answer is C. A blank page (A), a task you can&rsquo;t articulate (B) and a template you&rsquo;ll reuse (D) are the three cases where it pays. When the prompt is already clear in your head, writing it is faster than commissioning it.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 2, Lesson 4a</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+
+
+
+
+/* ===== M2L4a-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  var form = document.getElementById("draft-form");
+  if (!form) { return; }
+  var ids = ["task", "drafted", "edits", "edited", "verdict"];
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var vals = {};
+    ids.forEach(function (id) { vals[id] = document.getElementById(id).value.trim(); });
+    var status = document.getElementById("draft-status");
+    if (!vals.drafted && !vals.edited && !vals.edits) {
+      status.textContent = " Fill in at least the drafted prompt, your edits, or your edited prompt before building the copy.";
+      return;
+    }
+    ids.forEach(function (id) {
+      document.getElementById("out-" + id).textContent = vals[id] || "(not recorded)";
+    });
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this activity.";
+  });
+})();
+</script>
+</body>
+</html>
