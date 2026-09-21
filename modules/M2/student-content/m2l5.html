@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M2L5 &mdash; Frontier, Open-Weight and Local Models | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M2L4a-A1 prompt draft log only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 2, Lesson 5</p>
+    <h1>Frontier, Open-Weight and Local Models</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">Two ways a model reaches you</a></li>
+      <li><a href="#s2">The four questions</a></li>
+      <li><a href="#s3">On your own hardware</a></li>
+      <li><a href="#s4">Reading the trade-off</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Two Ways a Model Reaches You</h2>
+      <p class="sub">The question is not how good a model is. It is where the computation happens.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Everything you have used in this course so far works the same way from where you sit: you type into a box in your browser, and an answer comes back. That sameness hides the decision this lesson is about.</p>
+
+        <p><strong>The question is not how good a model is. It is where the computation happens, and who hands you the model in the first place.</strong> There are two answers, and almost everything else in this lesson follows from which one you are dealing with.</p>
+
+        <p><strong>A frontier model</strong> is <em>a large, state-of-the-art AI model offered as a closed, cloud-hosted service &mdash; highest capability, data leaves the user&rsquo;s device.</em> You reach it through a service. The weights &mdash; the enormous set of numbers that <em>are</em> the trained model &mdash; stay with the company that made them. You never have a copy; you have permission to send it things. <span class="sub">(Examples: Gemini, GPT, Claude.)</span></p>
+
+        <p><strong>An open-weight model</strong>, also called <strong>a local model</strong> when you are the one running it, is <em>a model whose weights are openly distributed and can run on hardware the user controls &mdash; trading capability for privacy, cost, and control.</em> Someone published the file. You can download it. What you do with it after that is between you and your own computer. <span class="sub">(Examples: Llama, Mistral.)</span></p>
+
+        <p class="sub"><strong>Model examples accurate as of 2026-09.</strong> Which category a particular model sits in is a decision its makers took and can take again &mdash; weights get published, and sometimes stop being published.</p>
+
+        <p>Those two definitions are the ones this course uses everywhere, including in Module 4. They are worth reading twice, because almost every disagreement you will hear about &ldquo;AI&rdquo; turns out to be a disagreement about which of these two someone is picturing.</p>
+
+        <p>The words point at two different things, which is why they get confused. <strong>&ldquo;Frontier&rdquo; and &ldquo;open-weight&rdquo; describe how you get the model. &ldquo;Local&rdquo; describes where it runs.</strong> An open-weight model sitting on a company&rsquo;s server in another state is open-weight but not local to you. That is not a technicality &mdash; it is the whole of the privacy question later in this lesson.</p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>&ldquo;Open-weight&rdquo; and &ldquo;local&rdquo; are not the same word.</strong> Open-weight describes how the model was published. Local describes where it is running. An openly-published model running on a company&rsquo;s servers is one and not the other &mdash; and the privacy argument later in this lesson depends entirely on the second, not the first.</p>
+        </div>
+
+        <figure>
+          <div class="figure-scroll">
+            <svg viewBox="0 0 700 300" role="presentation" focusable="false" aria-hidden="true">
+              <defs>
+                <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 9 5 L 0 9 z" fill="#1d6690"/>
+                </marker>
+              </defs>
+
+              <line x1="352" y1="18" x2="352" y2="286" stroke="#922b21" stroke-width="2" stroke-dasharray="6 4"/>
+              <text x="358" y="14" font-family="sans-serif" font-size="11" font-weight="700" fill="#922b21">your device ends here</text>
+
+              <text x="8" y="40" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">Lane A</text>
+              <text x="8" y="55" font-family="sans-serif" font-size="11" fill="#4a4a4a">a hosted</text>
+              <text x="8" y="69" font-family="sans-serif" font-size="11" fill="#4a4a4a">service</text>
+              <rect x="86" y="34" width="120" height="46" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="96" y="52" font-family="sans-serif" font-size="11" fill="#1a1a1a">Your device</text>
+              <text x="96" y="68" font-family="sans-serif" font-size="11" fill="#1a1a1a">(the browser)</text>
+              <line x1="206" y1="48" x2="470" y2="48" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+              <text x="240" y="42" font-family="sans-serif" font-size="11" font-weight="700" fill="#14304a">your prompt</text>
+              <line x1="470" y1="70" x2="206" y2="70" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+              <text x="252" y="84" font-family="sans-serif" font-size="11" fill="#4a4a4a">the answer</text>
+              <rect x="474" y="26" width="204" height="62" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="484" y="46" font-family="sans-serif" font-size="11" fill="#14304a">The provider&#8217;s computers</text>
+              <text x="484" y="62" font-family="sans-serif" font-size="11" font-weight="700" fill="#14304a">the model runs here</text>
+              <text x="86" y="108" font-family="sans-serif" font-size="11" fill="#4a4a4a">Your prompt crosses the line.</text>
+
+              <line x1="8" y1="132" x2="692" y2="132" stroke="#b0b8bd" stroke-width="1"/>
+
+              <text x="8" y="176" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">Lane B</text>
+              <text x="8" y="191" font-family="sans-serif" font-size="11" fill="#4a4a4a">a model you</text>
+              <text x="8" y="205" font-family="sans-serif" font-size="11" fill="#4a4a4a">run yourself</text>
+              <rect x="86" y="160" width="248" height="96" rx="5" fill="#ffffff" stroke="#1a5276" stroke-width="2"/>
+              <text x="96" y="180" font-family="sans-serif" font-size="11" fill="#1a1a1a">Your device</text>
+              <rect x="106" y="192" width="200" height="48" rx="5" fill="#e3f4ea" stroke="#1e8449"/>
+              <text x="116" y="212" font-family="sans-serif" font-size="11" font-weight="700" fill="#11532e">the model runs here</text>
+              <text x="116" y="230" font-family="sans-serif" font-size="11" fill="#11532e">prompt and answer stay inside</text>
+              <text x="380" y="200" font-family="sans-serif" font-size="12" font-weight="700" fill="#922b21">nothing crosses</text>
+              <text x="380" y="220" font-family="sans-serif" font-size="11" fill="#4a4a4a">no arrow reaches this side</text>
+              <text x="86" y="278" font-family="sans-serif" font-size="11" fill="#4a4a4a">The computation happens inside the boundary.</text>
+            </svg>
+          </div>
+          <figcaption><strong>Figure 1 &mdash; where the computation happens.</strong> A dashed vertical line down the middle marks the edge of your own device. <strong>Lane A, &ldquo;a hosted service&rdquo;:</strong> your device sits on the left; an arrow labelled <em>your prompt</em> crosses the line to a block on the right labelled <em>the provider&rsquo;s computers &mdash; the model runs here</em>, and a second arrow carries the answer back. Your prompt crosses the line. <strong>Lane B, &ldquo;a model you run yourself&rdquo;:</strong> the block labelled <em>the model runs here</em> is drawn inside your device, the prompt and answer stay within it, and nothing crosses the line at all. The difference the figure draws is <em>where the computation happens and what leaves the device</em> &mdash; not which arrangement is better.</figcaption>
+        </figure>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>The Four Questions</h2>
+      <p class="sub">Four separate questions that happen to have the same two candidate answers.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>When people argue about this, they are almost always arguing about one of four things without saying which. Naming them separately is most of the skill.</p>
+
+        <p><strong>Capability &mdash; how much model there is.</strong> The largest models need more hardware to run than a person owns, so the organizations that own that hardware are the ones offering them as a service. That is an economic fact about scale, not a verdict about any particular model. <strong>The gap between the two categories on everyday tasks has been narrowing, and by how much is a moving number</strong> &mdash; which is why this lesson does not print one, and why you should distrust anyone who does without a date on it.</p>
+
+        <p><strong>Privacy &mdash; what crosses the network.</strong> This is the axis that actually changes what you can do. When the computation happens on someone else&rsquo;s computers, your prompt goes there. Everything in it goes there: the paragraph you pasted, the document you uploaded, the question you were slightly embarrassed to ask. What happens to it after that is governed by terms you accepted rather than negotiated. When the computation happens on hardware you control, it doesn&rsquo;t leave. <em>Module 4 comes back to this as something an organization can do on purpose.</em></p>
+
+        <p><strong>Cost &mdash; who pays, and in what.</strong> A hosted service has no hardware for you to buy; you pay a subscription, a per-use price, an institutional account, or you accept the limits of a free tier. Running a model yourself inverts it: the hardware is the cost, up front and yours, and after that the marginal question is electricity. <strong>Neither is simply cheaper.</strong> Which one wins depends entirely on how much you use it, which is a question about you, not about the models.</p>
+
+        <p><strong>Control &mdash; whether it can change under you.</strong> A hosted model is the version the provider is serving today. It can be updated, and it can be withdrawn, and you generally find out when your results do. A model file you have downloaded stays exactly the model you downloaded, for as long as you keep it, whether or not anyone is still supporting it. That cuts both ways: nothing improves either.</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Capability</h3>
+            <p><em>The question it asks:</em> how much model is there?</p>
+            <p class="sub"><em>Why it follows from where the computation happens:</em> the biggest models need hardware a person doesn&rsquo;t own, so they live where that hardware is.</p>
+          </article>
+          <article class="card">
+            <h3>Privacy</h3>
+            <p><em>The question it asks:</em> what leaves your device?</p>
+            <p class="sub"><em>Why it follows from where the computation happens:</em> if the work happens elsewhere, the material has to travel there first.</p>
+          </article>
+          <article class="card">
+            <h3>Cost</h3>
+            <p><em>The question it asks:</em> who pays, and in what currency?</p>
+            <p class="sub"><em>Why it follows from where the computation happens:</em> someone has to own the hardware &mdash; either you buy it once, or you rent it by the use.</p>
+          </article>
+          <article class="card">
+            <h3>Control</h3>
+            <p><em>The question it asks:</em> can it change under you?</p>
+            <p class="sub"><em>Why it follows from where the computation happens:</em> whoever runs it decides which version runs, and for how long.</p>
+          </article>
+        </div>
+
+        <p><strong>The four are not a scorecard, and there is no total.</strong> They are four separate questions that happen to have the same two candidate answers. Which one matters is a property of your task &mdash; and that is the thing to actually take away from this lesson.</p>
+
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>The capability gap is the part of this lesson most likely to be out of date.</strong> Every number anyone gives you for it &mdash; how close an openly-distributed model gets to the largest hosted ones &mdash; is a snapshot with a date on it, and the date is usually missing. When you meet that claim, look for when it was written before you decide what to do with it.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>What &ldquo;On Your Own Hardware&rdquo; Actually Means</h2>
+      <p class="sub">&ldquo;You can just run it yourself&rdquo; is said far more often than it is done.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>It is worth being concrete about this, because &ldquo;you can just run it yourself&rdquo; is said far more often than it is done.</p>
+
+        <p><strong>What it takes.</strong> A model file is a download measured in gigabytes, sometimes tens of them. It wants a machine with a lot of memory, and it is much happier with the kind of graphics hardware sold for gaming and professional 3D work than with the processor in an ordinary laptop. Getting it running is usually a software-installation exercise, and often a command-line one. None of that is exotic &mdash; people do it in their spare rooms &mdash; but none of it is opening a browser tab either.</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>What you get</h3>
+            <p>Something that answers when the internet is down. Something that is not metered, not logged anywhere but your own machine, and not going to change next Tuesday.</p>
+            <p class="sub">For a confidential document, a huge repetitive job, or a place with bad connectivity, those are not small advantages.</p>
+          </article>
+          <article class="card">
+            <h3>What you give up</h3>
+            <p>The very largest models, mostly. Speed, generally, unless the hardware is serious.</p>
+            <p class="sub">And the quiet convenience of somebody else keeping the thing running, which is worth more than it sounds.</p>
+          </article>
+        </div>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>This week&rsquo;s activity is research, not installation.</strong> You will not download or run anything. You are finding out enough about one openly-distributed model to fill in four cells &mdash; which is the same thing you would do before recommending one, and it is the part of the job that transfers.</p>
+        </div>
+
+        <p>Nothing in this course asks you to install one. You are learning to read a trade-off that institutions, employers and software you use are making on your behalf all the time. You do not have to have run a model yourself to notice that a vendor chose one of these two &mdash; and to ask which, and why.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>Reading the Trade-off</h2>
+      <p class="sub">A small habit that dissolves a remarkable amount of disagreement.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Here is the useful habit, and it is a small one.</p>
+
+        <p>When you meet a claim about &ldquo;AI&rdquo; &mdash; in a product announcement, a policy, a news story, a colleague&rsquo;s confident opinion &mdash; <strong>ask which of the two it is talking about, and which of the four questions it is really answering.</strong> A remarkable amount of disagreement dissolves at that point, because the two people are answering different questions and neither said which.</p>
+
+        <p>Two examples of the move:</p>
+
+        <ul>
+          <li><em>&ldquo;AI is a privacy disaster.&rdquo;</em> Which category? The claim is largely about the first one, and it is largely about the privacy axis, and it is largely true there. It says very little about the second.</li>
+          <li><em>&ldquo;You can run this stuff on a laptop now.&rdquo;</em> Which model? Doing what? This is a capability claim, it is the most time-sensitive kind of claim in the field, and the honest version of it always has a date attached.</li>
+        </ul>
+
+        <p><strong>You already own the answer to one of these.</strong> Every tool you have used in this course so far sits in the first category &mdash; which is a fact about the tools, not a judgement about them, and it is the reason the privacy questions in this course have the shape they do.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M2L5-A1 &mdash; Fill in the local column</h2>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Not submitted</span>
+      </div>
+      <p><strong>Fill in the local column of the comparison table for one openly-distributed model.</strong></p>
+
+      <h3>Step 1 &mdash; pick one openly-distributed model</h3>
+      <p>Any one. Two families are named in this lesson&rsquo;s definitions if you want a starting point, and there are many others. <strong>You are not installing it, and you do not need a computer that could run it.</strong></p>
+
+      <h3>Step 2 &mdash; find out enough to fill four cells</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) and find out, for your model: roughly how big the download is and what hardware it wants; what happens to a prompt you give it when you run it yourself; what it costs to obtain and to run; and whether the version you download can change afterwards.</p>
+
+      <h3>Step 3 &mdash; write the four cells</h3>
+      <p>One or two sentences each, in the same terms as the pre-filled column. <strong>Where the honest answer is &ldquo;it depends,&rdquo; say what it depends on</strong> &mdash; that is a better cell than a confident one.</p>
+
+      <h3>Step 4 &mdash; name your weakest cell</h3>
+      <p>Which of your four are you least sure about, and what would you need to find out to be sure? <strong>One sentence.</strong> Being able to point at the soft spot in your own summary is worth more here than four tidy answers.</p>
+
+      <form id="cmp-form">
+        <label class="field" for="model">The model I chose</label>
+        <input type="text" id="model" name="model">
+
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>Frontier vs. one openly-distributed model &mdash; the left column is given; you write the right one.</caption>
+            <thead>
+              <tr>
+                <td></td>
+                <th scope="col">A hosted frontier model <span class="sub">(given &mdash; read this column)</span></th>
+                <th scope="col">The model I chose <span class="sub">(you fill this column)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Capability</th>
+                <td data-col="A hosted frontier model"><p>The largest models are in this category, because running one takes more hardware than a person owns and the organizations that own that hardware are the ones offering it as a service.</p></td>
+                <td data-col="The model I chose">
+                  <label class="visually-hidden" for="cap">Capability &mdash; the model I chose</label>
+                  <textarea id="cap" name="cap" rows="3"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Privacy</th>
+                <td data-col="A hosted frontier model"><p>Your prompt leaves your device and is processed on the provider&rsquo;s computers. What happens to it afterwards is set by terms you accepted rather than negotiated.</p></td>
+                <td data-col="The model I chose">
+                  <label class="visually-hidden" for="priv">Privacy &mdash; the model I chose</label>
+                  <textarea id="priv" name="priv" rows="3"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Cost</th>
+                <td data-col="A hosted frontier model"><p>No hardware to buy. You pay through a subscription, a per-use price, an institutional account, or the limits of a free tier &mdash; and the price is the provider&rsquo;s to change.</p></td>
+                <td data-col="The model I chose">
+                  <label class="visually-hidden" for="cost">Cost &mdash; the model I chose</label>
+                  <textarea id="cost" name="cost" rows="3"></textarea>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">Control</th>
+                <td data-col="A hosted frontier model"><p>You get the version the provider is serving today. It can be updated or withdrawn, and you generally find out when your results do.</p></td>
+                <td data-col="The model I chose">
+                  <label class="visually-hidden" for="ctrl">Control &mdash; the model I chose</label>
+                  <textarea id="ctrl" name="ctrl" rows="3"></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <label class="field" for="weak">My weakest cell, and what I&rsquo;d need to know</label>
+        <textarea id="weak" name="weak" rows="3"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="cmp-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M2L5, Frontier vs. Local Comparison</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <h3>The model I chose</h3>
+        <p id="out-model"></p>
+        <div class="table-scroll">
+          <table>
+            <caption>Frontier vs. <span id="out-model-2"></span></caption>
+            <thead>
+              <tr><td></td><th scope="col">A hosted frontier model</th><th scope="col">The model I chose</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Capability</th><td>The largest models are in this category, because running one takes more hardware than a person owns and the organizations that own that hardware are the ones offering it as a service.</td><td id="out-cap"></td></tr>
+              <tr><th scope="row">Privacy</th><td>Your prompt leaves your device and is processed on the provider&rsquo;s computers. What happens to it afterwards is set by terms you accepted rather than negotiated.</td><td id="out-priv"></td></tr>
+              <tr><th scope="row">Cost</th><td>No hardware to buy. You pay through a subscription, a per-use price, an institutional account, or the limits of a free tier &mdash; and the price is the provider&rsquo;s to change.</td><td id="out-cost"></td></tr>
+              <tr><th scope="row">Control</th><td>You get the version the provider is serving today. It can be updated or withdrawn, and you generally find out when your results do.</td><td id="out-ctrl"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>My weakest cell, and what I&rsquo;d need to know</h3>
+        <p id="out-weak"></p>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print sub">This one is for your own records. Nothing goes to Canvas for this activity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. A company publishes its model&rsquo;s weights openly, and a cloud provider downloads them and offers the model as a paid hosted service. A student uses that service from a browser. What is true of the student&rsquo;s prompt?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) It stays on the student&rsquo;s device, because the model is open-weight.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) It leaves the student&rsquo;s device, because the computation is happening on the provider&rsquo;s computers.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) It depends on how large the model is.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) It stays on the student&rsquo;s device only if the student is using a free tier.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly &mdash; and this is the case that catches people out. Open-weight describes how the model was published. It says nothing about where this particular copy is running, and where it runs is what decides what crosses the network.</p></template>
+          <template data-no><p>The answer is B. &ldquo;Open-weight&rdquo; is a fact about publication, not about location (A), and neither the model&rsquo;s size (C) nor the price of the account (D) changes where the computation happens. Someone else is running it, so the prompt goes to them.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>2. Which of the four questions is the one that most directly changes what you are <em>allowed</em> to put into a tool?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Capability &mdash; a more capable model can handle more sensitive material.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) Cost &mdash; paid accounts come with stronger commitments.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Privacy &mdash; it decides whether the material leaves your device at all.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Control &mdash; it decides whether the model changes under you.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. The other three change what the experience is like or what it costs you. Privacy changes what you can put in the box in the first place, which is a different kind of limit.</p></template>
+          <template data-no><p>The answer is C. Capability (A) is about what comes back, not about what you may send; cost (B) and control (D) are about the terms of the arrangement. Only privacy is about whether the material leaves your machine.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>3. Someone tells you &ldquo;open models have basically caught up now.&rdquo; What is the most useful thing to ask?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) Which model, doing what, and when was that measured?</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) Whether they have run one themselves.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) How much hardware it takes.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Whether they mean open-weight or local.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes. It is a capability claim, which is the most time-sensitive kind in this field, and the version of it worth anything always names a task and carries a date.</p></template>
+          <template data-no><p>The answer is A. The other three are reasonable follow-ups &mdash; and D is a genuinely good habit &mdash; but &ldquo;caught up&rdquo; is a claim about capability on some task at some moment, and without the task and the date there is nothing there to agree or disagree with.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 2, Lesson 5</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M2L5-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  var form = document.getElementById("cmp-form");
+  if (!form) { return; }
+  var ids = ["model", "cap", "priv", "cost", "ctrl", "weak"];
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var vals = {};
+    ids.forEach(function (id) { vals[id] = document.getElementById(id).value.trim(); });
+    var status = document.getElementById("cmp-status");
+    if (!vals.cap && !vals.priv && !vals.cost && !vals.ctrl) {
+      status.textContent = " Fill in at least one cell of the local column before building the copy.";
+      return;
+    }
+    ids.forEach(function (id) {
+      document.getElementById("out-" + id).textContent = vals[id] || "(not recorded)";
+    });
+    document.getElementById("out-model-2").textContent = vals.model || "your chosen model";
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this activity.";
+  });
+})();
+</script>
+</body>
+</html>

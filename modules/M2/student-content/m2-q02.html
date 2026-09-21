@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M2-Q02 &mdash; Prompt Engineering Casebook | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M2L4a-A1 prompt draft log only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)              { display: none !important; }
+  main > *:not(#a1)               { display: none !important; }
+  #a1 > *:not(#export-panel)      { display: none !important; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  #export-panel h3 { break-after: avoid; page-break-after: avoid; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+}
+#a1 ul .opt { display: block; font-weight: 400; }
+#a1 ul .opt input { margin-right: var(--s-2); }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 2, Studio</p>
+    <h1>M2-Q02 &mdash; Prompt Engineering Casebook</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What you&rsquo;ll do</a></li>
+      <li><a href="#s2">Tools</a></li>
+      <li><a href="#s3">How it&rsquo;s graded</a></li>
+      <li><a href="#a1">The studio</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What You&rsquo;ll Do</h2>
+      <p class="sub">One task, run through three tools with the same prompt, written down and read.</p>
+    </div>
+    <details open>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>Your casebook is one task, run through three tools with the same prompt, written down and read.</strong> You have the whole studio block to build it, and it is the artifact Module 2 is graded on.</p>
+
+        <p>Everything you need to <em>judge</em> the outputs &mdash; what a casebook is, how to pick a task, what the five criteria mean, and what a synthesis is for &mdash; is in this week&rsquo;s lesson, <em>Building Your Prompt Engineering Casebook</em>. This page is where you do the work.</p>
+
+        <h3>Part 1 &mdash; the task and the prompt</h3>
+        <p>Name the task in a sentence, then write the prompt you will use. Write it deliberately, using the anatomy from <em>Anatomy of a Good Prompt</em>: role, task, context, constraints, format. <strong>You need at least three of the five.</strong> This is the prompt you will send to all three tools, unchanged.</p>
+
+        <h3>Part 2 &mdash; three entries</h3>
+        <p>One for each tool. Each entry holds:</p>
+        <ul>
+          <li><strong>which tool you used;</strong></li>
+          <li><strong>the prompt</strong> &mdash; the same one every time, so you write it once in Part 1 and it appears with every entry in your PDF;</li>
+          <li><strong>the output you got back, in full;</strong></li>
+          <li><strong>your critique</strong> &mdash; at least three of the five criteria, two to four sentences, citing the specific thing in the output that led to it.</li>
+        </ul>
+
+        <h3>Part 3 &mdash; the synthesis</h3>
+        <p>Two hundred to three hundred and fifty words, written after you have read all three. At minimum: <strong>one pattern you saw across the outputs</strong>, what it tells you about your prompt or your task, and <strong>one change you would make to the prompt</strong> now that you have seen three attempts at answering it.</p>
+
+        <h3>Then &mdash; your Module 2 reflection</h3>
+        <p>Written at the studio close, in the last block. It goes in the same PDF.</p>
+
+        <h3>Format &amp; length</h3>
+        <ul>
+          <li><strong>Typed into this page</strong>, or pasted in from wherever you drafted it.</li>
+          <li><strong>Part 1:</strong> the task in one sentence; the prompt in full.</li>
+          <li><strong>Part 2:</strong> three entries, each with tool name, full output, and a critique of two to four sentences naming at least three criteria.</li>
+          <li><strong>Part 3:</strong> 200&ndash;350 words.</li>
+          <li><strong>Module reflection:</strong> 3&ndash;5 sentences answering all three prompts.</li>
+          <li><strong>Paste outputs in full.</strong> If one is very long, paste the whole thing anyway &mdash; an output trimmed to its good parts is not a record of what happened.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Tools</h2>
+      <p class="sub">Gemini plus any two of your choice. Three results in total.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>Gemini</strong> (your college Google account) <strong>plus any two other tools of your choice.</strong> Three results in total.</p>
+
+        <p>Gemini is the shared one so that everyone&rsquo;s casebook has a column in common &mdash; which is what makes the discussion next Monday work. The other two are yours to pick.</p>
+
+        <p><strong>All three must be tools you can open in a browser and actually send your prompt to.</strong> Free tiers are fine. <strong>Copilot</strong> is available through your college Microsoft account if you would like a second college-provided tool, and it is the fallback if Gemini gives you trouble. <strong>You do not need to open an account with any outside company to do this assignment</strong> &mdash; if your two picks would require one and you would rather not, use Copilot and one other.</p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>A model you only read about doesn&rsquo;t count as one of the three.</strong> This week&rsquo;s other lesson has you research an openly-distributed model without running it. That research is a different exercise. The casebook needs three outputs you actually received.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>How It&rsquo;s Graded</h2>
+      <p class="sub">100 points, four dimensions.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>M2-Q02 rubric &mdash; 100 points total</caption>
+            <thead>
+              <tr>
+                <th scope="col">Dimension</th>
+                <th scope="col">Excellent</th>
+                <th scope="col">Adequate</th>
+                <th scope="col">Needs work</th>
+                <th scope="col">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Documentation</th>
+                <td data-col="Excellent">All three entries are complete and clearly labelled: tool named, prompt shown, <strong>full</strong> output pasted, critique attached.</td>
+                <td data-col="Adequate">Three entries present but uneven &mdash; an output trimmed, or labelling that leaves the reader guessing which output came from where.</td>
+                <td data-col="Needs work">Fewer than three entries, or entries missing the output, or outputs summarized instead of reproduced.</td>
+                <td data-col="Points">30</td>
+              </tr>
+              <tr>
+                <th scope="row">Critique quality</th>
+                <td data-col="Excellent">Every critique names at least three of the five criteria <strong>and cites the specific thing in the output that led to the verdict</strong> &mdash; a quoted line, a missing requirement, a mis-pitched paragraph. Specific, and short is fine.</td>
+                <td data-col="Adequate">Critiques name three criteria but support is uneven &mdash; some point at the evidence, others assert a verdict (&ldquo;this one was better written&rdquo;) without saying what showed it.</td>
+                <td data-col="Needs work">Fewer than three criteria per output, or critiques are general impressions of quality with nothing in the output cited.</td>
+                <td data-col="Points">30</td>
+              </tr>
+              <tr>
+                <th scope="row">Cross-tool synthesis</th>
+                <td data-col="Excellent">Identifies <strong>at least one pattern across the three outputs</strong> &mdash; something they all did, or a dimension on which they diverged &mdash; <strong>states what it reveals about the prompt or the task</strong>, and names one concrete change to the prompt.</td>
+                <td data-col="Adequate">A comparison is present and describes differences between the outputs, but stops at description &mdash; no pattern named, or no link back to the prompt or the task, or no prompt change proposed.</td>
+                <td data-col="Needs work">Little comparison, <strong>or the synthesis is a ranking of the tools.</strong> One run each is not evidence about a product, and a verdict of that kind is not credited whichever way it goes.</td>
+                <td data-col="Points">20</td>
+              </tr>
+              <tr>
+                <th scope="row">Prompt quality</th>
+                <td data-col="Excellent">The prompt demonstrates at least three of the five anatomy elements (role, task, context, constraints, format), used deliberately &mdash; each one doing visible work for this particular task.</td>
+                <td data-col="Adequate">Three elements are present but at least one is generic &mdash; a constraint that constrains nothing, a format line that restates the task.</td>
+                <td data-col="Needs work">Fewer than three elements, or the prompt is a single unstructured request.</td>
+                <td data-col="Points">20</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Scored by the instructor and entered in the Canvas gradebook, in the <strong>Module artifacts</strong> category.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="section-head">
+      <h2>The Studio</h2>
+      <p class="sub">Ninety minutes, four blocks. Each block earns one part of the grade.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Opener &mdash; the task and the prompt</h3>
+        <span class="badge">15 minutes</span>
+        <span class="badge badge--quiet">Earns: Prompt quality</span>
+      </div>
+      <p><strong>Pick the task and write the prompt. No tools open yet.</strong></p>
+      <p>Before you write anything, finish this sentence about the task you picked: <em>&ldquo;The better answer will be the one that ______.&rdquo;</em> If you cannot finish it, pick a different task.</p>
+      <p>Then write the prompt, using the five anatomy elements by name: <strong>role, task, context, constraints, format</strong>. You need at least three of them doing real work.</p>
+
+      <div class="callout callout--try">
+        <span class="label">Try this</span>
+        <p><strong>Write the prompt before you open anything.</strong> The temptation is to start typing into a tool and shape the request as you go &mdash; which is a fine way to work and the wrong way to run a comparison. Everything you learn here comes from the prompt being the same all three times.</p>
+      </div>
+
+      <label class="field" for="task">The task, in one sentence</label>
+      <input type="text" id="task" name="task">
+      <label class="field" for="prompt">My prompt &mdash; the one I will send to all three tools</label>
+      <textarea id="prompt" name="prompt"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 1 &mdash; three runs</h3>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Earns: Documentation</span>
+      </div>
+      <p><strong>Run the prompt in all three tools and paste what comes back.</strong> About ten minutes each is the pace this block is built for.</p>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) for the first run, then your two other picks.</p>
+
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p><strong>Send the same prompt every time &mdash; do not improve it between runs.</strong> Refining a prompt across turns is a real skill and you practised it last week; it is a different exercise. Here the prompt is the thing held still, so that what varies is the part worth looking at. <strong>Paste each output in full</strong>, including the parts you would have cut.</p>
+      </div>
+
+      <label class="field" for="tool1">Entry 1 &mdash; which tool</label>
+      <input type="text" id="tool1" name="tool1">
+      <label class="field" for="out1">Entry 1 &mdash; the output, in full</label>
+      <textarea id="out1" name="out1"></textarea>
+
+      <label class="field" for="tool2">Entry 2 &mdash; which tool</label>
+      <input type="text" id="tool2" name="tool2">
+      <label class="field" for="out2">Entry 2 &mdash; the output, in full</label>
+      <textarea id="out2" name="out2"></textarea>
+
+      <label class="field" for="tool3">Entry 3 &mdash; which tool</label>
+      <input type="text" id="tool3" name="tool3">
+      <label class="field" for="out3">Entry 3 &mdash; the output, in full</label>
+      <textarea id="out3" name="out3"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 2 &mdash; three critiques</h3>
+        <span class="badge">25 minutes</span>
+        <span class="badge badge--quiet">Earns: Critique quality</span>
+      </div>
+      <p><strong>Read the three outputs and write a critique of each.</strong> Two to four sentences is plenty.</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Point at what produced the judgement.</strong> &ldquo;Missed the 200-word limit by half&rdquo; is a critique. &ldquo;Well written&rdquo; is a rating. The difference is whether someone reading your casebook later can see what you saw.</p>
+      </div>
+
+      <label class="field" for="crit1">Entry 1 &mdash; critique. At least three of: accuracy, completeness, tone and appropriateness, creativity, usefulness.</label>
+      <textarea id="crit1" name="crit1" rows="4"></textarea>
+      <label class="field" for="crit2">Entry 2 &mdash; critique. At least three of: accuracy, completeness, tone and appropriateness, creativity, usefulness.</label>
+      <textarea id="crit2" name="crit2" rows="4"></textarea>
+      <label class="field" for="crit3">Entry 3 &mdash; critique. At least three of: accuracy, completeness, tone and appropriateness, creativity, usefulness.</label>
+      <textarea id="crit3" name="crit3" rows="4"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Closing &mdash; synthesis and reflection</h3>
+        <span class="badge">20 minutes</span>
+        <span class="badge badge--quiet">Earns: Cross-tool synthesis</span>
+      </div>
+      <p><strong>Two things, in order.</strong></p>
+      <p><strong>The synthesis.</strong> One pattern across the three outputs, what it reveals about your prompt or your task, and one change you would make to the prompt.</p>
+
+      <label class="field" for="synth">Part 3 &mdash; the synthesis (200&ndash;350 words)</label>
+      <textarea id="synth" name="synth"></textarea>
+      <p class="sub" id="synth-count" role="status">0 words</p>
+
+      <p><strong>Then your Module 2 reflection.</strong> Looking back across this module &mdash; generative AI and how it differs from what you met in Module 1, the anatomy of a prompt, refining across a conversation, having a tool draft a prompt for you, and the frontier-versus-local landscape &mdash; answer the following in 3&ndash;5 sentences:</p>
+      <ol>
+        <li>Which single change to how you write prompts has made the most difference to what you get back?</li>
+        <li>What do you now notice about an AI-generated answer that you would have read straight past in Week 1?</li>
+        <li>What is one thing from this module you expect to still be doing in a year?</li>
+      </ol>
+
+      <label class="field" for="reflect">Module 2 reflection (3&ndash;5 sentences)</label>
+      <textarea id="reflect" name="reflect" rows="6"></textarea>
+
+      <p><button type="button" class="btn" id="build-btn">Build my printable copy</button> <span id="build-status" role="status"></span></p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Before you export</h3>
+      </div>
+      <p>Tick these as you check them. <strong>The ticks aren&rsquo;t saved, sent, or seen by anyone</strong> &mdash; they are here so you can walk the list once without losing your place.</p>
+      <ul>
+        <li><label class="opt"><input type="checkbox"> Part 1: the task in one sentence, and the prompt</label></li>
+        <li><label class="opt"><input type="checkbox"> The prompt shows at least three of the five anatomy elements</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 2: three entries &mdash; tool named, full output pasted, critique written</label></li>
+        <li><label class="opt"><input type="checkbox"> Each critique names at least three of the five criteria</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 3: synthesis, 200&ndash;350 words, with one cross-output pattern and one prompt change</label></li>
+        <li><label class="opt"><input type="checkbox"> Module 2 reflection: 3&ndash;5 sentences answering all three prompts</label></li>
+        <li><label class="opt"><input type="checkbox"> PDF exported and checked &mdash; it contains the casebook and the reflection, and nothing else</label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to Canvas as <code>M2-Q02-[LastName]-Casebook.pdf</code></label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to your <code>CSC141-portfolio</code> folder as <code>06-prompt-casebook.pdf</code></label></li>
+      </ul>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Save the same PDF twice, under two names. This is not a mistake.</strong></p>
+        <ul>
+          <li><strong>To hand in on Canvas:</strong> <code>M2-Q02-[LastName]-Casebook.pdf</code></li>
+          <li><strong>In your <code>CSC141-portfolio</code> folder:</strong> <code>06-prompt-casebook.pdf</code></li>
+        </ul>
+        <p>Canvas wants your name on the outside so it can be sorted with everyone else&rsquo;s. Your portfolio folder doesn&rsquo;t, because your name is already printed inside the document &mdash; and because the number is what makes the folder readable at the end of the semester.</p>
+        <p><strong><code>06</code> is a fixed slot.</strong> It is <code>06</code> for every student in this class. It is not &ldquo;the sixth file you happened to make&rdquo; &mdash; if you skip an artifact, its number stays empty, and the gap is the point.</p>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Dates for this week.</strong></p>
+        <p><strong>The casebook is due Sunday, September 27.</strong> <strong>Friday the 25th is a college holiday</strong>, so plan the studio for Monday through Thursday &mdash; nothing is expected of you on Friday, and the weekend is there if you need it.</p>
+        <p><strong>Our next live session is Monday, September 28</strong>, and it closes out Module 2. Bring your casebook and a position on the question in this week&rsquo;s lesson.</p>
+        <p><strong>Canvas is the authority on dates.</strong> If what Canvas says ever differs from what this page says, Canvas is right.</p>
+      </div>
+    </div>
+
+    <div class="export-panel" id="export-panel" hidden>
+      <div class="export-head">
+        <p><strong>CSC 141: AI Literacy</strong> &mdash; M2-Q02, Prompt Engineering Casebook &middot; Portfolio 06</p>
+      </div>
+      <div class="export-meta">
+        <p><strong>Name:</strong> ______________________</p>
+        <p><strong>Date:</strong> <span id="out-date"></span></p>
+      </div>
+
+      <h3>Part 1 &mdash; the task</h3>
+      <p id="out-task"></p>
+      <h3>Part 1 &mdash; the prompt, sent unchanged to all three tools</h3>
+      <p id="out-prompt"></p>
+
+      <h3>Entry 1 &mdash; <span id="out-tool1"></span></h3>
+      <p class="sub">Prompt used: the prompt in Part 1, unchanged.</p>
+      <h4>Output</h4>
+      <p id="out-out1"></p>
+      <h4>Critique</h4>
+      <p id="out-crit1"></p>
+
+      <h3>Entry 2 &mdash; <span id="out-tool2"></span></h3>
+      <p class="sub">Prompt used: the prompt in Part 1, unchanged.</p>
+      <h4>Output</h4>
+      <p id="out-out2"></p>
+      <h4>Critique</h4>
+      <p id="out-crit2"></p>
+
+      <h3>Entry 3 &mdash; <span id="out-tool3"></span></h3>
+      <p class="sub">Prompt used: the prompt in Part 1, unchanged.</p>
+      <h4>Output</h4>
+      <p id="out-out3"></p>
+      <h4>Critique</h4>
+      <p id="out-crit3"></p>
+
+      <h3>Part 3 &mdash; synthesis <span id="out-synth-count" class="sub"></span></h3>
+      <p id="out-synth"></p>
+
+      <h3>Module 2 Reflection</h3>
+      <p id="out-reflect"></p>
+
+      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+      <p class="no-print"><strong>Two names, one file.</strong> Hand it in on Canvas as <code>M2-Q02-[LastName]-Casebook.pdf</code>, and save it into your <code>CSC141-portfolio</code> folder as <code>06-prompt-casebook.pdf</code> while it is in front of you.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 2, Studio</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M2-Q02 — nothing persisted, nothing scored, nothing sent. ===== */
+(function () {
+  "use strict";
+  var btn = document.getElementById("build-btn");
+  if (!btn) { return; }
+  var ids = ["task", "prompt", "tool1", "out1", "crit1", "tool2", "out2", "crit2",
+             "tool3", "out3", "crit3", "synth", "reflect"];
+
+  function words(s) { s = s.trim(); return s ? s.split(/\s+/).length : 0; }
+
+  var synth = document.getElementById("synth");
+  var counter = document.getElementById("synth-count");
+  function updateCount() {
+    var n = words(synth.value);
+    counter.textContent = n + (n === 1 ? " word" : " words") +
+      (n === 0 ? "" : (n < 200 ? " — aiming for 200–350" : (n > 350 ? " — aiming for 200–350" : " — in range")));
+  }
+  synth.addEventListener("input", updateCount);
+  updateCount();
+
+  btn.addEventListener("click", function () {
+    var vals = {};
+    ids.forEach(function (id) { vals[id] = document.getElementById(id).value.trim(); });
+    var status = document.getElementById("build-status");
+    if (!vals.prompt && !vals.out1 && !vals.synth) {
+      status.textContent = " Fill in at least your prompt and one output before building the copy.";
+      return;
+    }
+    ids.forEach(function (id) {
+      var el = document.getElementById("out-" + id);
+      el.textContent = vals[id] || "(not recorded)";
+    });
+    ["tool1", "tool2", "tool3"].forEach(function (id) {
+      document.getElementById("out-" + id).textContent = vals[id] || "(tool not named)";
+    });
+    var n = words(vals.synth);
+    document.getElementById("out-synth-count").textContent = "(" + n + (n === 1 ? " word)" : " words)");
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this page.";
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M2L6 &mdash; Building Your Prompt Engineering Casebook | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M2L4a-A1 prompt draft log only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  a[href]::after { content: ""; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 2, Lesson 6</p>
+    <h1>Building Your Prompt Engineering Casebook</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What a casebook is</a></li>
+      <li><a href="#s2">Choosing a task</a></li>
+      <li><a href="#s3">Judging an output</a></li>
+      <li><a href="#s4">A comparison worth reading</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What a Casebook Is</h2>
+      <p class="sub">A worked record &mdash; not a summary of what you learned, the actual material.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>A casebook is a worked record. Not a summary of what you learned &mdash; the actual material, kept in enough detail that someone else could see what happened, including you in three months.</p>
+
+        <p>The form is borrowed. Lawyers keep casebooks; so do engineers, clinicians, and anyone whose judgement improves by accumulating cases rather than by reading one more explanation. <strong>What makes it a casebook rather than a folder is that each entry carries the thing you did, the thing you got, and what you made of it.</strong> Drop any one of the three and it stops being useful: the prompt without the output is a guess, the output without the prompt is unrepeatable, and both without your reading of them is a pile of text you will never open again.</p>
+
+        <p><strong>For prompt engineering the payoff is unusually direct</strong>, because the whole subject is a skill you can only see from the outside. You cannot tell whether a prompt was good by looking at the prompt. You find out by looking at what came back &mdash; and you learn the general lesson by looking at several of those next to each other, which is the one thing a single conversation can never show you.</p>
+
+        <p>So: <strong>one task, run more than once, written down, and read.</strong> That is the entire idea. Everything else in this lesson is about doing each of those four things well enough that the exercise pays.</p>
+
+        <figure>
+          <div class="figure-scroll">
+            <svg viewBox="0 0 700 320" role="presentation" focusable="false" aria-hidden="true">
+              <defs>
+                <marker id="arw6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 9 5 L 0 9 z" fill="#1d6690"/>
+                </marker>
+              </defs>
+
+              <text x="14" y="24" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">One entry</text>
+              <rect x="14" y="36" width="200" height="42" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="26" y="62" font-family="sans-serif" font-size="11" fill="#1a1a1a">The prompt you sent</text>
+              <line x1="114" y1="78" x2="114" y2="98" stroke="#1d6690" stroke-width="2" marker-end="url(#arw6)"/>
+              <rect x="14" y="102" width="200" height="42" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="26" y="128" font-family="sans-serif" font-size="11" fill="#14304a">The output you got back</text>
+              <line x1="114" y1="144" x2="114" y2="164" stroke="#1d6690" stroke-width="2" marker-end="url(#arw6)"/>
+              <rect x="14" y="168" width="200" height="42" rx="5" fill="#ffffff" stroke="#1a5276" stroke-width="2"/>
+              <text x="26" y="194" font-family="sans-serif" font-size="11" font-weight="700" fill="#1a1a1a">What you made of it</text>
+
+              <line x1="252" y1="20" x2="252" y2="300" stroke="#b0b8bd" stroke-width="1"/>
+
+              <text x="290" y="24" font-family="sans-serif" font-size="12" font-weight="700" fill="#0e3a56">The set of entries</text>
+              <rect x="290" y="36" width="110" height="174" rx="5" fill="#f4f6f7" stroke="#1a5276"/>
+              <text x="300" y="58" font-family="sans-serif" font-size="11" fill="#1a1a1a">Entry</text>
+              <rect x="300" y="68" width="90" height="26" rx="3" fill="#ffffff" stroke="#b0b8bd"/>
+              <rect x="300" y="100" width="90" height="26" rx="3" fill="#d6eaf8" stroke="#b0b8bd"/>
+              <rect x="300" y="132" width="90" height="26" rx="3" fill="#ffffff" stroke="#b0b8bd"/>
+              <rect x="412" y="36" width="110" height="174" rx="5" fill="#f4f6f7" stroke="#1a5276"/>
+              <text x="422" y="58" font-family="sans-serif" font-size="11" fill="#1a1a1a">Entry</text>
+              <rect x="422" y="68" width="90" height="26" rx="3" fill="#ffffff" stroke="#b0b8bd"/>
+              <rect x="422" y="100" width="90" height="26" rx="3" fill="#d6eaf8" stroke="#b0b8bd"/>
+              <rect x="422" y="132" width="90" height="26" rx="3" fill="#ffffff" stroke="#b0b8bd"/>
+              <rect x="534" y="36" width="110" height="174" rx="5" fill="#f4f6f7" stroke="#1a5276"/>
+              <text x="544" y="58" font-family="sans-serif" font-size="11" fill="#1a1a1a">Entry</text>
+              <rect x="544" y="68" width="90" height="26" rx="3" fill="#ffffff" stroke="#b0b8bd"/>
+              <rect x="544" y="100" width="90" height="26" rx="3" fill="#d6eaf8" stroke="#b0b8bd"/>
+              <rect x="544" y="132" width="90" height="26" rx="3" fill="#ffffff" stroke="#b0b8bd"/>
+
+              <path d="M 290 222 L 290 232 L 644 232 L 644 222" fill="none" stroke="#1a5276" stroke-width="2"/>
+              <text x="304" y="252" font-family="sans-serif" font-size="11" font-weight="700" fill="#0e3a56">&#215; the same task, run more than once</text>
+              <line x1="467" y1="256" x2="467" y2="272" stroke="#1d6690" stroke-width="2" marker-end="url(#arw6)"/>
+              <rect x="327" y="276" width="280" height="36" rx="5" fill="#e3f4ea" stroke="#1e8449" stroke-width="2"/>
+              <text x="339" y="299" font-family="sans-serif" font-size="11" font-weight="700" fill="#11532e">What you noticed across them</text>
+            </svg>
+          </div>
+          <figcaption><strong>Figure 1 &mdash; what one casebook entry holds, and what sits across the set.</strong> On the left, a single entry drawn as three blocks stacked top to bottom with arrows between them: <em>the prompt you sent</em>, then <em>the output you got back</em>, then <em>what you made of it</em>. All three belong to one entry, and an entry missing any of them stops being useful. On the right, the same three-part shape repeated as several entries side by side, with a bracket drawn underneath all of them labelled <em>&times; the same task, run more than once</em>. An arrow leads from that bracket down to a final block: <em>what you noticed across them</em>. The synthesis is written across the set of entries, not inside any one of them.</figcaption>
+        </figure>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Choosing a Task Worth Three Runs</h2>
+      <p class="sub">Made in the first five minutes, before any tool is open.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>This is the decision that determines whether the exercise teaches you anything, and it is made in the first five minutes, before any tool is open.</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>What makes a task work</h3>
+            <ul>
+              <li><strong>It is real.</strong> Something you actually want done &mdash; from your own field, your own coursework, or your &ldquo;10 Things&rdquo; list. A made-up task produces made-up judgement, because you have no standard to hold the answers to.</li>
+              <li><strong>You know enough to judge the answer.</strong> Not everything about it &mdash; enough to tell a good answer from a plausible-sounding one. This is the criterion people skip, and it is the one that decides whether your critiques are worth reading.</li>
+              <li><strong>It has requirements you can name.</strong> An audience, a length, a format, a thing to leave out. Requirements are what make differences <em>visible</em>: if you asked for under 200 words, you can see who ignored you.</li>
+              <li><strong>It is small enough to finish.</strong> One deliverable, not a project.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>What makes a task useless</h3>
+            <ul>
+              <li><strong>It is too easy to get wrong in an interesting way.</strong> <em>&ldquo;Write a poem about cats.&rdquo;</em> All the answers will be fine, you will have nothing to say about any of them, and you will conclude that the tools are much the same &mdash; which is a conclusion about your task, not about anything else.</li>
+              <li><strong>It is outside what you can evaluate.</strong> If you cannot tell whether the answer is any good, you are grading fluency, which every one of these tools has in quantity.</li>
+              <li><strong>It is enormous.</strong> A whole essay, a full study plan, a complete lesson. You will get several long answers and read none of them properly.</li>
+            </ul>
+          </article>
+        </div>
+
+        <p><strong>Use the same prompt every time.</strong> The point of running a task more than once is to hold something constant so that what varies is visible. Improving the prompt between runs is a good instinct, and it is a different exercise &mdash; one you already did. Here, the prompt is the control.</p>
+
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Say out loud what would make one answer better than another.</strong> Before you open anything, try to name it &mdash; not &ldquo;better written,&rdquo; but something you could point at afterwards. If you cannot name it for the task you picked, pick a different one: you have just found out that you would be grading these on how they sound. <em>The studio page opens with the exact test.</em></p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Judging an Output: Five Criteria</h2>
+      <p class="sub">A critique names what in the output produced the judgement.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>A critique is not a rating. <strong>A critique names what in the output produced the judgement</strong> &mdash; the sentence, the omission, the wrong register &mdash; and a good one is often shorter than a paragraph.</p>
+
+        <p>These are the five this course uses. You will not use all five on every output; two or three, chosen because they are what this task actually needs, beats five applied dutifully.</p>
+
+        <p><strong>Accuracy.</strong> Is it right about the things you already know enough to check? You brought this task because you know something about it &mdash; so check the parts you can: names, dates, steps, claims about your own field. <strong>You are not expected to go and research the parts you can&rsquo;t check.</strong> If two answers disagree and you cannot tell which is right, that is not a dead end &mdash; <em>write that down.</em> It is one of the more useful things a casebook can record.</p>
+
+        <p><strong>Completeness.</strong> Did it do the whole task, or the easy two-thirds of it? Look specifically for the requirement you put last, and for anything you asked it <em>not</em> to do. Instructions get dropped from the end and from the negative.</p>
+
+        <p><strong>Tone and appropriateness.</strong> Is it pitched at the audience you named? Read one paragraph as if you were the person it is for. Wrong register is the failure that survives every other check, because the text is perfectly good &mdash; for somebody else.</p>
+
+        <p><strong>Creativity.</strong> Did it bring anything you would not have thought of? This is the criterion that separates useful from merely correct, and it is worth being honest in both directions: a task that did not call for an original idea should not be marked down for not having one.</p>
+
+        <p><strong>Usefulness.</strong> The one that matters most and gets asked least: <strong>would you actually use this?</strong> Not &ldquo;is it impressive,&rdquo; not &ldquo;is it well written.&rdquo; Would this go in the thing you were making, with or without edits &mdash; and if with, how many?</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Accuracy</h3>
+            <p><em>The question it asks:</em> is it right about the things you can already check?</p>
+            <p class="sub"><em>Where it usually fails:</em> a confident sentence about your own field that you know is not quite right.</p>
+          </article>
+          <article class="card">
+            <h3>Completeness</h3>
+            <p><em>The question it asks:</em> did it do the whole task?</p>
+            <p class="sub"><em>Where it usually fails:</em> the requirement you put last, and anything you asked it not to do.</p>
+          </article>
+          <article class="card">
+            <h3>Tone and appropriateness</h3>
+            <p><em>The question it asks:</em> is it pitched at the audience you named?</p>
+            <p class="sub"><em>Where it usually fails:</em> good writing, aimed at somebody else.</p>
+          </article>
+          <article class="card">
+            <h3>Creativity</h3>
+            <p><em>The question it asks:</em> did it bring anything you would not have thought of?</p>
+            <p class="sub"><em>Where it usually fails:</em> being marked down on a task that never called for an original idea.</p>
+          </article>
+          <article class="card">
+            <h3>Usefulness</h3>
+            <p><em>The question it asks:</em> would you actually use this?</p>
+            <p class="sub"><em>Where it usually fails:</em> it is impressive, and it still does not go in the thing you were making.</p>
+          </article>
+        </div>
+
+        <p><strong>Judge the output you got, not the one you could have got with a better prompt.</strong> You already know how to improve a prompt; that is not what is being measured here. Read what came back against what you asked for.</p>
+
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>Two or three criteria, chosen because the task needs them, beats all five applied out of duty.</strong> A critique that says something specific about completeness and nothing about creativity is a better critique than one that says something vague about each.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>What Makes a Comparison Worth Reading</h2>
+      <p class="sub">The part that turns several entries into one thing.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>The last part of a casebook is the part that turns several entries into one thing: a short synthesis, written after you have read all of them.</p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>One run is not evidence about a tool.</strong> You will have one output from each, on one task, from one prompt, on one day &mdash; and there is randomness in all of it. Comparing the outputs in front of you is the exercise. Ranking the products is a different claim, and it is one this evidence cannot carry.</p>
+        </div>
+
+        <p><strong>Compare the outputs, not the products.</strong> This is the discipline the whole exercise rests on, and it is the opposite of what feels natural. You ran one task, once, through each tool, with one prompt, on one day. <strong>That is not enough to conclude anything about any of the tools, and any sentence of the form &ldquo;X is better than Y&rdquo; is a claim your evidence does not support.</strong> It is also the kind of claim that stops being true quietly, months before anyone notices.</p>
+
+        <p>What your evidence <em>does</em> support is much more interesting, because it is about you and your task:</p>
+
+        <ul>
+          <li><strong>What they all did the same.</strong> If every answer missed the same requirement, the requirement was buried, or ambiguous, or last. <strong>That is a finding about your prompt</strong>, and it is the single most valuable thing this exercise produces.</li>
+          <li><strong>Where they diverged, and on what.</strong> Not which was best &mdash; <em>on what dimension</em> they differed. Length? Register? How much they assumed about the reader? That tells you which parts of your request were doing work and which were being interpreted.</li>
+          <li><strong>What surprised you.</strong> Including the boring surprise: that they were all much the same. If that is what happened, it is worth asking whether the task was one where the answer was overdetermined &mdash; which is a real result and a good one to know.</li>
+          <li><strong>What you would change about the prompt</strong>, now that you have seen several attempts at answering it. One sentence.</li>
+        </ul>
+
+        <p><strong>The reader of your synthesis is you, later.</strong> Write the thing you would want to find if you came back to this task in six months having forgotten everything except that you once looked into it.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. You run the same task through several tools and every one of them ignores the length limit you set. What is the most useful thing to write in your synthesis?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) That none of these tools handles length limits reliably.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) That the length limit was probably buried or ambiguous in the prompt, and where it sat.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) That length limits are not worth setting.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) Which one came closest to the limit.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes &mdash; when everything does the same thing, the common factor is your prompt, not the tools. A requirement they all missed is the most useful signal this exercise produces, because it is the one you can act on.</p></template>
+          <template data-no><p>The answer is B. A and C are claims about the tools and about length limits in general, and one run each is nowhere near enough evidence for either. D is a ranking, which is the move to avoid. What you actually learned is something about how you wrote the request.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>2. Two of your outputs state different things about your topic and you do not know which is right. What belongs in the casebook?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Nothing &mdash; leave the disagreement out until you can resolve it.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) Whichever one sounds more authoritative, marked as correct.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) The disagreement itself, recorded as what you observed.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) A note that the tools are unreliable.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. Writing down what you observed &mdash; including that you could not settle it &mdash; is exactly what a worked record is for. A noticed disagreement is a real finding, and it is more honest than a resolved one you guessed at.</p></template>
+          <template data-no><p>The answer is C. Leaving it out (A) throws away the most interesting thing that happened; picking the confident-sounding one (B) is grading fluency, which is the habit this exercise exists to break; and (D) is a general claim from a single instance.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>3. Which of these is the best reason to reject a task before you start?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) You have already done something similar in an earlier lesson.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) You could not say, in one sentence, what would make one answer better than another.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) You expect the answers to be broadly similar.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) It is from your own field rather than a general topic.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Without that sentence you have no standard, so the critiques come out as &ldquo;this one flowed better&rdquo; &mdash; and an hour of work turns into an opinion about prose.</p></template>
+          <template data-no><p>The answer is B. Similar answers (C) are a legitimate result worth recording; a task from your own field (D) is preferred, not a problem; and familiarity (A) usually means you can judge the answers, which is what you want.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, September 28</h2>
+      <p class="sub">Our next live session &mdash; and the one that closes Module 2.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>Our next live session takes up one question, and it is one you now have your own evidence for:</p>
+      <p><strong>Is the frontier-versus-local debate mostly about capability, privacy, cost, or something else entirely &mdash; and where do you land?</strong></p>
+      <p>Come with a position and one concrete thing behind it. The table you filled in this week is one source; so is the experience of actually running a task through more than one tool. <strong>A position you changed your mind about partway through is the most interesting kind to bring.</strong></p>
+      <p>It is also the session where the course moves on to the next module, so this is the discussion that closes Module 2.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 2, Lesson 6</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>
