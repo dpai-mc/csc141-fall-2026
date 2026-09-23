@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M3L3 &mdash; Academic Integrity in the Age of AI | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M3L3-A1 three cases only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+/* ---------- page-specific (M3L3): tabbed panels, assignment card, sample text ---------- */
+.assignment-card { border: 1px solid var(--c-border); background: var(--c-surface); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.assignment-card p:last-child { margin-bottom: 0; }
+blockquote.sample { border-left: 4px solid var(--c-border); padding: var(--s-2) var(--s-3); margin: var(--s-3) 0; background: #fff; }
+blockquote.sample p { margin-bottom: 0; }
+.tabs { margin: var(--s-4) 0; }
+[role="tablist"] { display: flex; flex-wrap: wrap; gap: var(--s-1); border-bottom: 2px solid var(--c-primary); }
+[role="tab"] { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); border-bottom: 0; border-radius: var(--radius) var(--radius) 0 0; padding: .5rem 1rem; }
+[role="tab"][aria-selected="true"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+[role="tabpanel"] { border: 1px solid var(--c-border); border-top: 0; border-radius: 0 0 var(--radius) var(--radius); padding: var(--s-3); }
+[role="tabpanel"][hidden] { display: none; }
+@media print {
+  [role="tabpanel"][hidden] { display: block !important; }
+  [role="tablist"] { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 3, Lesson 3</p>
+    <h1>Academic Integrity in the Age of AI</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">Integrity is about trust</a></li>
+      <li><a href="#s2">Who&rsquo;s the author?</a></li>
+      <li><a href="#s3">How to credit AI</a></li>
+      <li><a href="#s4">What the rules say</a></li>
+      <li><a href="#s5">Judging a case</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Integrity Is About Trust, Not Just Rules</h2>
+      <p class="sub">When you hand in work, you&rsquo;re making a promise.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>&ldquo;Academic integrity&rdquo; can sound like a list of things you&rsquo;ll get in trouble for. It&rsquo;s more useful to think of it as a promise.</p>
+
+        <p>When you hand in work, you&rsquo;re telling your instructor: <strong>this shows what I can do.</strong> A grade is only worth something because that promise is usually kept &mdash; to you, to the next school that reads your transcript, to the employer who assumes your certificate means you can do the job. When the promise breaks, the damage isn&rsquo;t only to the person who broke it. It makes everyone&rsquo;s work a little harder to believe.</p>
+
+        <p>AI tools didn&rsquo;t create that problem. They made it much easier to blur &mdash; because an AI tool can produce work that <em>looks</em> like yours in seconds, and because the line between &ldquo;help&rdquo; and &ldquo;doing it for you&rdquo; is genuinely harder to see than it was with a copied essay.</p>
+
+        <p>The course&rsquo;s definition:</p>
+
+        <p><strong>Academic integrity (with AI).</strong> <em>The honest and transparent use of AI tools in academic work, including proper disclosure, citation, and adherence to institutional policies on AI-assisted work.</em></p>
+
+        <p>Three parts: <strong>disclose</strong> what the AI did, <strong>cite</strong> what you took from it, and <strong>follow the rules</strong> of the course you&rsquo;re in. The rest of this lesson takes them one at a time.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Who&rsquo;s the Author?</h2>
+      <p class="sub">You are responsible for everything you submit &mdash; and citing isn&rsquo;t the same as disclosing.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Here&rsquo;s the part that doesn&rsquo;t change no matter which rules apply: <strong>when you submit work, you are responsible for all of it</strong> &mdash; including every sentence, fact and source an AI tool produced for you. &ldquo;The AI wrote that&rdquo; is an explanation, never an excuse.</p>
+
+        <p>That&rsquo;s why the difference between two words matters:</p>
+        <ul>
+          <li><strong>Citing</strong> means crediting the AI for specific content you used &mdash; a sentence you quoted, a summary you relied on, an image it made. Citation says <em>where this piece came from.</em></li>
+          <li><strong>Disclosing</strong> means stating how you used AI in the <em>process</em> &mdash; brainstorming, outlining, checking grammar, translating &mdash; even when none of its words ended up in your work. Disclosure says <em>what help you had.</em></li>
+        </ul>
+
+        <p><strong>You can need one, the other, or both.</strong> Quoting an AI&rsquo;s explanation needs a citation. Using AI to brainstorm topics needs a disclosure. Using it to brainstorm <em>and</em> quoting a line from it needs both.</p>
+
+        <p>A good disclosure is specific. Compare:</p>
+        <blockquote class="sample"><p><em>&ldquo;I used AI on this assignment.&rdquo;</em></p></blockquote>
+        <blockquote class="sample"><p><em>&ldquo;I used Gemini to suggest possible topics and to check grammar in my final draft. I chose the topic, did the research, and wrote every sentence myself.&rdquo;</em></p></blockquote>
+        <p>The first one is technically a disclosure. The second one actually tells the reader something.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>How to Credit AI</h2>
+      <p class="sub">Three style guides, the same basics, different details.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>The three style guides you&rsquo;re most likely to meet in college have each published guidance on citing generative AI. They agree on the basics &mdash; name the tool and who makes it, give the date, show where it came from &mdash; and differ on the details.</p>
+
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>Crediting generative AI in three style guides</caption>
+            <thead>
+              <tr><th scope="col">Style</th><th scope="col">Where the credit goes</th><th scope="col">Shape of the entry</th><th scope="col">Example</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">APA</th>
+                <td data-col="Where the credit goes">A reference-list entry, plus an in-text citation &mdash; and a sentence in your text saying how you used the tool.</td>
+                <td data-col="Shape of the entry">Company. (Year). <em>Tool name</em> [Description]. URL</td>
+                <td data-col="Example">Google. (2026). <em>Gemini</em> [Large language model]. https://gemini.google.com &mdash; in text: (Google, 2026)</td>
+              </tr>
+              <tr>
+                <th scope="row">MLA</th>
+                <td data-col="Where the credit goes">A Works Cited entry for content you quote or paraphrase; other uses (editing, translating) acknowledged in a note or in your text.</td>
+                <td data-col="Shape of the entry">&ldquo;Description of your prompt&rdquo; prompt. <em>Tool name</em>, version (if shown), Company, date you used it, URL.</td>
+                <td data-col="Example">&ldquo;Explain how a bill becomes law in California&rdquo; prompt. <em>Gemini</em>, Google, 28 Sept. 2026, gemini.google.com.</td>
+              </tr>
+              <tr>
+                <th scope="row">Chicago</th>
+                <td data-col="Where the credit goes">A footnote or endnote. Whether it also needs a bibliography entry varies &mdash; check with your instructor.</td>
+                <td data-col="Shape of the entry">Tool name, response to &ldquo;your prompt,&rdquo; Company, date.</td>
+                <td data-col="Example">1. Gemini, response to &ldquo;Explain how a bill becomes law in California,&rdquo; Google, September 28, 2026.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="stamp"><strong>Citation formats accurate as of 2026-09.</strong> Style guides are still revising their AI guidance. Sources: MLA Style Center, <a href="https://style.mla.org/citing-generative-ai/" target="_blank" rel="noopener"><em>How do I cite generative AI in MLA style?</em></a> (revised August 2025) &middot; APA Style blog, <a href="https://apastyle.apa.org/blog/cite-generative-ai-references" target="_blank" rel="noopener"><em>Citing generative AI in APA Style: Part 1 &mdash; Reference formats</em></a> &middot; Chicago Manual of Style, 18th ed., &sect;14.112 (<a href="https://libguides.mcmaster.ca/cite-gen-ai/chicago" target="_blank" rel="noopener">summarized by McMaster University Library</a>).</p>
+
+        <p>Two things all three agree on that are easy to forget:</p>
+        <ul>
+          <li><strong>Say what you asked.</strong> Most of these formats include your prompt, or a description of it. An AI&rsquo;s answer depends on the question, so the question is part of the source.</li>
+          <li><strong>Say it in your text too.</strong> A citation at the end isn&rsquo;t enough if the reader can&rsquo;t tell which parts of your work came from the AI. Introduce quoted AI text the way you&rsquo;d introduce any quotation.</li>
+        </ul>
+
+        <p><strong>And the rule under all the formats: your instructor&rsquo;s syllabus decides whether AI output can be used at all.</strong> A perfect citation doesn&rsquo;t make a use acceptable if the course didn&rsquo;t allow it.</p>
+
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>Before you cite AI in a real assignment, check two things:</strong> what your instructor&rsquo;s syllabus says about AI, and which style guide the course uses. If you can&rsquo;t find either, ask. Then check the style guide&rsquo;s own current page &mdash; this table is a snapshot.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>What the Rules Actually Say</h2>
+      <p class="sub">There isn&rsquo;t one rule for every class &mdash; on purpose.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>If you&rsquo;re hoping for one rule that covers every class, there isn&rsquo;t one &mdash; and that&rsquo;s on purpose.</p>
+
+        <p>California&rsquo;s community colleges get guidance on this from the <strong>Academic Senate for California Community Colleges</strong>, the statewide body that represents faculty on academic matters. Its paper <a href="https://www.asccc.org/papers/academic-integrity-policies-in-the-age-of-ai" target="_blank" rel="noopener"><em>Academic Integrity Policies in the Age of Artificial Intelligence</em></a>, adopted in spring 2024, explicitly isn&rsquo;t a mandate. It leaves the decision to individual instructors and disciplines, and offers sample syllabus statements running from fully <strong>open</strong> to fully <strong>closed</strong>.</p>
+
+        <p>So the same use of AI can be expected in one class and prohibited in the next. That&rsquo;s not inconsistency &mdash; a writing course, a lab course and a computer science course have genuinely different things they&rsquo;re trying to teach.</p>
+
+        <figure>
+          <div class="figure-scroll">
+            <svg viewBox="0 0 700 230" role="presentation" focusable="false" aria-hidden="true">
+              <text x="350" y="22" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#0e3a56">Where a course&#8217;s syllabus can put the line</text>
+              <line x1="70" y1="62" x2="630" y2="62" stroke="#1a5276" stroke-width="4"/>
+              <circle cx="90" cy="62" r="9" fill="#ffffff" stroke="#1a5276" stroke-width="3"/>
+              <circle cx="263" cy="62" r="9" fill="#ffffff" stroke="#1a5276" stroke-width="3"/>
+              <circle cx="437" cy="62" r="9" fill="#ffffff" stroke="#1a5276" stroke-width="3"/>
+              <circle cx="610" cy="62" r="9" fill="#ffffff" stroke="#1a5276" stroke-width="3"/>
+              <text x="90" y="96" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#1a1a1a">Closed</text>
+              <text x="90" y="116" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">No AI use on</text>
+              <text x="90" y="131" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">this work.</text>
+              <text x="263" y="96" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#1a1a1a">Limited</text>
+              <text x="263" y="116" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">Specific uses allowed</text>
+              <text x="263" y="131" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">(e.g. brainstorming,</text>
+              <text x="263" y="146" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">grammar), disclosed.</text>
+              <text x="437" y="96" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#1a1a1a">Open with disclosure</text>
+              <text x="437" y="116" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">Most uses allowed,</text>
+              <text x="437" y="131" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">all disclosed and cited.</text>
+              <text x="610" y="96" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#1a1a1a">Open</text>
+              <text x="610" y="116" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">AI use expected</text>
+              <text x="610" y="131" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4a4a4a">or unrestricted.</text>
+              <text x="350" y="200" text-anchor="middle" font-family="sans-serif" font-size="12" font-style="italic" fill="#14304a">Same student, same tool &#8212; different courses, different rules.</text>
+            </svg>
+          </div>
+          <figcaption><strong>Figure 1 &mdash; the acceptable-use spectrum.</strong> A horizontal line, headed <em>where a course&rsquo;s syllabus can put the line</em>, with four stops from left to right. <strong>Closed:</strong> no AI use on this work. <strong>Limited:</strong> specific uses allowed, such as brainstorming or grammar, and disclosed. <strong>Open with disclosure:</strong> most uses allowed, all disclosed and cited. <strong>Open:</strong> AI use expected or unrestricted. Beneath it: <em>same student, same tool &mdash; different courses, different rules.</em> The four stops are this lesson&rsquo;s simplification of the range of sample syllabus statements in the ASCCC paper, not official categories.</figcaption>
+        </figure>
+
+        <p><strong>In practice, the rule that applies to you is the one in each course&rsquo;s syllabus.</strong> If a syllabus doesn&rsquo;t say, ask your instructor <em>before</em> you use AI on an assignment &mdash; not after. &ldquo;I didn&rsquo;t know&rdquo; is a much weaker position than &ldquo;I asked.&rdquo;</p>
+
+        <p><strong>Where do you land?</strong> You&rsquo;ll be asked in the activity, in one sentence. There&rsquo;s no right answer &mdash; people who teach for a living disagree about this. What matters is that you can say why.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>Judging a Case</h2>
+      <p class="sub">The clearest real case so far happened in a federal court.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>The clearest real case so far didn&rsquo;t happen in a classroom. It happened in a federal court.</p>
+
+        <p>In 2023, in a lawsuit called <em>Mata v. Avianca</em>, two New York lawyers filed a brief that cited court decisions that didn&rsquo;t exist &mdash; ChatGPT had produced them, and nobody checked. When the judge questioned the cases, the lawyers stood by them instead of saying where they&rsquo;d come from. In June 2023 the court fined the lawyers and their firm $5,000 and ordered them to write to the judges falsely named as authors of the fake opinions. (<a href="https://www.seyfarth.com/news-insights/update-on-the-chatgpt-case-counsel-who-submitted-fake-cases-are-sanctioned.html" target="_blank" rel="noopener">summary of the court&rsquo;s sanctions order</a>)</p>
+
+        <p><strong>The court&rsquo;s problem wasn&rsquo;t that they used an AI tool.</strong> It was that they submitted work they hadn&rsquo;t checked, as if they had, and then weren&rsquo;t honest about it. Swap &ldquo;brief&rdquo; for &ldquo;essay&rdquo; and &ldquo;judge&rdquo; for &ldquo;instructor&rdquo; and it&rsquo;s the same three failures this lesson is about: no verification, no disclosure, and responsibility dodged.</p>
+
+        <p>Most real situations are much less dramatic, and much harder to call. <strong>Three questions work for any case:</strong></p>
+        <ol>
+          <li><strong>What did the AI actually do?</strong> Brainstorm, edit, translate, draft, write the whole thing?</li>
+          <li><strong>What did the rules for <em>that</em> course allow?</strong></li>
+          <li><strong>What did the person say about it?</strong> Nothing? Something vague? Something specific?</li>
+        </ol>
+        <p>Notice what&rsquo;s not on the list: <strong>how the writing sounds.</strong></p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>You can&rsquo;t reliably tell AI writing by reading it &mdash; and neither can the tools that claim to.</strong> In 2023, OpenAI <a href="https://openai.com/index/new-ai-classifier-for-indicating-ai-written-text/" target="_blank" rel="noopener">withdrew its own AI-text detector</a> because it wasn&rsquo;t accurate enough, and <a href="https://arxiv.org/abs/2304.02819" target="_blank" rel="noopener">a Stanford study</a> found that popular detectors regularly flagged essays by non-native English writers as AI-written. Judging a case by how the writing &ldquo;sounds&rdquo; gets real people wrongly accused. Judge what was done and what was said.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M3L3-A1 &mdash; Three cases</h2>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Not submitted</span>
+      </div>
+      <p><strong>Three students answered the same assignment. Decide whether each one met the course&rsquo;s AI rule &mdash; and say why.</strong></p>
+
+      <div class="assignment-card">
+        <p><strong>Short response (150&ndash;200 words):</strong> Should community colleges require every student to take a personal-finance course? Take a position and give your strongest reason.</p>
+        <p><strong>This course&rsquo;s AI rule (from the syllabus):</strong> <span id="rule-text">AI tools may be used for brainstorming and for grammar and spelling checks. All ideas and wording in your submitted work must be your own. Any AI use must be disclosed in a note at the end of your response.</span></p>
+      </div>
+
+      <h3>Step 1 &mdash; read each sample and its process notes</h3>
+      <p>The notes tell you what the student actually did. That&rsquo;s your evidence &mdash; not how the writing sounds.</p>
+
+      <h3>Step 2 &mdash; for each sample, make three calls</h3>
+      <p>Using the course&rsquo;s rule above.</p>
+
+      <h3>Step 3 &mdash; say why</h3>
+      <p>Two or three sentences per sample.</p>
+
+      <h3>Step 4 &mdash; where do you land?</h3>
+      <p>One sentence: where on the spectrum would you put the line for a course like this one, and why?</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>About these samples.</strong> Jordan, Priya and Sam are fictional. Their responses and process notes were drafted for this course with the help of an AI tool and then reviewed and edited by your instructor &mdash; which is exactly the kind of statement this lesson is asking you to be able to write.</p>
+      </div>
+
+      <div class="tabs">
+        <div role="tablist" aria-label="The three samples">
+            <button type="button" role="tab" id="tab-A" aria-controls="panel-A" aria-selected="true">Sample A &mdash; Jordan</button>
+            <button type="button" role="tab" id="tab-B" aria-controls="panel-B" aria-selected="false" tabindex="-1">Sample B &mdash; Priya</button>
+            <button type="button" role="tab" id="tab-C" aria-controls="panel-C" aria-selected="false" tabindex="-1">Sample C &mdash; Sam</button>
+        </div>
+          <div role="tabpanel" id="panel-A" aria-labelledby="tab-A" tabindex="0">
+            <blockquote class="sample">
+              <p>I think community colleges should require a personal-finance course, because most of us are already making money decisions that can follow us for years. I&rsquo;m twenty and I already have a car loan, a credit card, and a part-time job that pays into a retirement account I don&rsquo;t understand. Nobody taught me any of it. I learned what an interest rate really costs by paying one. A single required course wouldn&rsquo;t make everyone an expert, and it wouldn&rsquo;t need to be long, but it would mean students hear the basics &mdash; budgeting, credit, loans, taxes &mdash; before a mistake teaches them the expensive way. Some people will say it&rsquo;s one more requirement in a schedule that&rsquo;s already full, and that&rsquo;s fair. But a community college is supposed to prepare people for real life, not just transfer, and money is part of real life for every single student here. It would probably be the class people use most.</p>
+            </blockquote>
+            <p><strong>Process notes</strong></p>
+            <ul><li>Wrote the response in one sitting in a Google Doc.</li><li>Asked a friend to read it; changed one sentence after.</li><li>Used no AI tools.</li></ul>
+            <p><strong>Disclosure note at the end of the submission:</strong> <em>(none)</em></p>
+          </div>
+          <div role="tabpanel" id="panel-B" aria-labelledby="tab-B" tabindex="0" hidden>
+            <blockquote class="sample">
+              <p>Community colleges should require a personal-finance course because financial mistakes made early can take years to fix. Many students are managing rent, loans, or credit cards for the first time while they&rsquo;re in school, and most never had a class that explained how any of it works. The strongest reason is fairness: students whose families talk openly about money start with an advantage that others don&rsquo;t have, and a required course is one of the few ways a college can close that gap. Critics argue that students can learn this online for free, and that&rsquo;s true &mdash; but &ldquo;can&rdquo; isn&rsquo;t &ldquo;will,&rdquo; and the students who need it most are often the least likely to go looking. A required course reaches everyone, including the students who would never have signed up for it on their own. A short, practical course on budgeting, credit and debt would pay off long after graduation.</p>
+            </blockquote>
+            <p><strong>Process notes</strong></p>
+            <ul><li>Asked Gemini: <em>&ldquo;Give me five reasons colleges might require a personal finance class.&rdquo;</em> Picked the fairness reason from its list and wrote the response herself.</li><li>Pasted her finished draft into Gemini and asked it to <em>&ldquo;fix grammar and spelling only, don&rsquo;t change my words.&rdquo;</em> Accepted two comma fixes and one spelling fix.</li></ul>
+            <p><strong>Disclosure note at the end of the submission:</strong> <em>&ldquo;I used AI to help with this.&rdquo;</em></p>
+          </div>
+          <div role="tabpanel" id="panel-C" aria-labelledby="tab-C" tabindex="0" hidden>
+            <blockquote class="sample">
+              <p>Requiring a personal-finance course at community colleges would be a meaningful investment in student success. Financial literacy equips learners with essential skills such as budgeting, managing credit, and understanding loans &mdash; competencies that directly influence long-term well-being. Moreover, many community college students are already navigating significant financial responsibilities, making this knowledge immediately applicable. Research consistently highlights that students with strong financial knowledge are better positioned to make informed decisions regarding tuition, employment, and borrowing. While some may argue that adding a requirement could delay degree completion, the course could be designed as a flexible, low-unit option. Additionally, integrating real-world scenarios, such as creating a monthly budget or comparing loan offers, would ensure that the content remains relevant, engaging, and directly connected to students&rsquo; everyday lives. Ultimately, the strongest reason to require such a course is its potential to reduce financial stress, which is a leading factor in students leaving college. By empowering students with practical knowledge, community colleges can foster both academic persistence and lifelong financial stability.</p>
+            </blockquote>
+            <p><strong>Process notes</strong></p>
+            <ul><li>Pasted the assignment prompt into an AI tool and asked it to <em>&ldquo;write a 175-word response.&rdquo;</em></li><li>Copied the response into the submission and changed two words.</li></ul>
+            <p><strong>Disclosure note at the end of the submission:</strong> <em>(none)</em></p>
+          </div>
+      </div>
+
+      <form id="cases-form">
+        <div class="claims">
+        <fieldset class="group">
+          <legend id="sA-lg">Sample A &mdash; Jordan</legend>
+          <label class="field" id="sA-did-l" for="sA-did">What the AI did</label>
+          <select id="sA-did" aria-labelledby="sA-lg sA-did-l"><option value="">&mdash; choose &mdash;</option><option>Nothing</option><option>Helped with part of the process</option><option>Produced the submitted work</option></select>
+          <label class="field" id="sA-dis-l" for="sA-dis">Disclosure</label>
+          <select id="sA-dis" aria-labelledby="sA-lg sA-dis-l"><option value="">&mdash; choose &mdash;</option><option>Not needed</option><option>Present and specific</option><option>Present but too vague</option><option>Missing</option></select>
+          <label class="field" id="sA-meets-l" for="sA-meets">Meets this course&rsquo;s rule?</label>
+          <select id="sA-meets" aria-labelledby="sA-lg sA-meets-l"><option value="">&mdash; choose &mdash;</option><option>Yes</option><option>No</option><option>Arguable</option></select>
+          <label class="field" id="sA-why-l" for="sA-why">Why</label>
+          <textarea id="sA-why" rows="3" aria-labelledby="sA-lg sA-why-l"></textarea>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="sB-lg">Sample B &mdash; Priya</legend>
+          <label class="field" id="sB-did-l" for="sB-did">What the AI did</label>
+          <select id="sB-did" aria-labelledby="sB-lg sB-did-l"><option value="">&mdash; choose &mdash;</option><option>Nothing</option><option>Helped with part of the process</option><option>Produced the submitted work</option></select>
+          <label class="field" id="sB-dis-l" for="sB-dis">Disclosure</label>
+          <select id="sB-dis" aria-labelledby="sB-lg sB-dis-l"><option value="">&mdash; choose &mdash;</option><option>Not needed</option><option>Present and specific</option><option>Present but too vague</option><option>Missing</option></select>
+          <label class="field" id="sB-meets-l" for="sB-meets">Meets this course&rsquo;s rule?</label>
+          <select id="sB-meets" aria-labelledby="sB-lg sB-meets-l"><option value="">&mdash; choose &mdash;</option><option>Yes</option><option>No</option><option>Arguable</option></select>
+          <label class="field" id="sB-why-l" for="sB-why">Why</label>
+          <textarea id="sB-why" rows="3" aria-labelledby="sB-lg sB-why-l"></textarea>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="sC-lg">Sample C &mdash; Sam</legend>
+          <label class="field" id="sC-did-l" for="sC-did">What the AI did</label>
+          <select id="sC-did" aria-labelledby="sC-lg sC-did-l"><option value="">&mdash; choose &mdash;</option><option>Nothing</option><option>Helped with part of the process</option><option>Produced the submitted work</option></select>
+          <label class="field" id="sC-dis-l" for="sC-dis">Disclosure</label>
+          <select id="sC-dis" aria-labelledby="sC-lg sC-dis-l"><option value="">&mdash; choose &mdash;</option><option>Not needed</option><option>Present and specific</option><option>Present but too vague</option><option>Missing</option></select>
+          <label class="field" id="sC-meets-l" for="sC-meets">Meets this course&rsquo;s rule?</label>
+          <select id="sC-meets" aria-labelledby="sC-lg sC-meets-l"><option value="">&mdash; choose &mdash;</option><option>Yes</option><option>No</option><option>Arguable</option></select>
+          <label class="field" id="sC-why-l" for="sC-why">Why</label>
+          <textarea id="sC-why" rows="3" aria-labelledby="sC-lg sC-why-l"></textarea>
+        </fieldset>
+        </div>
+        <label class="field" for="land">Where I&rsquo;d put the line for a course like this, and why</label>
+        <textarea id="land" name="land" rows="2"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="cases-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M3L3, Three Cases</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>The course&rsquo;s AI rule</dt><dd id="out-rule"></dd>
+        </dl>
+        <div class="case-out">
+          <h3>Sample A &mdash; Jordan</h3>
+          <dl>
+            <dt>What the AI did</dt><dd id="out-sA-did"></dd>
+            <dt>Disclosure</dt><dd id="out-sA-dis"></dd>
+            <dt>Meets this course&rsquo;s rule?</dt><dd id="out-sA-meets"></dd>
+            <dt>Why</dt><dd id="out-sA-why"></dd>
+          </dl>
+        </div>
+        <div class="case-out">
+          <h3>Sample B &mdash; Priya</h3>
+          <dl>
+            <dt>What the AI did</dt><dd id="out-sB-did"></dd>
+            <dt>Disclosure</dt><dd id="out-sB-dis"></dd>
+            <dt>Meets this course&rsquo;s rule?</dt><dd id="out-sB-meets"></dd>
+            <dt>Why</dt><dd id="out-sB-why"></dd>
+          </dl>
+        </div>
+        <div class="case-out">
+          <h3>Sample C &mdash; Sam</h3>
+          <dl>
+            <dt>What the AI did</dt><dd id="out-sC-did"></dd>
+            <dt>Disclosure</dt><dd id="out-sC-dis"></dd>
+            <dt>Meets this course&rsquo;s rule?</dt><dd id="out-sC-meets"></dd>
+            <dt>Why</dt><dd id="out-sC-why"></dd>
+          </dl>
+        </div>
+        <dl>
+          <dt>Where I&rsquo;d put the line for a course like this, and why</dt><dd id="out-land"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>Keep this one.</strong> You&rsquo;ll want your three judgments for a live discussion later in this module. Nothing goes to Canvas for this activity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. You used an AI tool to brainstorm topics, then wrote the whole paper yourself without using any of its words. What do you most likely owe your reader?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) A citation for every paragraph.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) A disclosure that you used AI to brainstorm.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Nothing &mdash; none of its words are in the paper.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) A citation in the reference list only.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. Citation credits content you used; disclosure describes help you had. Brainstorming is help, so it&rsquo;s disclosed &mdash; if the course allows it at all.</p></template>
+          <template data-no><p>The answer is B. There&rsquo;s no AI content to cite (A, D), but &ldquo;none of its words&rdquo; doesn&rsquo;t mean no AI use (C). Disclosure covers the process, not just the words.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>2. An instructor suspects a student used AI against the course rules. What&rsquo;s the strongest evidence to look at?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Whether the writing sounds unusually polished.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) What an AI-detection tool reports.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) What the student actually did and what they disclosed, compared with what the course allowed.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Whether the essay uses words like &ldquo;moreover.&rdquo;</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes. Style (A, D) and detector scores (B) are unreliable and have wrongly flagged real students. Process and disclosure, against the actual rule, is evidence.</p></template>
+          <template data-no><p>The answer is C. How writing sounds and what detectors say are not reliable evidence &mdash; detectors in particular have flagged non-native English writers&rsquo; own work. Judge what was done and what was said.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>3. What was the core failure in the <em>Mata v. Avianca</em> case?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) The lawyers used an AI tool at all.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) The lawyers submitted AI-produced citations without checking them, then weren&rsquo;t honest about where they came from.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) The AI tool was the wrong brand for legal work.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) The judge didn&rsquo;t understand AI.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Using the tool wasn&rsquo;t the problem. Submitting unchecked work as if it were checked, and then not owning it, was.</p></template>
+          <template data-no><p>The answer is B. The court didn&rsquo;t sanction them for using AI (A), nothing turned on which product it was (C), and the judge&rsquo;s findings were about the lawyers&rsquo; conduct (D).</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 3, Lesson 3</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M3L3-A1 tabbed samples — standard tab pattern: arrow keys, Home/End, aria-selected. ===== */
+(function () {
+  "use strict";
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function select(t, focus) {
+    tabs.forEach(function (x) {
+      var on = x === t;
+      x.setAttribute("aria-selected", on ? "true" : "false");
+      x.tabIndex = on ? 0 : -1;
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+    });
+    if (focus) { t.focus(); }
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { select(t, false); });
+    t.addEventListener("keydown", function (e) {
+      var n = null;
+      if (e.key === "ArrowRight") { n = tabs[(i + 1) % tabs.length]; }
+      else if (e.key === "ArrowLeft") { n = tabs[(i - 1 + tabs.length) % tabs.length]; }
+      else if (e.key === "Home") { n = tabs[0]; }
+      else if (e.key === "End") { n = tabs[tabs.length - 1]; }
+      if (n) { e.preventDefault(); select(n, true); }
+    });
+  });
+})();
+/* ===== M3L3-A1 — nothing persisted, nothing scored, no answer feedback. ===== */
+(function () {
+  "use strict";
+  var form = document.getElementById("cases-form");
+  if (!form) { return; }
+  var ids = ["land"];
+  ["A", "B", "C"].forEach(function (L) { ["did", "dis", "meets", "why"].forEach(function (p) { ids.push("s" + L + "-" + p); }); });
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var status = document.getElementById("cases-status");
+    var any = ids.some(function (id) { return document.getElementById(id).value.trim(); });
+    if (!any) { status.textContent = " Make at least one call before building the copy."; return; }
+    ids.forEach(function (id) {
+      var v = document.getElementById(id).value.trim();
+      document.getElementById("out-" + id).textContent = v || "(not recorded)";
+    });
+    document.getElementById("out-rule").textContent = document.getElementById("rule-text").textContent;
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this activity.";
+  });
+})();
+</script>
+</body>
+</html>

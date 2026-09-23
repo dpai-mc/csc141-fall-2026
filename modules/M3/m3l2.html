@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M3L2 &mdash; Writing Assistance, Study Aids and Productivity | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M3L2-A1 learning check only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 3, Lesson 2</p>
+    <h1>Writing Assistance, Study Aids and Productivity</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">Three jobs</a></li>
+      <li><a href="#s2">Learning vs. doing</a></li>
+      <li><a href="#s3">Tutor, not ghostwriter</a></li>
+      <li><a href="#s4">Your own sources</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Three Jobs AI Does for Learners</h2>
+      <p class="sub">Writing, studying and getting organized &mdash; each with a version that helps and a version that doesn&rsquo;t.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Last lesson was about using AI to find things out. This one is about using it to <em>learn</em> them &mdash; to write, to study, and to keep your life organized enough to do both. Most of what students actually use AI for falls into three jobs.</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Writing help</h3>
+            <p><em>Where it helps:</em> getting unstuck on a first draft, seeing your own paragraph restructured, adjusting tone for a different reader, catching grammar and spelling.</p>
+            <p class="sub"><em>Where it goes wrong:</em> the draft stops being yours &mdash; your ideas, your voice, and your practice at putting them into words all quietly move to the tool.</p>
+          </article>
+          <article class="card">
+            <h3>Study help</h3>
+            <p><em>Where it helps:</em> explaining a concept a different way, turning your notes into practice questions or flashcards, talking a topic through like a patient tutor.</p>
+            <p class="sub"><em>Where it goes wrong:</em> reading a clear explanation feels like understanding it. It isn&rsquo;t &mdash; until you can explain it yourself.</p>
+          </article>
+          <article class="card">
+            <h3>Getting organized</h3>
+            <p><em>Where it helps:</em> breaking a big assignment into steps, turning a messy week into a plan, tidying scattered notes into something you can find again.</p>
+            <p class="sub"><em>Where it goes wrong:</em> a plan you didn&rsquo;t make is easy to ignore &mdash; and it can&rsquo;t see the parts of your week you didn&rsquo;t tell it about.</p>
+          </article>
+        </div>
+
+        <p>Every one of those jobs has a version that makes you better at something and a version that means you never have to get better at it. <strong>The tool doesn&rsquo;t know which one you&rsquo;re doing. You do.</strong></p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Helping You Learn vs. Doing the Learning</h2>
+      <p class="sub">Offloading is normal. The question is what you offload.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>There&rsquo;s a name for handing a mental task to a tool: <strong>cognitive offloading</strong> &mdash; letting something outside your head do thinking you&rsquo;d otherwise do yourself. It isn&rsquo;t new and it isn&rsquo;t bad. You offload arithmetic to a calculator, phone numbers to your contacts, and directions to a map app, and your life is better for it.</p>
+
+        <p><strong>The question is never whether you offload. It&rsquo;s what.</strong> If the thing you hand over is the thing you&rsquo;re in the class to learn, you&rsquo;ve skipped the class while still sitting in it.</p>
+
+        <p>That matters because of a second idea: <strong>skill atrophy</strong> &mdash; skills you stop practicing fade. Nobody memorizes phone numbers any more, and for phone numbers that&rsquo;s fine. It&rsquo;s less fine for writing a clear paragraph, working through a problem, or remembering what you studied long enough to use it.</p>
+
+        <p>There&rsquo;s now direct evidence of how this plays out. In <a href="https://www.pnas.org/doi/10.1073/pnas.2422633122" target="_blank" rel="noopener">a study published in 2025</a>, researchers gave nearly a thousand high-school math students in Turkey access to an AI tool during practice. Students with a plain chat version did much better on practice problems while they had it &mdash; and then <strong>did worse on the exam than students who&rsquo;d never had it at all</strong>, once it was taken away. A second group used a version set up to act like a tutor, giving hints instead of answers. They improved in practice too, and the harm to their exam scores <strong>largely disappeared</strong>.</p>
+
+        <p>The tool didn&rsquo;t change what they could look up. It changed who did the thinking.</p>
+
+        <div class="sl">
+          <div>
+            <h3>Helps you learn</h3>
+            <ul>
+              <li>&ldquo;Quiz me on this &mdash; one question at a time.&rdquo;</li>
+              <li>&ldquo;Explain this, then let me explain it back.&rdquo;</li>
+              <li>&ldquo;Tell me what&rsquo;s weak in my draft.&rdquo;</li>
+              <li>&ldquo;Give me a hint for step two.&rdquo;</li>
+              <li>&ldquo;Help me break this assignment into steps.&rdquo;</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Does the learning for you</h3>
+            <ul>
+              <li>&ldquo;Give me the answers to these questions.&rdquo;</li>
+              <li>&ldquo;Explain this.&rdquo; <em>(and stop there)</em></li>
+              <li>&ldquo;Rewrite my draft.&rdquo;</li>
+              <li>&ldquo;Solve this.&rdquo;</li>
+              <li>&ldquo;Do this assignment.&rdquo;</li>
+            </ul>
+          </div>
+        </div>
+        <p><em>Same tool, same topic. The difference is who does the thinking.</em></p>
+
+        <p><strong>The honest test is simple: could you do it without the tool next time?</strong> If yes, the AI helped you learn. If you&rsquo;d need it again for the same thing, it did the work &mdash; which might be exactly what you wanted, but then be honest with yourself about which one it was.</p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>Feeling like you learned something isn&rsquo;t the same as learning it.</strong> A clear explanation, a tidy summary or a finished draft all produce the feeling. The only way to find out is to try without the tool &mdash; which is exactly what this lesson&rsquo;s activity asks you to do.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Tutor, Not Ghostwriter</h2>
+      <p class="sub">Three prompt moves that make the tool make you think.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>You already know how to write a good prompt &mdash; that was Module 2. The same skills turn an AI tool from something that does the work into something that makes you do it. Three moves do most of the job.</p>
+
+        <p><strong>Ask for questions, not answers.</strong> Have it quiz you, and make it wait.</p>
+        <div class="prompt">
+          <pre id="p1">I'm studying [topic] for [class]. Quiz me with one question at a time. Wait for my answer before you tell me if I'm right, and if I'm wrong, give me a hint before you give me the answer.</pre>
+          <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+          <span id="cp1-status" role="status"></span>
+        </div>
+
+        <p><strong>Ask for hints, not solutions.</strong> When you&rsquo;re stuck, ask for the smallest nudge that gets you moving.</p>
+        <div class="prompt">
+          <pre id="p2">I'm stuck on this problem: [paste it]. Don't solve it. Give me the smallest hint that would help me take the next step, and then stop.</pre>
+          <button type="button" class="btn btn--secondary" id="cp2" data-copies="p2">Copy prompt</button>
+          <span id="cp2-status" role="status"></span>
+        </div>
+
+        <p><strong>Ask it to find problems, not fix them.</strong> Keep the pen in your hand.</p>
+        <div class="prompt">
+          <pre id="p3">Here's my draft: [paste it]. Point out the three biggest weaknesses and explain why each one is a weakness. Don't rewrite anything &mdash; I'll make the changes myself.</pre>
+          <button type="button" class="btn btn--secondary" id="cp3" data-copies="p3">Copy prompt</button>
+          <span id="cp3-status" role="status"></span>
+        </div>
+
+        <p><strong>Two things to keep in mind whichever way you use it.</strong> Explanations, practice questions and summaries can be wrong &mdash; check anything you&rsquo;re going to rely on, the way you did in M3L1. And study material you paste in (a classmate&rsquo;s notes, your instructor&rsquo;s slides, anything with someone&rsquo;s personal information) goes wherever that tool&rsquo;s account terms send it; M1L5&rsquo;s rule about which account you&rsquo;re using applies here too. <strong>How to credit AI help in work you hand in is next, in M3L3.</strong></p>
+
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Use the first prompt on something you have a test on soon.</strong> Ten minutes of being quizzed &mdash; and getting some wrong &mdash; will do more for the test than an hour of re-reading a summary.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>A Study Tool Built From Your Own Sources</h2>
+      <p class="sub">The same four steps from M3L1 &mdash; except you choose what goes in.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>In M3L1 you saw the four steps an app takes when it looks something up. A study tool built from your own sources runs the same steps with one change: <strong>you choose the sources.</strong> You add your notes, a reading, a textbook chapter &mdash; and the tool answers, quizzes and summarizes from those, instead of from the open web.</p>
+
+        <p>For studying, that&rsquo;s a real advantage. The questions come from the material you&rsquo;ll actually be tested on, and when something isn&rsquo;t in your sources, a well-built tool says so instead of filling the gap.</p>
+
+        <p><strong>Your college account includes a tool built for exactly this: Gemini Notebook</strong> (formerly NotebookLM), which M3L1 introduced. How to get around it is in the Gemini Notebook guide and shown in class; this lesson is about using it well.</p>
+
+        <div class="sl">
+          <div>
+            <h3>What &ldquo;your own sources&rdquo; buys you</h3>
+            <ul>
+              <li>Questions and flashcards about <em>your</em> course, not the internet&rsquo;s version of it.</li>
+              <li>Answers you can trace back to a page you added.</li>
+              <li>A tool that can say &ldquo;that isn&rsquo;t in your sources&rdquo; &mdash; which is useful information.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>What it doesn&rsquo;t</h3>
+            <ul>
+              <li><strong>It doesn&rsquo;t make the answers right.</strong> A tool can still misread a source or attach a claim to the wrong page. Check it the way you did in M3L1.</li>
+              <li>It&rsquo;s only as good as what you put in &mdash; and blind to anything you left out.</li>
+              <li>It doesn&rsquo;t do the learning. A generated quiz you never take, or a summary you only skim, is M3L2&rsquo;s offloading problem with a nicer interface.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p><strong>What to put in.</strong> Your own notes are always fine, and so are readings you were given to study. Instructor slides and handouts: only if your instructor says it&rsquo;s OK to upload them. Never a classmate&rsquo;s work, and never anything with someone&rsquo;s personal information &mdash; M1L5&rsquo;s rule about whose account you&rsquo;re using applies here too, and the privacy guide says what happens to what you upload.</p>
+
+        <h3>Read one student&rsquo;s take</h3>
+        <p>A computer science student and tech writer compared four AI tools as study partners for XDA Developers, in March 2026: <a href="https://www.xda-developers.com/tested-notebooklm-gemini-claude-and-chatgpt-for-studying/" target="_blank" rel="noopener"><em>I tested NotebookLM, Gemini, Claude, and ChatGPT for studying, and one stood out immediately</em></a> (about a ten-minute read). She makes the same point this section does &mdash; that a tool working only from your sources &ldquo;will simply tell you that your sources don&rsquo;t mention it&rdquo; &mdash; and she also ranks the tools. Read it, then think through these four questions:</p>
+        <ol>
+          <li><strong>What was actually tested?</strong> The headline says &ldquo;tested.&rdquo; Look for the test: the same materials in each tool? A measure of what she learned? Or one person&rsquo;s experience over time?</li>
+          <li><strong>Which claims are about design, and which are rankings?</strong> &ldquo;It generates flashcards only from the content included in your sources&rdquo; describes how a tool is built. &ldquo;Simply doesn&rsquo;t compare to the rest&rdquo; is a verdict. Which kind is still useful a year from now?</li>
+          <li><strong>Which of her study habits would pass the learning test?</strong> She describes listening to generated podcasts as &ldquo;study sessions without even trying,&rdquo; and taking a quiz as &ldquo;immediate proof.&rdquo; Hold both up against this lesson&rsquo;s test.</li>
+          <li><strong>Does &ldquo;only from your sources&rdquo; mean &ldquo;always right&rdquo;?</strong> What would you still have to check?</li>
+        </ol>
+
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>Rankings of AI tools come with a date and a tester, whether they say so or not.</strong> This one is one student, her own materials, in March 2026 &mdash; and the tool she picked has been renamed and changed since. That&rsquo;s why this course doesn&rsquo;t rank tools: it teaches you to check what a ranking actually measured.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M3L2-A1 &mdash; Build a study notebook</h2>
+        <span class="badge">35 minutes</span>
+        <span class="badge badge--quiet">Not submitted</span>
+      </div>
+      <p><strong>Build a small study tool from your own sources for a class you&rsquo;re taking, use it, and find out whether it helped you learn.</strong></p>
+
+      <h3>Step 1 &mdash; pick a class and a topic</h3>
+      <p>Something you&rsquo;ll be tested on or have to write about soon. An item from your 10 Things list works too.</p>
+
+      <h3>Step 2 &mdash; gather two or three sources</h3>
+      <p>Your own notes, a reading you were given, a chapter you&rsquo;re studying. Only things you&rsquo;re allowed to upload &mdash; see &ldquo;What to put in&rdquo; above.</p>
+
+      <h3>Step 3 &mdash; pick your route</h3>
+      <p><strong>All three routes count the same.</strong> Use whichever your account allows.</p>
+      <ul>
+        <li><strong>Route A &mdash; a Gemini notebook.</strong> Create a notebook and add your sources to it.</li>
+        <li><strong>Route B &mdash; a Gemini chat with your files.</strong> Open <strong>Gemini</strong> (or another tool if you prefer), start a new chat and upload your sources to it.</li>
+        <li><strong>Route C &mdash; a Gemini chat with your notes pasted in.</strong> Paste the text of your sources into a new chat. Nothing to upload.</li>
+      </ul>
+      <p class="sub">Some notebook features are limited to students 18 and over, even on a college account, and notebooks are still rolling out to school accounts. Routes B and C teach exactly the same thing.</p>
+
+      <h3>Step 4 &mdash; make it quiz you</h3>
+      <p>Use this prompt, with your topic filled in:</p>
+      <div class="prompt">
+        <pre id="p4">Using only the sources I've added, quiz me on [topic], one question at a time. Wait for my answer. Then tell me whether I'm right, and point to the part of my sources that supports the answer.</pre>
+        <button type="button" class="btn btn--secondary" id="cp4" data-copies="p4">Copy prompt</button>
+        <span id="cp4-status" role="status"></span>
+      </div>
+      <p>Answer at least five questions.</p>
+
+      <h3>Step 5 &mdash; check one answer</h3>
+      <p>Pick one answer the tool marked as right. Find the place in your source that supports it &mdash; the M3L1 method.</p>
+
+      <h3>Step 6 &mdash; the test</h3>
+      <p>Close the chat or notebook. Without looking back at it, write two or three sentences that explain the topic from what you now know.</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>&ldquo;It did the work for me&rdquo; is an honest answer, not a wrong one.</strong> Sometimes that&rsquo;s what you wanted. The point is knowing which one happened.</p>
+      </div>
+
+      <h3>Step 7 &mdash; your verdict</h3>
+      <p>Did it help you learn, do the work for you, or some of both? And one thing you&rsquo;d change next time. <strong>Keep your notebook or chat</strong> &mdash; next week&rsquo;s studio builds on it.</p>
+
+      <form id="lc-form">
+        <label class="field" for="task">My class and topic</label>
+        <input type="text" id="task" name="task">
+        <label class="field" for="route">My route</label>
+        <select id="route" name="route"><option value="">&mdash; choose &mdash;</option><option>Route A &mdash; a Gemini notebook</option><option>Route B &mdash; a Gemini chat with my files</option><option>Route C &mdash; a Gemini chat with my notes pasted in</option></select>
+        <label class="field" for="sources">The sources I added</label>
+        <textarea id="sources" name="sources" rows="2"></textarea>
+        <label class="field" for="score">How the quiz went (how many right, what tripped me up)</label>
+        <textarea id="score" name="score" rows="2"></textarea>
+        <label class="field" for="claim">The answer I checked, and what my source actually says</label>
+        <textarea id="claim" name="claim" rows="2"></textarea>
+        <label class="field" for="without">Without the tool &mdash; my two or three sentences</label>
+        <textarea id="without" name="without" rows="4"></textarea>
+        <label class="field" for="verdict">My verdict</label>
+        <select id="verdict" name="verdict"><option value="">&mdash; choose &mdash;</option><option>It helped me learn</option><option>It did the work for me</option><option>Some of both</option></select>
+        <label class="field" for="next">Next time I&rsquo;d change&hellip;</label>
+        <textarea id="next" name="next" rows="2"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="lc-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M3L2, Study Notebook Check</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>My class and topic</dt><dd id="out-task"></dd>
+          <dt>My route</dt><dd id="out-route"></dd>
+          <dt>The sources I added</dt><dd id="out-sources"></dd>
+          <dt>How the quiz went</dt><dd id="out-score"></dd>
+          <dt>The answer I checked, and what my source actually says</dt><dd id="out-claim"></dd>
+          <dt>Without the tool &mdash; my two or three sentences</dt><dd id="out-without"></dd>
+          <dt>My verdict</dt><dd id="out-verdict"></dd>
+          <dt>Next time I&rsquo;d change&hellip;</dt><dd id="out-next"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print sub">This one is for your own records. Nothing goes to Canvas for this activity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>1. Which of these is cognitive offloading?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) Using a calculator to add up a restaurant bill.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) Asking an AI tool to summarize a chapter so you don&rsquo;t have to read it.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Saving a friend&rsquo;s number in your phone.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) All of these.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; all three hand a mental task to a tool. Offloading itself isn&rsquo;t the problem. What matters is whether the task you handed over is the one you&rsquo;re supposed to be learning.</p></template>
+          <template data-no><p>The answer is D. Each one moves a mental task outside your head. The lesson&rsquo;s point is that offloading is normal &mdash; the question is <em>what</em> you offload.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>2. You have a biology test Friday. Which request is most likely to help you learn the material?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) &ldquo;Summarize chapter 4 for me.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) &ldquo;Quiz me on chapter 4, one question at a time, and wait for my answer.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) &ldquo;Write me a study guide for chapter 4.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) &ldquo;What will be on the test?&rdquo;</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes. Being quizzed makes you pull the answer out of your own memory &mdash; the part that actually builds it. Summaries and study guides feel productive but leave the thinking to the tool.</p></template>
+          <template data-no><p>The answer is B. A summary (A) and a study guide (C) produce something to read, which feels like studying; being quizzed makes you retrieve and get some wrong, which is what actually builds memory. D can&rsquo;t be answered reliably at all.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>3. What&rsquo;s the best quick test of whether an AI tool helped you learn something?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) Whether its explanation was clear.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) Whether you felt confident afterwards.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) Whether you can explain or do it yourself without the tool.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Whether the tool said you understood.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Clarity (A) and confidence (B) are feelings the tool can produce without any learning happening. Doing it yourself is the evidence.</p></template>
+          <template data-no><p>The answer is C. A clear explanation and a confident feeling can both come from reading, not learning &mdash; and the tool can&rsquo;t see inside your head (D). Try it without the tool.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, October 5</h2>
+      <p class="sub">This week&rsquo;s work, and our next live session.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>This week&rsquo;s new material is three lessons</strong> &mdash; M3L1 on AI research tools, this one, and M3L3 on academic integrity. Give each its activity; they&rsquo;re the week.</p>
+      <p><strong>One graded item is open:</strong> the Module 3 quiz, in Canvas. It opens this week and is due with the rest of Module 3 on <strong>Sunday, October 11</strong>. Canvas is the authority on dates.</p>
+      <p><strong>For Monday&rsquo;s live session, come ready to talk &mdash; there&rsquo;s nothing to turn in.</strong> The question:</p>
+      <p><strong>Where is the line between using AI as a learning tool and letting AI do the learning for you?</strong></p>
+      <p>Bring one piece of your own evidence: something from M3L1&rsquo;s activity (what the tools got right and wrong when you checked) or from this lesson&rsquo;s (what happened when you closed the chat). <strong>The most useful thing to bring is a moment you weren&rsquo;t sure which side of the line you were on.</strong></p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 3, Lesson 2</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M3L2-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  var form = document.getElementById("lc-form");
+  if (!form) { return; }
+  var ids = ["task", "route", "sources", "score", "claim", "without", "verdict", "next"];
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var status = document.getElementById("lc-status");
+    if (!document.getElementById("task").value.trim() && !document.getElementById("without").value.trim()) {
+      status.textContent = " Fill in at least your class and topic and your without-the-tool sentences before building the copy.";
+      return;
+    }
+    ids.forEach(function (id) {
+      var v = document.getElementById(id).value.trim();
+      document.getElementById("out-" + id).textContent = v || "(not recorded)";
+    });
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this activity.";
+  });
+})();
+</script>
+</body>
+</html>

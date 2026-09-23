@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M3-Q02 &mdash; AI-Assisted Research Summary | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M3-Q02 research summary only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)              { display: none !important; }
+  main > *:not(#a1)               { display: none !important; }
+  #a1 > *:not(#export-panel)      { display: none !important; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  #export-panel h3 { break-after: avoid; page-break-after: avoid; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+}
+#a1 ul .opt { display: block; font-weight: 400; }
+#a1 ul .opt input { margin-right: var(--s-2); }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+/* ---------- page-specific (M3 studio) ---------- */
+.assignment-card { border: 2px solid var(--c-primary); background: var(--c-surface); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.assignment-card p:last-child { margin-bottom: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel .claim-out h4, #export-panel .gl-ctx { font-size: .9rem; color: var(--c-text-muted); }
+@media print { #export-panel li, #export-panel .claim-out { break-inside: avoid; page-break-inside: avoid; } }
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 3, Studio</p>
+    <h1>M3-Q02 &mdash; Build a Study Tool From Your Own Sources</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What you&rsquo;ll do</a></li>
+      <li><a href="#s2">Citation formats</a></li>
+      <li><a href="#s3">How it&rsquo;s graded</a></li>
+      <li><a href="#a1">The studio</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What You&rsquo;ll Do</h2>
+      <p class="sub">A study tool for a real class, built from sources you chose, checked, and tested on yourself.</p>
+    </div>
+    <details open>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>Build a study tool for a class you&rsquo;re taking, from sources you chose &mdash; then check it, use it, and find out whether it taught you anything.</strong> It&rsquo;s one of Module 3&rsquo;s two graded artifacts. Why it&rsquo;s built this way is in this week&rsquo;s lesson and in M3L2; this page is where you do it.</p>
+
+        <div class="assignment-card">
+          <p><strong>This assignment&rsquo;s AI rule: open, with disclosure.</strong> The study aids <em>will</em> be AI-generated &mdash; that&rsquo;s the point. What must be yours: <strong>the choice of sources, the checking, and the writing in Parts 5 and 6.</strong> Every AI interaction goes in your log.</p>
+        </div>
+
+        <h3>The seven parts</h3>
+        <ul>
+          <li><strong>Part 1 &mdash; your class, topic and route</strong> (a Gemini notebook, a Gemini chat with your files, or a Gemini chat with your notes pasted in &mdash; all three count the same).</li>
+          <li><strong>Part 2 &mdash; your sources:</strong> at least three you opened and are allowed to use, listed in one style guide.</li>
+          <li><strong>Part 3 &mdash; your AI log:</strong> every interaction &mdash; which tool, what you asked or set up, what you used.</li>
+          <li><strong>Part 4 &mdash; the study tool itself:</strong> what it generated &mdash; at least ten quiz questions or flashcards, or a study guide &mdash; pasted in.</li>
+          <li><strong>Part 5 &mdash; five items checked</strong> against your sources.</li>
+          <li><strong>Part 6 &mdash; the learning test:</strong> use it, close it, and explain the topic in your own words (150&ndash;250 words), then say what the tool did and didn&rsquo;t do for you.</li>
+          <li><strong>Part 7 &mdash; your disclosure statement.</strong></li>
+        </ul>
+
+        <h3>Format &amp; length</h3>
+        <ul>
+          <li><strong>Typed or pasted into this page.</strong> Part 4 goes in as generated &mdash; don&rsquo;t tidy it.</li>
+          <li><strong>Sources:</strong> three or more. <strong>Checks:</strong> five. <strong>Learning test:</strong> 150&ndash;250 words. <strong>Style guide:</strong> one, throughout.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Citation Formats</h2>
+      <p class="sub">The table from M3L3, here so you don&rsquo;t have to go looking.</p>
+    </div>
+    <details>
+      <summary>Open the table</summary>
+      <div>
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>Crediting generative AI in three style guides</caption>
+            <thead>
+              <tr><th scope="col">Style</th><th scope="col">Where the credit goes</th><th scope="col">Shape of the entry</th><th scope="col">Example</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">APA</th>
+                <td data-col="Where the credit goes">A reference-list entry, plus an in-text citation &mdash; and a sentence in your text saying how you used the tool.</td>
+                <td data-col="Shape of the entry">Company. (Year). <em>Tool name</em> [Description]. URL</td>
+                <td data-col="Example">Google. (2026). <em>Gemini</em> [Large language model]. https://gemini.google.com &mdash; in text: (Google, 2026)</td>
+              </tr>
+              <tr>
+                <th scope="row">MLA</th>
+                <td data-col="Where the credit goes">A Works Cited entry for content you quote or paraphrase; other uses (editing, translating) acknowledged in a note or in your text.</td>
+                <td data-col="Shape of the entry">&ldquo;Description of your prompt&rdquo; prompt. <em>Tool name</em>, version (if shown), Company, date you used it, URL.</td>
+                <td data-col="Example">&ldquo;Explain how a bill becomes law in California&rdquo; prompt. <em>Gemini</em>, Google, 28 Sept. 2026, gemini.google.com.</td>
+              </tr>
+              <tr>
+                <th scope="row">Chicago</th>
+                <td data-col="Where the credit goes">A footnote or endnote. Whether it also needs a bibliography entry varies &mdash; check with your instructor.</td>
+                <td data-col="Shape of the entry">Tool name, response to &ldquo;your prompt,&rdquo; Company, date.</td>
+                <td data-col="Example">1. Gemini, response to &ldquo;Explain how a bill becomes law in California,&rdquo; Google, September 28, 2026.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="stamp"><strong>Citation formats accurate as of 2026-09.</strong> Style guides are still revising their AI guidance. Sources: MLA Style Center, <a href="https://style.mla.org/citing-generative-ai/" target="_blank" rel="noopener"><em>How do I cite generative AI in MLA style?</em></a> (revised August 2025) &middot; APA Style blog, <a href="https://apastyle.apa.org/blog/cite-generative-ai-references" target="_blank" rel="noopener"><em>Citing generative AI in APA Style: Part 1 &mdash; Reference formats</em></a> &middot; Chicago Manual of Style, 18th ed., &sect;14.112 (<a href="https://libguides.mcmaster.ca/cite-gen-ai/chicago" target="_blank" rel="noopener">summarized by McMaster University Library</a>).</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>How It&rsquo;s Graded</h2>
+      <p class="sub">50 points, four dimensions.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>M3-Q02 rubric &mdash; 50 points total</caption>
+            <thead>
+              <tr><th scope="col">Dimension</th><th scope="col">Excellent</th><th scope="col">Adequate</th><th scope="col">Needs work</th><th scope="col">Points</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Disclosure</th>
+                <td data-col="Excellent">Every AI interaction is in the log &mdash; tool, what was asked or set up, what was used &mdash; and the disclosure statement matches the log and says which parts are AI-generated.</td>
+                <td data-col="Adequate">The log is there but thin, or doesn&rsquo;t match the statement.</td>
+                <td data-col="Needs work">No log, or a disclosure statement that doesn&rsquo;t say what the AI did.</td>
+                <td data-col="Points">15</td>
+              </tr>
+              <tr>
+                <th scope="row">Verification</th>
+                <td data-col="Excellent">Five items from the study tool, each checked against a named place in your sources, with what the source actually says and a clear verdict. Any item that isn&rsquo;t supported is named as such.</td>
+                <td data-col="Adequate">Five items, but at least one check is vague about where in the source it looked, or only confirms the topic rather than the answer.</td>
+                <td data-col="Needs work">Fewer than five, or checks that consist of asking the tool whether it was right.</td>
+                <td data-col="Points">15</td>
+              </tr>
+              <tr>
+                <th scope="row">Learning test</th>
+                <td data-col="Excellent">150&ndash;250 words explaining the topic without the tool, in your own words, plus an honest account of what the tool helped with and what it didn&rsquo;t.</td>
+                <td data-col="Adequate">The explanation is there but thin, or the account of what the tool did is missing or generic.</td>
+                <td data-col="Needs work">No explanation written without the tool, or one that restates the tool&rsquo;s output.</td>
+                <td data-col="Points">10</td>
+              </tr>
+              <tr>
+                <th scope="row">Sources &amp; citation</th>
+                <td data-col="Excellent">Three or more sources you&rsquo;re allowed to use, listed consistently in one recognized style; the study tool itself credited as AI-generated.</td>
+                <td data-col="Adequate">Three sources, with a mixed format or a missing detail.</td>
+                <td data-col="Needs work">Fewer than three, no consistent style, or sources you weren&rsquo;t permitted to upload.</td>
+                <td data-col="Points">10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Scored by the instructor and entered in the Canvas gradebook, in the <strong>Module artifacts</strong> category.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="section-head">
+      <h2>The Studio</h2>
+      <p class="sub">About 105 minutes, five blocks. Each work block earns one part of the grade.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Opener &mdash; class, topic, route, sources</h3>
+        <span class="badge">10 minutes</span>
+      </div>
+      <p><strong>Pick a class and a topic you&rsquo;ll be tested on or have to write about, choose your route, and gather at least three sources.</strong> Your own notes are always fine; so are readings you were given to study. Instructor slides only if your instructor says you may upload them. Never a classmate&rsquo;s work or anyone&rsquo;s personal information. <strong>Your topic, sources and study tool all go to your instructor.</strong></p>
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Built a notebook or chat in M3L2&rsquo;s activity?</strong> Build on it here &mdash; add a source and keep going.</p>
+      </div>
+      <ul>
+        <li><strong>Route A &mdash; a Gemini notebook.</strong> Create a notebook and add your sources to it.</li>
+        <li><strong>Route B &mdash; a Gemini chat with your files.</strong> Upload your sources to a new chat.</li>
+        <li><strong>Route C &mdash; a Gemini chat with your notes pasted in.</strong> Paste the text of your sources into a new chat. Nothing to upload.</li>
+      </ul>
+      <p class="sub"><strong>All three routes earn full credit.</strong> Some notebook features are limited to students 18 and over, even on a college account; routes B and C need nothing more than the Gemini you already use.</p>
+      <label class="field" for="topic">Part 1 &mdash; my class and topic</label>
+      <input type="text" id="topic" name="topic">
+      <label class="field" for="route">My route</label>
+      <select id="route" name="route"><option value="">&mdash; choose &mdash;</option><option>Route A &mdash; a Gemini notebook</option><option>Route B &mdash; a Gemini chat with my files</option><option>Route C &mdash; a Gemini chat with my notes pasted in</option></select>
+      <label class="field" for="style">The style guide I&rsquo;ll use</label>
+      <select id="style" name="style"><option value="">&mdash; choose &mdash;</option><option>APA</option><option>MLA</option><option>Chicago</option></select>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 1 &mdash; build it, and log as you go</h3>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Earns: Disclosure</span>
+      </div>
+      <p><strong>Load your sources, have the tool make a study aid, and log every interaction the moment it happens.</strong> Open <strong>Gemini</strong> (or another tool if you prefer) by your route. Ask for at least ten quiz questions or flashcards, or a study guide, <em>using only your sources</em>. Paste what it made into Part 4 as it came back.</p>
+      <div class="prompt">
+        <pre id="p1">Using only the sources I've added, make [ten quiz questions / ten flashcards / a one-page study guide] on [topic]. For each item, note which source it comes from.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p><strong>Log it now, not later.</strong> Five minutes after a conversation you&rsquo;ll remember the answer and forget what you asked &mdash; and the log is what makes your disclosure true.</p>
+      </div>
+      <p class="sub">Part 3 &mdash; my AI log. Leave unused boxes empty; they won&rsquo;t print.</p>
+        <div class="claims">
+        <fieldset class="group">
+          <legend id="i1-lg">Interaction 1</legend>
+          <label class="field" id="i1-tool-l" for="i1-tool">Tool (and route)</label>
+          <input type="text" id="i1-tool" aria-labelledby="i1-lg i1-tool-l">
+          <label class="field" id="i1-asked-l" for="i1-asked">What I asked or set up</label>
+          <textarea id="i1-asked" rows="2" aria-labelledby="i1-lg i1-asked-l"></textarea>
+          <label class="field" id="i1-used-l" for="i1-used">What I used from the result</label>
+          <textarea id="i1-used" rows="2" aria-labelledby="i1-lg i1-used-l"></textarea>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="i2-lg">Interaction 2</legend>
+          <label class="field" id="i2-tool-l" for="i2-tool">Tool (and route)</label>
+          <input type="text" id="i2-tool" aria-labelledby="i2-lg i2-tool-l">
+          <label class="field" id="i2-asked-l" for="i2-asked">What I asked or set up</label>
+          <textarea id="i2-asked" rows="2" aria-labelledby="i2-lg i2-asked-l"></textarea>
+          <label class="field" id="i2-used-l" for="i2-used">What I used from the result</label>
+          <textarea id="i2-used" rows="2" aria-labelledby="i2-lg i2-used-l"></textarea>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="i3-lg">Interaction 3</legend>
+          <label class="field" id="i3-tool-l" for="i3-tool">Tool (and route)</label>
+          <input type="text" id="i3-tool" aria-labelledby="i3-lg i3-tool-l">
+          <label class="field" id="i3-asked-l" for="i3-asked">What I asked or set up</label>
+          <textarea id="i3-asked" rows="2" aria-labelledby="i3-lg i3-asked-l"></textarea>
+          <label class="field" id="i3-used-l" for="i3-used">What I used from the result</label>
+          <textarea id="i3-used" rows="2" aria-labelledby="i3-lg i3-used-l"></textarea>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="i4-lg">Interaction 4</legend>
+          <label class="field" id="i4-tool-l" for="i4-tool">Tool (and route)</label>
+          <input type="text" id="i4-tool" aria-labelledby="i4-lg i4-tool-l">
+          <label class="field" id="i4-asked-l" for="i4-asked">What I asked or set up</label>
+          <textarea id="i4-asked" rows="2" aria-labelledby="i4-lg i4-asked-l"></textarea>
+          <label class="field" id="i4-used-l" for="i4-used">What I used from the result</label>
+          <textarea id="i4-used" rows="2" aria-labelledby="i4-lg i4-used-l"></textarea>
+        </fieldset>
+        </div>
+      <label class="field" for="more">Any further interactions (one per line: tool &mdash; what I asked &mdash; what I used)</label>
+      <textarea id="more" name="more" rows="3"></textarea>
+      <label class="field" for="tool">Part 4 &mdash; the study tool, as generated</label>
+      <textarea id="tool" name="tool" rows="10"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 2 &mdash; check five items</h3>
+        <span class="badge">25 minutes</span>
+        <span class="badge badge--quiet">Earns: Verification</span>
+      </div>
+      <p><strong>Pick five items from your study tool and check each against your sources.</strong> Find the place that supports the answer &mdash; the M3L1 method. &ldquo;Built from your sources&rdquo; doesn&rsquo;t mean right: a tool can misread a page or attach an answer to the wrong one. An item that isn&rsquo;t supported is a finding, not a failure.</p>
+      <p class="sub">Part 5 &mdash; five items, checked.</p>
+        <div class="claims">
+        <fieldset class="group">
+          <legend id="v1-lg">Item 1</legend>
+          <label class="field" id="v1-item-l" for="v1-item">The question or flashcard, and the tool's answer</label>
+          <textarea id="v1-item" rows="2" aria-labelledby="v1-lg v1-item-l"></textarea>
+          <label class="field" id="v1-src-l" for="v1-src">Where in my sources I looked</label>
+          <input type="text" id="v1-src" aria-labelledby="v1-lg v1-src-l">
+          <label class="field" id="v1-says-l" for="v1-says">What my source actually says</label>
+          <textarea id="v1-says" rows="2" aria-labelledby="v1-lg v1-says-l"></textarea>
+          <label class="field" id="v1-verdict-l" for="v1-verdict">Verdict</label>
+          <select id="v1-verdict" aria-labelledby="v1-lg v1-verdict-l"><option value="">&mdash; choose &mdash;</option><option>Supported by my source</option><option>Not supported by my source</option><option>Not in my sources at all</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="v2-lg">Item 2</legend>
+          <label class="field" id="v2-item-l" for="v2-item">The question or flashcard, and the tool's answer</label>
+          <textarea id="v2-item" rows="2" aria-labelledby="v2-lg v2-item-l"></textarea>
+          <label class="field" id="v2-src-l" for="v2-src">Where in my sources I looked</label>
+          <input type="text" id="v2-src" aria-labelledby="v2-lg v2-src-l">
+          <label class="field" id="v2-says-l" for="v2-says">What my source actually says</label>
+          <textarea id="v2-says" rows="2" aria-labelledby="v2-lg v2-says-l"></textarea>
+          <label class="field" id="v2-verdict-l" for="v2-verdict">Verdict</label>
+          <select id="v2-verdict" aria-labelledby="v2-lg v2-verdict-l"><option value="">&mdash; choose &mdash;</option><option>Supported by my source</option><option>Not supported by my source</option><option>Not in my sources at all</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="v3-lg">Item 3</legend>
+          <label class="field" id="v3-item-l" for="v3-item">The question or flashcard, and the tool's answer</label>
+          <textarea id="v3-item" rows="2" aria-labelledby="v3-lg v3-item-l"></textarea>
+          <label class="field" id="v3-src-l" for="v3-src">Where in my sources I looked</label>
+          <input type="text" id="v3-src" aria-labelledby="v3-lg v3-src-l">
+          <label class="field" id="v3-says-l" for="v3-says">What my source actually says</label>
+          <textarea id="v3-says" rows="2" aria-labelledby="v3-lg v3-says-l"></textarea>
+          <label class="field" id="v3-verdict-l" for="v3-verdict">Verdict</label>
+          <select id="v3-verdict" aria-labelledby="v3-lg v3-verdict-l"><option value="">&mdash; choose &mdash;</option><option>Supported by my source</option><option>Not supported by my source</option><option>Not in my sources at all</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="v4-lg">Item 4</legend>
+          <label class="field" id="v4-item-l" for="v4-item">The question or flashcard, and the tool's answer</label>
+          <textarea id="v4-item" rows="2" aria-labelledby="v4-lg v4-item-l"></textarea>
+          <label class="field" id="v4-src-l" for="v4-src">Where in my sources I looked</label>
+          <input type="text" id="v4-src" aria-labelledby="v4-lg v4-src-l">
+          <label class="field" id="v4-says-l" for="v4-says">What my source actually says</label>
+          <textarea id="v4-says" rows="2" aria-labelledby="v4-lg v4-says-l"></textarea>
+          <label class="field" id="v4-verdict-l" for="v4-verdict">Verdict</label>
+          <select id="v4-verdict" aria-labelledby="v4-lg v4-verdict-l"><option value="">&mdash; choose &mdash;</option><option>Supported by my source</option><option>Not supported by my source</option><option>Not in my sources at all</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="v5-lg">Item 5</legend>
+          <label class="field" id="v5-item-l" for="v5-item">The question or flashcard, and the tool's answer</label>
+          <textarea id="v5-item" rows="2" aria-labelledby="v5-lg v5-item-l"></textarea>
+          <label class="field" id="v5-src-l" for="v5-src">Where in my sources I looked</label>
+          <input type="text" id="v5-src" aria-labelledby="v5-lg v5-src-l">
+          <label class="field" id="v5-says-l" for="v5-says">What my source actually says</label>
+          <textarea id="v5-says" rows="2" aria-labelledby="v5-lg v5-says-l"></textarea>
+          <label class="field" id="v5-verdict-l" for="v5-verdict">Verdict</label>
+          <select id="v5-verdict" aria-labelledby="v5-lg v5-verdict-l"><option value="">&mdash; choose &mdash;</option><option>Supported by my source</option><option>Not supported by my source</option><option>Not in my sources at all</option></select>
+        </fieldset>
+        </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 3 &mdash; use it, then the learning test</h3>
+        <span class="badge">25 minutes</span>
+        <span class="badge badge--quiet">Earns: Learning test</span>
+      </div>
+      <p><strong>Study with your tool for fifteen minutes. Then close it, and write about the topic without looking back.</strong></p>
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>This is the part the grade is really about.</strong> A study tool that feels useful and a study tool that taught you something are different things, and only this block tells them apart.</p>
+      </div>
+      <label class="field" for="explain">Part 6 &mdash; the topic, explained without the tool (150&ndash;250 words)</label>
+      <textarea id="explain" name="explain" rows="8"></textarea>
+      <p class="sub" id="explain-count" role="status">0 words</p>
+      <label class="field" for="did">What the tool helped with, and what it didn&rsquo;t</label>
+      <textarea id="did" name="did" rows="3"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 4 &mdash; sources and disclosure</h3>
+        <span class="badge">15 minutes</span>
+        <span class="badge badge--quiet">Earns: Sources &amp; citation</span>
+      </div>
+      <p><strong>List your sources in your chosen style, credit the study tool as AI-generated, and write your disclosure statement.</strong> The citation table is in the section above this studio.</p>
+      <label class="field" for="refs">Part 2 &mdash; my sources, and a citation for the AI-generated study tool</label>
+      <textarea id="refs" name="refs" rows="6"></textarea>
+      <label class="field" for="disc">Part 7 &mdash; my disclosure statement (which tools, what they did, what you did)</label>
+      <textarea id="disc" name="disc" rows="4"></textarea>
+      <p><button type="button" class="btn" id="build-btn">Build my printable copy</button> <span id="build-status" role="status"></span></p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Before you export</h3>
+      </div>
+      <p>Tick these as you check them. <strong>The ticks aren&rsquo;t saved, sent, or seen by anyone</strong> &mdash; they&rsquo;re here so you can walk the list once without losing your place.</p>
+      <ul>
+        <li><label class="opt"><input type="checkbox"> Part 1: class, topic and route</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 2: three or more sources I&rsquo;m allowed to use, one style</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 3: every AI interaction is in the log</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 4: the study tool, pasted in as generated</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 5: five items checked against my sources</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 6: 150&ndash;250 words written without the tool, and what it did for me</label></li>
+        <li><label class="opt"><input type="checkbox"> Part 7: disclosure statement matches the log</label></li>
+        <li><label class="opt"><input type="checkbox"> PDF exported and checked</label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to Canvas as <code>M3-Q02-[LastName]-Study-Tool.pdf</code></label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to your <code>CSC141-portfolio</code> folder as <code>08-m3-study-tool.pdf</code></label></li>
+      </ul>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Save the same PDF twice, under two names. This is not a mistake.</strong></p>
+        <ul>
+          <li><strong>To hand in on Canvas:</strong> <code>M3-Q02-[LastName]-Study-Tool.pdf</code></li>
+          <li><strong>In your <code>CSC141-portfolio</code> folder:</strong> <code>08-m3-study-tool.pdf</code></li>
+        </ul>
+        <p>Canvas wants your name on the outside so it can be sorted with everyone else&rsquo;s. Your portfolio folder doesn&rsquo;t, because your name is already printed inside the document &mdash; and because the number is what makes the folder readable at the end of the semester.</p>
+        <p><strong><code>08</code> is a fixed slot.</strong> It is <code>08</code> for every student in this class. If you skip an artifact, its number stays empty, and the gap is the point.</p>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Dates for this week.</strong> The study tool is due <strong>Sunday, October 11</strong>. Our next live session is <strong>Monday, October 12</strong> &mdash; what to bring is in this week&rsquo;s lesson.</p>
+        <p><strong>Canvas is the authority on dates.</strong> If what Canvas says ever differs from what this page says, Canvas is right.</p>
+      </div>
+    </div>
+
+    <div class="export-panel" id="export-panel" hidden>
+      <div class="export-head">
+        <p><strong>CSC 141: AI Literacy</strong> &mdash; M3-Q02, Study Tool From My Sources &middot; Portfolio 08</p>
+      </div>
+      <div class="export-meta">
+        <p><strong>Name:</strong> ______________________</p>
+        <p><strong>Date:</strong> <span id="out-date"></span></p>
+      </div>
+      <h3>Part 1 &mdash; class and topic</h3>
+      <p id="out-topic"></p>
+      <p class="sub">Route: <span id="out-route"></span> &middot; Style guide: <span id="out-style"></span></p>
+      <h3>Part 6 &mdash; the topic, explained without the tool <span id="out-explain-count" class="sub"></span></h3>
+      <p id="out-explain" class="pre"></p>
+      <h4>What the tool helped with, and what it didn&rsquo;t</h4>
+      <p id="out-did" class="pre"></p>
+      <h3>Part 5 &mdash; five items, checked</h3>
+      <div id="out-checks"></div>
+      <h3>Part 4 &mdash; the study tool (AI-generated)</h3>
+      <p id="out-tool" class="pre"></p>
+      <h3>Part 2 &mdash; sources</h3>
+      <p id="out-refs" class="pre"></p>
+      <h3>Part 7 &mdash; disclosure statement</h3>
+      <p id="out-disc" class="pre"></p>
+      <h3>Part 3 &mdash; AI log</h3>
+      <ol id="out-log"></ol>
+      <p id="out-more" class="pre"></p>
+      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+      <p class="no-print"><strong>Two names, one file.</strong> Hand it in on Canvas as <code>M3-Q02-[LastName]-Study-Tool.pdf</code>, and save it into your <code>CSC141-portfolio</code> folder as <code>08-m3-study-tool.pdf</code> while it&rsquo;s in front of you.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 3, Studio</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M3-Q02 — nothing persisted, nothing scored, nothing sent. ===== */
+(function () {
+  "use strict";
+  var btn = document.getElementById("build-btn");
+  if (!btn) { return; }
+  function v(id) { return document.getElementById(id).value.trim(); }
+  function words(s) { s = s.trim(); return s ? s.split(/\s+/).length : 0; }
+  var ex = document.getElementById("explain"), counter = document.getElementById("explain-count");
+  function updateCount() {
+    var n = words(ex.value);
+    counter.textContent = n + (n === 1 ? " word" : " words") +
+      (n === 0 ? "" : (n < 150 || n > 250 ? " — aiming for 150–250" : " — in range"));
+  }
+  ex.addEventListener("input", updateCount); updateCount();
+
+  function para(label, text) {
+    var p = document.createElement("p"), b = document.createElement("strong");
+    b.textContent = label + ": "; p.appendChild(b); p.appendChild(document.createTextNode(text || "(not recorded)"));
+    return p;
+  }
+
+  btn.addEventListener("click", function () {
+    var status = document.getElementById("build-status");
+    if (!v("topic") && !v("explain")) { status.textContent = " Fill in at least your topic and your learning test before building the copy."; return; }
+    ["topic", "route", "style", "explain", "did", "tool", "refs", "disc"].forEach(function (id) {
+      document.getElementById("out-" + id).textContent = v(id) || "(not recorded)";
+    });
+    var n = words(v("explain"));
+    document.getElementById("out-explain-count").textContent = "(" + n + (n === 1 ? " word)" : " words)");
+    var log = document.getElementById("out-log"); log.textContent = "";
+    for (var i = 1; i <= 4; i++) {
+      var t = v("i" + i + "-tool"), a = v("i" + i + "-asked"), u = v("i" + i + "-used");
+      if (!t && !a && !u) { continue; }
+      var li = document.createElement("li");
+      li.textContent = (t || "(tool not named)") + " — Asked or set up: " + (a || "(not recorded)") + " — Used: " + (u || "(not recorded)");
+      log.appendChild(li);
+    }
+    if (!log.children.length) { var none = document.createElement("li"); none.textContent = "(no interactions logged)"; log.appendChild(none); }
+    document.getElementById("out-more").textContent = v("more") ? "Further interactions:\n" + v("more") : "";
+    var box = document.getElementById("out-checks"); box.textContent = "";
+    for (var k = 1; k <= 5; k++) {
+      var d = document.createElement("div"); d.className = "claim-out";
+      var h = document.createElement("h4"); h.textContent = "Item " + k; d.appendChild(h);
+      d.appendChild(para("The item and the tool's answer", v("v" + k + "-item")));
+      d.appendChild(para("Where I looked", v("v" + k + "-src")));
+      d.appendChild(para("What my source says", v("v" + k + "-says")));
+      d.appendChild(para("Verdict", v("v" + k + "-verdict")));
+      box.appendChild(d);
+    }
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this page.";
+  });
+})();
+</script>
+</body>
+</html>
