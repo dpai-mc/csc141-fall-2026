@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M3L1 &mdash; AI Research Tools: Power and Limits | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M3L1-A1 verification log only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 3, Lesson 1</p>
+    <h1>AI Research Tools: Power and Limits</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">The model and the app</a></li>
+      <li><a href="#s2">How a web answer gets made</a></li>
+      <li><a href="#s3">Reading the answer</a></li>
+      <li><a href="#s4">Verifying</a></li>
+      <li><a href="#s5">Using AI well for research</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>The Model and the App Around It</h2>
+      <p class="sub">When you use an AI tool, you&rsquo;re using a product &mdash; not talking to a model directly.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Module 3 is about using AI to learn &mdash; to research, to study, to write &mdash; without fooling yourself about what it just did. That starts with a distinction almost nobody makes out loud, even though every tool you have used this term depends on it.</p>
+
+        <p><strong>When you use &ldquo;Gemini&rdquo; or &ldquo;ChatGPT,&rdquo; you are not talking to a model directly. You are using a product.</strong></p>
+
+        <p><strong>AI product vs. underlying model.</strong> <em>A <strong>model</strong> generates text from its trained parameters plus whatever is in its context; it has no connection to anything else. An <strong>AI product</strong> (the Gemini app, the ChatGPT app, a third-party app built on an API) is that model with software wrapped around it &mdash; software that can call external tools, including web search, on the model&rsquo;s behalf. Most things students assume are properties of &ldquo;the AI&rdquo; are actually properties of the product: web access, file uploads, memory, image generation. The same model reached through a different product behaves differently.</em></p>
+
+        <p>Read the first sentence of that definition again, because the rest of this lesson hangs on it: <strong>the model reaches nothing.</strong> It has what it learned in training, and it has what is in front of it right now &mdash; your question, the conversation so far, and anything the app put there. That is the whole list.</p>
+
+        <p><strong>The mismatch you were asked to hold onto.</strong> In M2L1 you asked a tool to describe what kind of model produced its answer, and its description didn&rsquo;t quite line up with the lesson. Here is why. The model can&rsquo;t look at itself. When you asked, the app answered the way it answers everything: from what the model absorbed in training, plus whatever instructions the product wraps around your conversation. So a self-description is a mix of general knowledge about AI and what the product was set up to say &mdash; not a report from the inside. That isn&rsquo;t the tool lying. It&rsquo;s the tool doing the only thing it can, which is producing likely text. <strong>It is also your first example of the habit this module is about: a confident answer is not evidence of how it was made.</strong></p>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>&ldquo;The AI said&rdquo; hides two different things.</strong> When you tell someone what an AI tool told you, it&rsquo;s worth knowing whether you&rsquo;re reporting what a model produced from memory or what an app found and handed it. They fail differently &mdash; and the rest of this lesson is about telling them apart.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>How a Web-Connected Answer Gets Made</h2>
+      <p class="sub">If the model reaches nothing, the app does the reaching &mdash; in four steps.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>If the model reaches nothing, how does an AI tool ever tell you about something that happened last week?</p>
+
+        <p><strong>The app does the reaching.</strong> When an answer draws on current web pages, four things happened, usually in a second or two:</p>
+
+        <ol>
+          <li><strong>The app decided this question needs fresh information.</strong> Sometimes the product decides; sometimes the model is prompted to make that call. Either way, it&rsquo;s a decision, made per question.</li>
+          <li><strong>The app sent a query out to a search service.</strong></li>
+          <li><strong>The results &mdash; links, snippets, sometimes whole pages &mdash; were put into the model&rsquo;s context</strong>, right alongside your question, the same way your typed words are.</li>
+          <li><strong>The model wrote an answer from that material</strong>, ideally saying which source each part came from.</li>
+        </ol>
+
+        <figure>
+          <div class="figure-scroll">
+            <svg viewBox="0 0 700 540" role="presentation" focusable="false" aria-hidden="true">
+              <defs>
+                <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 9 5 L 0 9 z" fill="#1d6690"/>
+                </marker>
+              </defs>
+              <rect x="250" y="12" width="200" height="40" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="350" y="37" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#1a1a1a">Your question</text>
+              <line x1="350" y1="52" x2="350" y2="104" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+
+              <rect x="16" y="76" width="668" height="386" rx="8" fill="none" stroke="#4a4a4a" stroke-width="1.5" stroke-dasharray="7 4"/>
+              <text x="28" y="96" font-family="sans-serif" font-size="12" font-weight="700" fill="#4a4a4a">The app around it</text>
+
+              <rect x="26" y="330" width="648" height="120" rx="6" fill="#e3f4ea" stroke="#1e8449" stroke-width="2"/>
+              <text x="212" y="347" font-family="sans-serif" font-size="12" font-weight="700" fill="#11532e">The model &#8212; reaches nothing;</text>
+              <text x="212" y="362" font-family="sans-serif" font-size="12" font-weight="700" fill="#11532e">only reads what&#8217;s put in front of it</text>
+
+              <rect x="190" y="108" width="320" height="48" rx="5" fill="#fdebd0" stroke="#b9770e"/>
+              <text x="350" y="129" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#6b4708">1. The app decides:</text>
+              <text x="350" y="146" text-anchor="middle" font-family="sans-serif" font-size="12" fill="#6b4708">look something up?</text>
+
+              <line x1="270" y1="156" x2="190" y2="196" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+              <text x="212" y="176" font-family="sans-serif" font-size="12" font-weight="700" fill="#14304a">Yes</text>
+              <polyline points="510,132 560,132 560,366" fill="none" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+              <text x="568" y="150" font-family="sans-serif" font-size="12" font-weight="700" fill="#14304a">No</text>
+
+              <rect x="36" y="198" width="310" height="44" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="48" y="218" font-family="sans-serif" font-size="12" fill="#1a1a1a">2. The app sends a query</text>
+              <text x="48" y="234" font-family="sans-serif" font-size="12" fill="#1a1a1a">to a search service</text>
+              <line x1="190" y1="242" x2="190" y2="268" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+
+              <rect x="36" y="270" width="310" height="44" rx="5" fill="#ffffff" stroke="#1a5276"/>
+              <text x="48" y="290" font-family="sans-serif" font-size="12" fill="#1a1a1a">3. The results go into</text>
+              <text x="48" y="306" font-family="sans-serif" font-size="12" fill="#1a1a1a">the model&#8217;s context</text>
+              <line x1="190" y1="314" x2="190" y2="366" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+
+
+              <rect x="36" y="368" width="310" height="58" rx="5" fill="#ffffff" stroke="#1e8449"/>
+              <text x="48" y="390" font-family="sans-serif" font-size="12" fill="#1a1a1a">4. The model writes from that</text>
+              <text x="48" y="407" font-family="sans-serif" font-size="12" fill="#1a1a1a">material &#8212; ideally citing it</text>
+
+              <rect x="392" y="368" width="270" height="58" rx="5" fill="#ffffff" stroke="#1e8449"/>
+              <text x="404" y="390" font-family="sans-serif" font-size="12" fill="#1a1a1a">The model writes from</text>
+              <text x="404" y="407" font-family="sans-serif" font-size="12" fill="#1a1a1a">its training alone</text>
+
+              <line x1="190" y1="426" x2="190" y2="486" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+              <line x1="527" y1="426" x2="527" y2="486" stroke="#1d6690" stroke-width="2" marker-end="url(#arw)"/>
+              <rect x="90" y="488" width="200" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="190" y="513" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#14304a">Answer (with sources)</text>
+              <rect x="427" y="488" width="200" height="40" rx="5" fill="#d6eaf8" stroke="#1a5276"/>
+              <text x="527" y="513" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#14304a">Answer (no sources)</text>
+            </svg>
+          </div>
+          <figcaption><strong>Figure 1 &mdash; how a web-connected answer gets made.</strong> Your question enters a dashed region labelled <em>the app around it</em>. <strong>Step 1:</strong> the app decides whether to look something up. <strong>If yes:</strong> step 2, the app sends a query to a search service; step 3, the results go into the model&rsquo;s context; step 4, the model writes from that material, ideally citing it, and you get an answer with sources. <strong>If no:</strong> the model writes from its training alone, and you get an answer with no sources. A smaller box labelled <em>the model &mdash; reaches nothing; only reads what&rsquo;s put in front of it</em> contains only the two writing steps. Steps 1 to 3, where the searching happens, sit outside the model, in the app.</figcaption>
+        </figure>
+
+        <p>Notice what did not happen: the model never went online. Someone handed it documents, and it read them. That is all retrieval is. The course&rsquo;s name for it:</p>
+
+        <p><strong>Retrieval-grounded generation (search-grounded).</strong> <em>Answering by fetching sources at question time and putting them into the model&rsquo;s context, so it writes from those documents rather than from parameters alone. The model does not &ldquo;go online&rdquo; &mdash; the surrounding product queries a search service and hands the results to the model as context. Used selectively: the system typically decides per question whether a lookup is warranted. The consequence that matters here: a citation shows you where to check, not that anyone checked.</em></p>
+
+        <p><strong>So &ldquo;can it search?&rdquo; is a question about the product, not the AI.</strong> The same underlying model might look things up in a company&rsquo;s consumer app, not look anything up when a developer reaches it directly, and look things up only sometimes in someone else&rsquo;s app built on top of it. And inside one app it is usually selective &mdash; the app decides per question whether a lookup is worth it, and it may not tell you which way it went.</p>
+
+        <p>Some products are built to look things up by default and put their sources front and center. There&rsquo;s a name for that design:</p>
+
+        <p><strong>Answer engine.</strong> <em>A product designed retrieval-first &mdash; it searches by default and puts sources in the foreground (Perplexity is the usual example). A design posture of a product, not a capability boundary between models. Useful for describing a product&rsquo;s default behaviour; useless for predicting whether any given answer was looked up.</em></p>
+
+        <p><strong>When you choose the sources.</strong> Some tools are built to work the other way around. Instead of the app searching the web, <em>you</em> add the sources &mdash; your notes, a reading, a textbook chapter &mdash; and the app puts those into the model&rsquo;s context. Same four steps, except step 2 is you. Your college account includes one built this way, <strong>Gemini Notebook</strong> (called NotebookLM until July 2026, so you&rsquo;ll see both names online); M3L2 puts it to work. The rule doesn&rsquo;t change: a citation to your own source still tells you where to check, not that anyone checked.</p>
+
+        <p class="stamp"><strong>Product examples accurate as of 2026-09.</strong></p>
+
+        <p><strong>The upshot: you can&rsquo;t predict any of this from a brand name, and you can&rsquo;t assume it&rsquo;s the same as last month.</strong> Every major AI assistant may look something up or may answer from memory, often deciding question by question. What you <em>can</em> do is read the answer itself for evidence &mdash; which is the next section.</p>
+
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Ask the same thing two ways.</strong> In one new chat, ask a question that obviously needs current information (&ldquo;What happened in [your town] this week?&rdquo;). In another new chat, ask a general-knowledge question (&ldquo;How does a bill become a law?&rdquo;). Watch whether the app shows a searching step or sources in each. It often won&rsquo;t search the second time &mdash; which is the &ldquo;decided per question&rdquo; part, happening in front of you.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Reading the Answer for Evidence</h2>
+      <p class="sub">Two kinds of answer, wrong in different ways &mdash; and two checklists for telling them apart.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>You will get two kinds of answer from AI tools, often without being told which one you got. Both can be right. Both can be wrong. <strong>They are wrong in different ways &mdash; and the retrieved kind is easier to miss.</strong></p>
+
+        <p><strong>When the answer came from recall.</strong> The model is producing likely text from what it absorbed in training. Most of the time that works surprisingly well. But when it doesn&rsquo;t, the result looks exactly like when it does: fluent, specific, confident. A made-up statistic. A quotation nobody said. A book title with a plausible author and a plausible year that does not exist. When an AI tool states something false with the same confidence as something true, that is usually called a <strong>hallucination</strong>. In research, the classic version is the <strong>fabricated citation</strong> &mdash; a reference that looks perfect and leads nowhere.</p>
+
+        <p><strong>When the answer came from retrieval.</strong> Now there are real sources, often with links you can click. That helps &mdash; genuinely. But it creates a subtler failure. The model can summarize a real page wrongly, attach a claim to the wrong source, or take a sentence out of the context that changed its meaning. <strong>A fabricated citation collapses the moment you look for it. A real, clickable, genuinely-existing source that simply doesn&rsquo;t say what the summary claims will sail past a casual glance &mdash; because a link <em>feels</em> like verification.</strong> It isn&rsquo;t.</p>
+
+        <blockquote class="pull">A citation tells you where to check, not that anyone checked.</blockquote>
+
+        <p>Two checklists do most of the work. The first tells you which kind of answer you probably got. The second names what went wrong, if something did. <strong>You&rsquo;ll use both in this lesson&rsquo;s activity, word for word.</strong></p>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Looked up, or recalled?</h3>
+            <p><em>What it&rsquo;s for:</em> telling which kind of answer you probably got.</p>
+            <p><strong>Signs it was looked up:</strong></p>
+            <ul>
+              <li>Named sources with links that work</li>
+              <li>Information newer than the model could have been trained on</li>
+              <li>A visible &ldquo;searching&rdquo; or &ldquo;sources&rdquo; step in the app</li>
+            </ul>
+            <p><strong>Signs it was recalled:</strong></p>
+            <ul>
+              <li>Confident specifics with no links</li>
+              <li>A citation written out as plain text you&rsquo;d have to go and find yourself</li>
+              <li>None of the signs above</li>
+            </ul>
+            <p><strong>Can&rsquo;t tell</strong> is an honest answer. Say what you&rsquo;d need to see to decide.</p>
+          </article>
+          <article class="card">
+            <h3>What kind of wrong?</h3>
+            <p><em>What it&rsquo;s for:</em> naming the problem, claim by claim.</p>
+            <ol>
+              <li><strong>The source doesn&rsquo;t exist</strong></li>
+              <li><strong>A real source that doesn&rsquo;t support the claim</strong></li>
+              <li><strong>A claim with no source offered</strong></li>
+              <li><strong>Accurate as stated</strong></li>
+            </ol>
+            <p class="sub">A claim with no source may still be true &mdash; it&rsquo;s a risk, not a verdict. Check it anyway.</p>
+          </article>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>Verifying Like You Mean It</h2>
+      <p class="sub">A big word for a small habit.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Verification sounds like a big word for a small habit. Here is the habit.</p>
+
+        <p><strong>Open the source.</strong> Not the snippet, not the preview &mdash; the page. If it&rsquo;s long, use your browser&rsquo;s find (Ctrl+F, or Cmd+F on a Mac) to jump to a key word from the claim.</p>
+
+        <p><strong>Find the sentence.</strong> You&rsquo;re looking for the part of the source that says the thing. If you can&rsquo;t point to it, the source doesn&rsquo;t support the claim &mdash; however relevant the page looks.</p>
+
+        <p><strong>Check the claim, not the topic.</strong> A page about the right subject is not the same as a page that says the right thing. The most common real-world failure is a source that is <em>about</em> the claim without <em>making</em> it.</p>
+
+        <p><strong>Check the date.</strong> A source can be real, relevant and correct &mdash; for two years ago.</p>
+
+        <p><strong>Cross-check anything that matters with a second, independent source</strong> &mdash; ideally one close to the original: the agency that published the number, the study itself rather than an article about it, the organization&rsquo;s own page.</p>
+
+        <p><strong>Reverse-search a claim with no source.</strong> Take its most specific part &mdash; a number, a name, a quoted phrase &mdash; and search for it yourself. If it&rsquo;s real, it usually turns up. If the only place it turns up is the AI&rsquo;s answer, that&rsquo;s your answer.</p>
+
+        <p><strong>When you can&rsquo;t open a source</strong> &mdash; a paywall, a login, a dead link &mdash; you haven&rsquo;t learned whether it&rsquo;s right. You&rsquo;ve learned that you can&rsquo;t check it. A dead link in particular is not proof the source never existed; pages move. Say so, and check something you <em>can</em> open instead.</p>
+
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>Check one claim from any AI answer you get this week &mdash; even one you believe.</strong> Open the source, find the sentence. It takes two minutes, and it&rsquo;s the only way to learn how often your tools are right about the things <em>you</em> ask them.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>Using AI Well for Research</h2>
+      <p class="sub">None of this means AI is bad at research. It means it&rsquo;s a particular kind of help.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>None of this means AI is bad at research. It means it&rsquo;s a particular kind of help.</p>
+
+        <div class="sl">
+          <div>
+            <h3>Good uses</h3>
+            <ul>
+              <li><strong>Getting oriented</strong> in a topic you know nothing about &mdash; the vocabulary, the main debates, what people argue about.</li>
+              <li><strong>Brainstorming research questions</strong> and narrowing a topic that&rsquo;s too big.</li>
+              <li><strong>Finding places to start looking</strong> &mdash; search terms, kinds of sources, organizations that publish on the subject.</li>
+              <li><strong>Summarizing a source you already have</strong> and have read yourself &mdash; so you can check the summary against it.</li>
+              <li><strong>Stress-testing your own understanding</strong> &mdash; &ldquo;explain this back to me,&rdquo; &ldquo;what&rsquo;s the strongest objection to this.&rdquo;</li>
+            </ul>
+          </div>
+          <div>
+            <h3>What it isn&rsquo;t</h3>
+            <ul>
+              <li><strong>It isn&rsquo;t a source.</strong> You cite the article, not the chatbot&rsquo;s description of the article. (How to credit the AI&rsquo;s part in your work is next up this week.)</li>
+              <li><strong>It isn&rsquo;t a search engine</strong>, even when the app around it runs one. You get a written answer built from a selection of results someone else chose.</li>
+              <li><strong>It isn&rsquo;t a finished literature review.</strong> It gives you somewhere to start reading, not something to stop reading at.</li>
+              <li><strong>It isn&rsquo;t the last word on anything recent</strong>, contested, local, or specialized &mdash; which is most of what a research assignment is about.</li>
+            </ul>
+          </div>
+        </div>
+
+        <p><strong>Your college account gives you two tools that work for this</strong>: Gemini, and <strong>Gemini Notebook</strong>, which you&rsquo;ll use in M3L2 &mdash; both come with your <code>@student.mendocino.edu</code> login. Copilot is available through the same address too. How to get around each one&rsquo;s screens is shown in class and in the tool guides, not here.</p>
+
+        <p><strong>Your 10 Things list is fair game.</strong> If an item on it involves finding something out &mdash; comparing options, understanding how something works, figuring out a process &mdash; that&rsquo;s a research question, and it&rsquo;s the kind this activity is built for.</p>
+
+        <p><strong>One more thing you&rsquo;ll start hearing about.</strong> A newer kind of tool doesn&rsquo;t stop at answering questions about a web page &mdash; it takes actions in the browser on your behalf, clicking and filling things in for you. That is a different thing from anything in this lesson, and Module 6 comes back to it when the course looks at where AI is heading.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M3L1-A1 &mdash; Two tools, four claims</h2>
+        <span class="badge">40 minutes</span>
+        <span class="badge">Portfolio 07</span>
+      </div>
+      <p><strong>Run one research question through two AI tools, then check four of their claims yourself.</strong></p>
+
+      <h3>Step 1 &mdash; pick a research question</h3>
+      <p>Something you actually want to know, specific enough that a good answer would cite sources. An item from your 10 Things list works well. <strong>The question you choose appears in the PDF you file</strong> &mdash; so pick one you&rsquo;re comfortable having your instructor read.</p>
+
+      <h3>Step 2 &mdash; ask the first tool</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) in a new chat and ask your question using the prompt below, with your question filled in. Copy the whole answer somewhere you can see it.</p>
+      <div class="prompt">
+        <pre id="p1">[Your question here]. Summarize the key findings in a few short paragraphs, and list the sources you used for each claim, with links where you have them.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+
+      <h3>Step 3 &mdash; ask a second tool the same thing</h3>
+      <p>Use a second AI tool of your choice &mdash; Copilot, through your college account, works. Same prompt, new chat.</p>
+
+      <h3>Step 4 &mdash; pick four claims</h3>
+      <p>Two from each answer. Choose claims that are specific enough to check: a number, a date, a named finding, an &ldquo;according to&hellip;&rdquo;. Not the vague ones.</p>
+
+      <h3>Step 5 &mdash; check each one</h3>
+      <p>Open the source the tool gave (or reverse-search the claim if it gave none), find the sentence, and fill in the fields below. Use the two checklists from this lesson for the two drop-downs. <strong>If you can&rsquo;t open a source &mdash; paywall, login, dead link &mdash; swap in a different claim and note the swap in the box for it.</strong> A dead link isn&rsquo;t proof the source never existed.</p>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>A result where everything checks out is a real result.</strong> So is one where both tools looked things up, or neither did. You&rsquo;re not trying to catch a tool out. You&rsquo;re finding out what each one actually did with your question.</p>
+      </div>
+
+      <h3>Step 6 &mdash; close it out</h3>
+      <p>Two or three sentences: did having citations in front of you make you more likely to trust the summary &mdash; and was that trust earned?</p>
+
+      <form id="log-form">
+        <label class="field" for="q">My research question</label>
+        <input type="text" id="q" name="q">
+        <label class="field" for="tool2">The second tool I used</label>
+        <input type="text" id="tool2" name="tool2">
+
+        <div class="claims">
+        <fieldset class="group">
+          <legend id="c1-lg">Claim 1 &mdash; from Gemini (or your first tool)</legend>
+          <label class="field" id="c1-said-l" for="c1-said">What the tool said</label>
+          <textarea id="c1-said" rows="2" aria-labelledby="c1-lg c1-said-l"></textarea>
+          <label class="field" id="c1-look-l" for="c1-look">Looked up, or recalled?</label>
+          <select id="c1-look" aria-labelledby="c1-lg c1-look-l"><option value="">&mdash; choose &mdash;</option><option>Looked up</option><option>Recalled</option><option>Can&rsquo;t tell</option></select>
+          <label class="field" id="c1-ev-l" for="c1-ev">My evidence for that</label>
+          <textarea id="c1-ev" rows="2" aria-labelledby="c1-lg c1-ev-l"></textarea>
+          <label class="field" id="c1-src-l" for="c1-src">What the source actually said</label>
+          <textarea id="c1-src" rows="2" aria-labelledby="c1-lg c1-src-l"></textarea>
+          <label class="field" id="c1-kind-l" for="c1-kind">What kind of wrong?</label>
+          <select id="c1-kind" aria-labelledby="c1-lg c1-kind-l"><option value="">&mdash; choose &mdash;</option><option>The source doesn&rsquo;t exist</option><option>A real source that doesn&rsquo;t support the claim</option><option>A claim with no source offered</option><option>Accurate as stated</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="c2-lg">Claim 2 &mdash; from Gemini (or your first tool)</legend>
+          <label class="field" id="c2-said-l" for="c2-said">What the tool said</label>
+          <textarea id="c2-said" rows="2" aria-labelledby="c2-lg c2-said-l"></textarea>
+          <label class="field" id="c2-look-l" for="c2-look">Looked up, or recalled?</label>
+          <select id="c2-look" aria-labelledby="c2-lg c2-look-l"><option value="">&mdash; choose &mdash;</option><option>Looked up</option><option>Recalled</option><option>Can&rsquo;t tell</option></select>
+          <label class="field" id="c2-ev-l" for="c2-ev">My evidence for that</label>
+          <textarea id="c2-ev" rows="2" aria-labelledby="c2-lg c2-ev-l"></textarea>
+          <label class="field" id="c2-src-l" for="c2-src">What the source actually said</label>
+          <textarea id="c2-src" rows="2" aria-labelledby="c2-lg c2-src-l"></textarea>
+          <label class="field" id="c2-kind-l" for="c2-kind">What kind of wrong?</label>
+          <select id="c2-kind" aria-labelledby="c2-lg c2-kind-l"><option value="">&mdash; choose &mdash;</option><option>The source doesn&rsquo;t exist</option><option>A real source that doesn&rsquo;t support the claim</option><option>A claim with no source offered</option><option>Accurate as stated</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="c3-lg">Claim 3 &mdash; from your second tool</legend>
+          <label class="field" id="c3-said-l" for="c3-said">What the tool said</label>
+          <textarea id="c3-said" rows="2" aria-labelledby="c3-lg c3-said-l"></textarea>
+          <label class="field" id="c3-look-l" for="c3-look">Looked up, or recalled?</label>
+          <select id="c3-look" aria-labelledby="c3-lg c3-look-l"><option value="">&mdash; choose &mdash;</option><option>Looked up</option><option>Recalled</option><option>Can&rsquo;t tell</option></select>
+          <label class="field" id="c3-ev-l" for="c3-ev">My evidence for that</label>
+          <textarea id="c3-ev" rows="2" aria-labelledby="c3-lg c3-ev-l"></textarea>
+          <label class="field" id="c3-src-l" for="c3-src">What the source actually said</label>
+          <textarea id="c3-src" rows="2" aria-labelledby="c3-lg c3-src-l"></textarea>
+          <label class="field" id="c3-kind-l" for="c3-kind">What kind of wrong?</label>
+          <select id="c3-kind" aria-labelledby="c3-lg c3-kind-l"><option value="">&mdash; choose &mdash;</option><option>The source doesn&rsquo;t exist</option><option>A real source that doesn&rsquo;t support the claim</option><option>A claim with no source offered</option><option>Accurate as stated</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="c4-lg">Claim 4 &mdash; from your second tool</legend>
+          <label class="field" id="c4-said-l" for="c4-said">What the tool said</label>
+          <textarea id="c4-said" rows="2" aria-labelledby="c4-lg c4-said-l"></textarea>
+          <label class="field" id="c4-look-l" for="c4-look">Looked up, or recalled?</label>
+          <select id="c4-look" aria-labelledby="c4-lg c4-look-l"><option value="">&mdash; choose &mdash;</option><option>Looked up</option><option>Recalled</option><option>Can&rsquo;t tell</option></select>
+          <label class="field" id="c4-ev-l" for="c4-ev">My evidence for that</label>
+          <textarea id="c4-ev" rows="2" aria-labelledby="c4-lg c4-ev-l"></textarea>
+          <label class="field" id="c4-src-l" for="c4-src">What the source actually said</label>
+          <textarea id="c4-src" rows="2" aria-labelledby="c4-lg c4-src-l"></textarea>
+          <label class="field" id="c4-kind-l" for="c4-kind">What kind of wrong?</label>
+          <select id="c4-kind" aria-labelledby="c4-lg c4-kind-l"><option value="">&mdash; choose &mdash;</option><option>The source doesn&rsquo;t exist</option><option>A real source that doesn&rsquo;t support the claim</option><option>A claim with no source offered</option><option>Accurate as stated</option></select>
+        </fieldset>
+        </div>
+
+        <label class="field" for="swaps">Claims I swapped out, and why</label>
+        <textarea id="swaps" name="swaps" rows="2"></textarea>
+        <label class="field" for="trust">Did the citations earn my trust?</label>
+        <textarea id="trust" name="trust" rows="3"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="log-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M3L1, Verification Log &middot; Portfolio 07</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>My research question</dt><dd id="out-q"></dd>
+          <dt>The second tool I used</dt><dd id="out-tool2"></dd>
+        </dl>
+        <div class="claim-out">
+          <h3>Claim 1 &mdash; from Gemini (or your first tool)</h3>
+          <dl>
+            <dt>What the tool said</dt><dd id="out-c1-said"></dd>
+            <dt>Looked up, or recalled?</dt><dd id="out-c1-look"></dd>
+            <dt>My evidence for that</dt><dd id="out-c1-ev"></dd>
+            <dt>What the source actually said</dt><dd id="out-c1-src"></dd>
+            <dt>What kind of wrong?</dt><dd id="out-c1-kind"></dd>
+          </dl>
+        </div>
+        <div class="claim-out">
+          <h3>Claim 2 &mdash; from Gemini (or your first tool)</h3>
+          <dl>
+            <dt>What the tool said</dt><dd id="out-c2-said"></dd>
+            <dt>Looked up, or recalled?</dt><dd id="out-c2-look"></dd>
+            <dt>My evidence for that</dt><dd id="out-c2-ev"></dd>
+            <dt>What the source actually said</dt><dd id="out-c2-src"></dd>
+            <dt>What kind of wrong?</dt><dd id="out-c2-kind"></dd>
+          </dl>
+        </div>
+        <div class="claim-out">
+          <h3>Claim 3 &mdash; from your second tool</h3>
+          <dl>
+            <dt>What the tool said</dt><dd id="out-c3-said"></dd>
+            <dt>Looked up, or recalled?</dt><dd id="out-c3-look"></dd>
+            <dt>My evidence for that</dt><dd id="out-c3-ev"></dd>
+            <dt>What the source actually said</dt><dd id="out-c3-src"></dd>
+            <dt>What kind of wrong?</dt><dd id="out-c3-kind"></dd>
+          </dl>
+        </div>
+        <div class="claim-out">
+          <h3>Claim 4 &mdash; from your second tool</h3>
+          <dl>
+            <dt>What the tool said</dt><dd id="out-c4-said"></dd>
+            <dt>Looked up, or recalled?</dt><dd id="out-c4-look"></dd>
+            <dt>My evidence for that</dt><dd id="out-c4-ev"></dd>
+            <dt>What the source actually said</dt><dd id="out-c4-src"></dd>
+            <dt>What kind of wrong?</dt><dd id="out-c4-kind"></dd>
+          </dl>
+        </div>
+        <dl>
+          <dt>Claims I swapped out, and why</dt><dd id="out-swaps"></dd>
+          <dt>Did the citations earn my trust?</dt><dd id="out-trust"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>This one goes in your portfolio.</strong> Save it as <code>07-m3l1-verification-log.pdf</code> and move it into your <code>CSC141-portfolio</code> folder now, while it&rsquo;s in front of you. It has no grade of its own. What it has is a slot &mdash; and at the end of the term every slot is checked. Filed is credit; missing is not.</p>
+        <p class="no-print sub">Nothing goes to Canvas for this activity.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>1. A friend says, &ldquo;Gemini looked that up online for me.&rdquo; Which restatement is most accurate?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) The model went onto the internet and read the pages.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) The model remembered the pages from when it was trained.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) The app ran a search and put the results in front of the model, which wrote the answer from them.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) Google&rsquo;s search engine wrote the answer.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. The model reaches nothing on its own. The app around it did the searching and handed over the results &mdash; the model&rsquo;s job was the writing.</p></template>
+          <template data-no><p>The answer is C. The model can&rsquo;t go online (A); remembering from training is recall, not looking something up (B); and the search service found pages but didn&rsquo;t write the answer (D). The app searched; the model wrote.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>2. An AI answer cites a real article with a working link. You open it and it&rsquo;s about the right topic, but you can&rsquo;t find anything in it that says what the answer claimed. What kind of wrong is this?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) The source doesn&rsquo;t exist.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) A real source that doesn&rsquo;t support the claim.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) A claim with no source offered.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Accurate as stated.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes &mdash; and it&rsquo;s the hardest kind to catch, because the link makes the claim feel checked. A source being about the topic isn&rsquo;t the same as the source making the claim.</p></template>
+          <template data-no><p>The answer is B. The source is real (so not A), a source was offered (so not C), and you couldn&rsquo;t find the claim in it (so not D). This is the failure a clickable link hides best.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>3. You ask the same app two questions on the same afternoon. One answer shows sources; the other shows none. What&rsquo;s the most likely explanation?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) The model forgot how to search between the two questions.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) The second answer must be wrong.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) The app only searches for paid accounts.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) The app decided, question by question, whether a lookup was worth doing.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Looking things up is usually selective &mdash; decided per question &mdash; and the app doesn&rsquo;t always say which way it went. That&rsquo;s why you read the answer for evidence instead of assuming.</p></template>
+          <template data-no><p>The answer is D. The model never searches, so it can&rsquo;t forget how (A); an answer from recall can still be right (B); and nothing here is about account type (C). The app made a choice for each question.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 3, Lesson 1</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M3L1-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  var form = document.getElementById("log-form");
+  if (!form) { return; }
+  var ids = ["q", "tool2", "swaps", "trust"];
+  var parts = ["said", "look", "ev", "src", "kind"];
+  for (var i = 1; i <= 4; i++) { parts.forEach(function (p) { ids.push("c" + i + "-" + p); }); }
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var status = document.getElementById("log-status");
+    var any = false;
+    for (var i = 1; i <= 4; i++) { if (document.getElementById("c" + i + "-said").value.trim()) { any = true; } }
+    if (!any) { status.textContent = " Fill in at least one claim before building the copy."; return; }
+    ids.forEach(function (id) {
+      var v = document.getElementById(id).value.trim();
+      document.getElementById("out-" + id).textContent = v || "(not recorded)";
+    });
+    document.getElementById("out-date").textContent =
+      new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    document.getElementById("export-panel").hidden = false;
+    status.textContent = " Ready below — a printable copy is at the bottom of this activity.";
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M3L4 &mdash; Drafting Your Personal AI Code | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT ( only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 3, Lesson 4</p>
+    <h1>Drafting Your Personal AI Code</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What Module 3 adds up to</a></li>
+      <li><a href="#s2">What a Code is</a></li>
+      <li><a href="#s3">Good guidelines</a></li>
+      <li><a href="#s4">A first draft</a></li>
+      <li><a href="#s5">The study tool</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What Module 3 Adds Up To</h2>
+      <p class="sub">Three moves last week. This week you use all three &mdash; and write your own rules.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Last week was three lessons and three moves. <strong>M3L1:</strong> check what the AI told you. <strong>M3L2:</strong> notice what the AI did to your learning. <strong>M3L3:</strong> say honestly what the AI did in your work.</p>
+        <p>This week you do all three on your own work &mdash; and then you write down the rules you&rsquo;ll hold yourself to.</p>
+        <p>Two things come out of the week. <strong>A study tool</strong> for a class you&rsquo;re taking: built from sources you chose, checked, tested on yourself, every AI interaction disclosed. <strong>And a Personal AI Code</strong>: your own rules for when and how you&rsquo;ll use AI. The study tool is practice at following rules. The Code is where you write them.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>What a Personal AI Code Is</h2>
+      <p class="sub">A personal policy, in four parts.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>Personal AI Code of Conduct.</strong> <em>A self-authored set of guidelines governing how an individual chooses to use AI tools responsibly, ethically, and effectively &mdash; developed and refined throughout this course.</em></p>
+        <p>It isn&rsquo;t a pledge, and it isn&rsquo;t a list of banned tools. It&rsquo;s closer to a personal policy: what you&rsquo;ll do, what you won&rsquo;t, what you&rsquo;ll tell people, and when you&rsquo;ll stop and reconsider. It has four parts.</p>
+        <div class="cards">
+          <article class="card">
+            <h3>Purpose statement</h3>
+            <p><em>What it answers:</em> why you use AI at all, and what you&rsquo;re protecting.</p>
+            <p class="sub"><em>Example line:</em> &ldquo;I use AI to get unstuck and to check my work &mdash; not to skip the parts of a class that are there to teach me something.&rdquo;</p>
+          </article>
+          <article class="card">
+            <h3>Guidelines</h3>
+            <p><em>What it answers:</em> when you will and won&rsquo;t use AI, specifically.</p>
+            <p class="sub"><em>Example line:</em> &ldquo;In any class that allows it, I&rsquo;ll have AI quiz me before tests &mdash; and I won&rsquo;t paste in a question from a graded assignment.&rdquo;</p>
+          </article>
+          <article class="card">
+            <h3>Disclosure policy</h3>
+            <p><em>What it answers:</em> what you tell people about your AI use, and how.</p>
+            <p class="sub"><em>Example line:</em> &ldquo;Any time AI helped with work I hand in, I add a one-line note saying which tool and what it did.&rdquo;</p>
+          </article>
+          <article class="card">
+            <h3>Review plan</h3>
+            <p><em>What it answers:</em> when you&rsquo;ll look at your Code again, and what would make you change it.</p>
+            <p class="sub"><em>Example line:</em> &ldquo;I&rsquo;ll reread this at the start of every semester, and any time I&rsquo;m not sure whether a use crosses a line.&rdquo;</p>
+          </article>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>What Makes a Guideline Good</h2>
+      <p class="sub">Specific enough that you&rsquo;d know, in the moment, whether you were following it.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>The difference between a Code that does something and one that doesn&rsquo;t is almost all in the guidelines. <strong>A good guideline is specific enough that you&rsquo;d know, in the moment, whether you were following it.</strong></p>
+        <div class="sl">
+          <div>
+            <h3>Vague</h3>
+            <ul>
+              <li>&ldquo;Use AI responsibly.&rdquo;</li>
+              <li>&ldquo;Don&rsquo;t cheat with AI.&rdquo;</li>
+              <li>&ldquo;Always verify.&rdquo;</li>
+              <li>&ldquo;Protect my privacy.&rdquo;</li>
+              <li>&ldquo;Use AI to learn.&rdquo;</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Actionable</h3>
+            <ul>
+              <li>&ldquo;Before I use AI on an assignment, I check the syllabus &mdash; and if it doesn&rsquo;t say, I ask.&rdquo;</li>
+              <li>&ldquo;I don&rsquo;t paste a graded question into an AI tool unless the assignment says I may.&rdquo;</li>
+              <li>&ldquo;Any fact from an AI tool that goes into work I hand in, I check in a source I&rsquo;ve opened myself.&rdquo;</li>
+              <li>&ldquo;I don&rsquo;t put other people&rsquo;s names, grades or personal details into any AI tool.&rdquo;</li>
+              <li>&ldquo;When I&rsquo;m studying, I ask AI to quiz me or give hints &mdash; not to give me the answers.&rdquo;</li>
+            </ul>
+          </div>
+        </div>
+        <p><em>The test: could someone watching you tell whether you&rsquo;d followed it?</em></p>
+        <p><strong>Cover more than school.</strong> Your Code should reach at least three kinds of situation: <strong>academic work</strong> (your classes), <strong>personal learning</strong> (things you&rsquo;re figuring out for yourself &mdash; your 10 Things list is full of them), and <strong>professional use</strong> (a job you have now or want later). The same rule can look different in each: a use one instructor forbids may be exactly what an employer expects.</p>
+        <p><strong>Build in triggers.</strong> A review plan works best with a trigger, not just a date &mdash; &ldquo;when I start a new job,&rdquo; &ldquo;when a course&rsquo;s AI rule surprises me,&rdquo; &ldquo;when I catch myself not checking.&rdquo;</p>
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>A Code you&rsquo;d never break isn&rsquo;t doing anything.</strong> If every guideline describes what you already do without thinking, it isn&rsquo;t a Code yet &mdash; it&rsquo;s a description. At least one line should ask something of you.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>A First Draft, On Purpose</h2>
+      <p class="sub">Version 1 now. Version 2 in Module 6.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>This is <strong>version 1</strong>. In Module 6 &mdash; after the course has covered bias, privacy, how AI is governed and where it&rsquo;s heading &mdash; you&rsquo;ll revise it into version 2. So write the Code you believe now, not the one you think you&rsquo;ll believe in December. <strong>Changing your mind later is part of the assignment, not a failure of this draft.</strong></p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>The Study Tool</h2>
+      <p class="sub">Built from your sources, checked, tested on yourself, and all of it disclosed.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>The other half of this week puts all three of last week&rsquo;s moves into one piece of work. You&rsquo;ll build a study tool for a class you&rsquo;re taking from sources you chose &mdash; the notebook or chat from M3L2&rsquo;s activity is a head start &mdash; check what it tells you against those sources, use it, and then find out without it whether it taught you anything. Along the way you cite your sources and keep a log of every AI interaction.</p>
+        <p><strong>The learning test is the heart of it</strong> &mdash; the part that tells you whether the tool taught you anything.</p>
+        <p><strong>The log isn&rsquo;t paperwork.</strong> It&rsquo;s what makes the disclosure honest, because you can&rsquo;t disclose what you didn&rsquo;t keep track of.</p>
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>Everything you need to do the work &mdash; the steps, the rubric, the dates, the file names &mdash; is on this week&rsquo;s two studio pages.</strong> This lesson is the why.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>1. Which of these is the most actionable guideline for a Personal AI Code?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) &ldquo;Use AI responsibly.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) &ldquo;Be honest about AI.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) &ldquo;Before using AI on an assignment, I check the syllabus, and if it doesn&rsquo;t say, I ask.&rdquo;</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) &ldquo;Never misuse AI tools.&rdquo;</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Yes &mdash; you&rsquo;d know in the moment whether you&rsquo;d followed it. The others are values; this is an action.</p></template>
+          <template data-no><p>The answer is C. The other three are principles you&rsquo;d agree with and couldn&rsquo;t check. A guideline earns its place when someone watching could tell whether you followed it.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>2. What is the job of the disclosure-policy part of a Code?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Listing the tools you&rsquo;re allowed to use.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) Saying what you&rsquo;ll tell people about your AI use, and how.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Promising never to use AI on graded work.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Explaining how AI models work.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. It&rsquo;s a commitment about honesty &mdash; when you&rsquo;ll say something, and what.</p></template>
+          <template data-no><p>The answer is B. A disclosure policy is about what you tell people; the tools you use (A) and your limits (C) belong in guidelines, and D isn&rsquo;t part of a Code at all.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>3. Why is this week&rsquo;s Code called version 1?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) The instructor will rewrite it for you.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) It only counts once the college approves it.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) Longer versions earn more points later.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) You&rsquo;ll revise it in Module 6, after the course covers more.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Write the one you believe now; revising it later is part of the course.</p></template>
+          <template data-no><p>The answer is D. You revise it yourself in Module 6, after the course has covered bias, privacy, governance and the future of AI. Nobody rewrites it for you, and it isn&rsquo;t graded on length.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, October 12</h2>
+      <p class="sub">This week&rsquo;s work, and our next live session.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p><strong>This week is the Module 3 studio.</strong> The new material is this lesson; the rest of the week is the work.</p>
+      <p><strong>Two graded items are yours this week:</strong> your study tool, and your Personal AI Code &mdash; which closes with your Module 3 reflection. Each has its own studio page with the steps, the rubric and the dates. If you haven&rsquo;t taken the Module 3 quiz yet, it&rsquo;s still open in Canvas. <strong>Canvas is the authority on dates.</strong></p>
+      <p><strong>For Monday&rsquo;s live session, come ready to talk &mdash; there&rsquo;s nothing more to turn in.</strong> The question:</p>
+      <p><strong>Should colleges set one AI policy for every class, or should each instructor decide?</strong></p>
+      <p>Bring two things: <strong>one guideline from your Code and why you wrote it</strong>, and <strong>your three judgments from M3L3&rsquo;s activity</strong>. Monday is also where Module 4 begins.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 3, Lesson 4</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M3L4 — no activity on this page (studio week). ===== */
+</script>
+</body>
+</html>
