@@ -380,7 +380,7 @@ fieldset.group textarea { max-width: 100%; }
 
         <div class="kc" data-kc data-answer="B">
           <fieldset>
-            <legend>2. What is the job of the disclosure-policy part of a Code?</legend>
+            <legend>2. What is the job of the disclosure-policy as part of a Code?</legend>
             <label class="opt"><input type="radio" name="kc2" value="A">A) Listing the tools you&rsquo;re allowed to use.</label>
             <label class="opt"><input type="radio" name="kc2" value="B">B) Saying what you&rsquo;ll tell people about your AI use, and how.</label>
             <label class="opt"><input type="radio" name="kc2" value="C">C) Promising never to use AI on graded work.</label>
@@ -443,12 +443,27 @@ fieldset.group textarea { max-width: 100%; }
     btn.addEventListener("click", function () {
       var text = document.getElementById(srcId).textContent;
       function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
-                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
-      } else {
-        done("Copying isn't available here — select the text above and copy it manually.");
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
       }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
     });
   });
 
