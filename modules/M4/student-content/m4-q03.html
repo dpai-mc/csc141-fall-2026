@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M4-Q03 &mdash; Personal Data-Protection and Security Assessment | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M4-Q03 security assessment only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)              { display: none !important; }
+  main > *:not(#a1)               { display: none !important; }
+  #a1 > *:not(#export-panel)      { display: none !important; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  #export-panel h3 { break-after: avoid; page-break-after: avoid; }
+  a[href]::after { content: ""; }
+}
+
+
+/* ---------- page-specific ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+}
+#a1 ul .opt { display: block; font-weight: 400; }
+#a1 ul .opt input { margin-right: var(--s-2); }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+/* ---------- page-specific (M3 studio) ---------- */
+.assignment-card { border: 2px solid var(--c-primary); background: var(--c-surface); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+.assignment-card p:last-child { margin-bottom: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel .claim-out h4, #export-panel .gl-ctx { font-size: .9rem; color: var(--c-text-muted); }
+@media print { #export-panel li, #export-panel .claim-out { break-inside: avoid; page-break-inside: avoid; } }
+
+
+/* ---------- page-specific (M4 studio — security assessment) ---------- */
+#a1 input[type="text"] { max-width: 100%; }
+#export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+#export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+#export-panel h5 { font-size: .95rem; margin-top: var(--s-3); color: var(--c-primary-dark); }
+@media print {
+  #export-panel table tr, #export-panel .tbl-out, #export-panel .rec-out { break-inside: avoid; page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 4, Studio</p>
+    <h1>M4-Q03 &mdash; Personal Data-Protection and Security Assessment</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What you&rsquo;ll do</a></li>
+      <li><a href="#s3">How it&rsquo;s graded</a></li>
+      <li><a href="#a1">The studio</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What You&rsquo;ll Do</h2>
+      <p class="sub">The AI tools in your life, what they do with your information, and what you&rsquo;ll do about it.</p>
+    </div>
+    <details open>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>Take stock of the AI tools you use, find out what each one does with your information, and decide what you&rsquo;ll do about it.</strong> It&rsquo;s Module 4&rsquo;s second graded artifact &mdash; and M4L5&rsquo;s activity. It closes with your Module 4 reflection. Where to find the answers, how to share less and when a local model makes sense are in M4L5; this page is where you do it.</p>
+        <h3>The five parts</h3>
+        <ul>
+          <li><strong>Part 1 &mdash; inventory:</strong> every AI tool you use or plan to use, including AI built into other apps.</li>
+          <li><strong>Part 2 &mdash; evaluation:</strong> for the three you use most, what each collects, where it&rsquo;s kept and who can see it, whether it trains on what you type, how long it keeps it and what deleting reaches &mdash; and where you found each answer.</li>
+          <li><strong>Part 3 &mdash; protection steps:</strong> one specific step for each of those three tools.</li>
+          <li><strong>Part 4 &mdash; the local-model question:</strong> for one of your own uses, would a model on your own hardware be worth what it costs?</li>
+          <li><strong>Part 5 &mdash; your overall judgment:</strong> is the privacy cost of your tools worth it?</li>
+        </ul>
+        <h3>Format &amp; length</h3>
+        <ul>
+          <li><strong>Typed into this page.</strong> About two to three pages exported.</li>
+          <li><strong>Module reflection:</strong> 3&ndash;5 sentences answering all three prompts.</li>
+        </ul>
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>This assessment goes to your instructor. List tools, not accounts</strong> &mdash; never write an email address, username or password here. If there&rsquo;s a tool you&rsquo;d rather not name, describe the kind instead (&ldquo;a chat assistant in a social app&rdquo;). You can earn full credit either way.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>How It&rsquo;s Graded</h2>
+      <p class="sub">50 points, five dimensions.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>M4-Q03 rubric &mdash; 50 points total</caption>
+            <thead>
+              <tr><th scope="col">Dimension</th><th scope="col">Excellent</th><th scope="col">Adequate</th><th scope="col">Needs work</th><th scope="col">Points</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Inventory</th><td data-col="Excellent">Every AI tool you use or plan to use &mdash; at least three &mdash; with the account each runs under and what you use it for, including AI built into another app (or a note that you looked and found none).</td><td data-col="Adequate">Three tools, but the account or the use is missing for some, or only chatbots you open on purpose.</td><td data-col="Needs work">Fewer than three.</td><td data-col="Points">5</td></tr>
+              <tr><th scope="row">Evaluation</th><td data-col="Excellent">Your three most-used tools, each answered on what it collects, where it&rsquo;s kept and who can see it, training, how long it keeps data and what deleting reaches, and your biggest risk &mdash; with where each answer came from and when. &ldquo;Not sure&rdquo; is used honestly, with what you&rsquo;d need to find out.</td><td data-col="Adequate">Three tools, but some answers are guesses with no source, or one question is skipped throughout.</td><td data-col="Needs work">Fewer than three tools, or answers that could describe any tool.</td><td data-col="Points">15</td></tr>
+              <tr><th scope="row">Protection steps</th><td data-col="Excellent">A specific step for each evaluated tool &mdash; something someone could check you&rsquo;d done.</td><td data-col="Adequate">Steps for each tool, but some are general advice (&ldquo;be careful&rdquo;).</td><td data-col="Needs work">Missing, or general advice only.</td><td data-col="Points">10</td></tr>
+              <tr><th scope="row">Local-model judgment</th><td data-col="Excellent">One of your own uses weighed on M2L5&rsquo;s four questions &mdash; capability, privacy, cost and control &mdash; with a clear judgment and the reason that decided it.</td><td data-col="Adequate">A judgment, but the four questions are only partly used or it isn&rsquo;t tied to a use of yours.</td><td data-col="Needs work">No judgment, or a judgment with no reasons.</td><td data-col="Points">10</td></tr>
+              <tr><th scope="row">Overall judgment</th><td data-col="Excellent">A clear answer to whether your tools&rsquo; privacy cost is worth it, reasoned through at least one lens from M4L5, saying where you&rsquo;d draw the line.</td><td data-col="Adequate">A judgment with thin reasoning, or no line drawn.</td><td data-col="Needs work">No judgment, or a summary of the parts instead of one.</td><td data-col="Points">10</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Scored by the instructor and entered in the Canvas gradebook, in the <strong>Module artifacts</strong> category. Your Module 4 reflection is part of your portfolio and isn&rsquo;t scored on this rubric.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="section-head">
+      <h2>The Studio</h2>
+      <p class="sub">About 105 minutes, five blocks and a closing reflection.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Opener &mdash; your inventory</h3>
+        <span class="badge">10 minutes</span>
+        <span class="badge badge--quiet">Earns: Inventory</span>
+      </div>
+      <p><strong>List every AI tool you use or plan to use &mdash; then go looking for the ones built into other things.</strong></p>
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>The easy ones to miss:</strong> a phone keyboard that suggests your next word, a search engine&rsquo;s summary above the results, a chat assistant inside a social app, a writing helper in your email or documents, a photo app that sorts faces.</p>
+      </div>
+      <div class="claims">
+<fieldset class="group">
+<legend id="t1-lg">Tool 1</legend>
+<label class="field" id="t1-name-l" for="t1-name">The tool, or the kind of tool</label>
+<input type="text" id="t1-name" aria-labelledby="t1-lg t1-name-l">
+<label class="field" id="t1-acct-l" for="t1-acct">The account it runs under</label>
+<select id="t1-acct" aria-labelledby="t1-lg t1-acct-l"><option value="">&mdash; choose &mdash;</option><option>My college account</option><option>A personal account I made</option><option>Built into another app or device</option><option>Not sure</option></select>
+<label class="field" id="t1-use-l" for="t1-use">What I use it for</label>
+<input type="text" id="t1-use" aria-labelledby="t1-lg t1-use-l">
+</fieldset>
+<fieldset class="group">
+<legend id="t2-lg">Tool 2</legend>
+<label class="field" id="t2-name-l" for="t2-name">The tool, or the kind of tool</label>
+<input type="text" id="t2-name" aria-labelledby="t2-lg t2-name-l">
+<label class="field" id="t2-acct-l" for="t2-acct">The account it runs under</label>
+<select id="t2-acct" aria-labelledby="t2-lg t2-acct-l"><option value="">&mdash; choose &mdash;</option><option>My college account</option><option>A personal account I made</option><option>Built into another app or device</option><option>Not sure</option></select>
+<label class="field" id="t2-use-l" for="t2-use">What I use it for</label>
+<input type="text" id="t2-use" aria-labelledby="t2-lg t2-use-l">
+</fieldset>
+<fieldset class="group">
+<legend id="t3-lg">Tool 3</legend>
+<label class="field" id="t3-name-l" for="t3-name">The tool, or the kind of tool</label>
+<input type="text" id="t3-name" aria-labelledby="t3-lg t3-name-l">
+<label class="field" id="t3-acct-l" for="t3-acct">The account it runs under</label>
+<select id="t3-acct" aria-labelledby="t3-lg t3-acct-l"><option value="">&mdash; choose &mdash;</option><option>My college account</option><option>A personal account I made</option><option>Built into another app or device</option><option>Not sure</option></select>
+<label class="field" id="t3-use-l" for="t3-use">What I use it for</label>
+<input type="text" id="t3-use" aria-labelledby="t3-lg t3-use-l">
+</fieldset>
+<fieldset class="group">
+<legend id="t4-lg">Tool 4 <span class="sub">(optional)</span></legend>
+<label class="field" id="t4-name-l" for="t4-name">The tool, or the kind of tool</label>
+<input type="text" id="t4-name" aria-labelledby="t4-lg t4-name-l">
+<label class="field" id="t4-acct-l" for="t4-acct">The account it runs under</label>
+<select id="t4-acct" aria-labelledby="t4-lg t4-acct-l"><option value="">&mdash; choose &mdash;</option><option>My college account</option><option>A personal account I made</option><option>Built into another app or device</option><option>Not sure</option></select>
+<label class="field" id="t4-use-l" for="t4-use">What I use it for</label>
+<input type="text" id="t4-use" aria-labelledby="t4-lg t4-use-l">
+</fieldset>
+<fieldset class="group">
+<legend id="t5-lg">Tool 5 <span class="sub">(optional)</span></legend>
+<label class="field" id="t5-name-l" for="t5-name">The tool, or the kind of tool</label>
+<input type="text" id="t5-name" aria-labelledby="t5-lg t5-name-l">
+<label class="field" id="t5-acct-l" for="t5-acct">The account it runs under</label>
+<select id="t5-acct" aria-labelledby="t5-lg t5-acct-l"><option value="">&mdash; choose &mdash;</option><option>My college account</option><option>A personal account I made</option><option>Built into another app or device</option><option>Not sure</option></select>
+<label class="field" id="t5-use-l" for="t5-use">What I use it for</label>
+<input type="text" id="t5-use" aria-labelledby="t5-lg t5-use-l">
+</fieldset>
+<fieldset class="group">
+<legend id="t6-lg">Tool 6 <span class="sub">(optional)</span></legend>
+<label class="field" id="t6-name-l" for="t6-name">The tool, or the kind of tool</label>
+<input type="text" id="t6-name" aria-labelledby="t6-lg t6-name-l">
+<label class="field" id="t6-acct-l" for="t6-acct">The account it runs under</label>
+<select id="t6-acct" aria-labelledby="t6-lg t6-acct-l"><option value="">&mdash; choose &mdash;</option><option>My college account</option><option>A personal account I made</option><option>Built into another app or device</option><option>Not sure</option></select>
+<label class="field" id="t6-use-l" for="t6-use">What I use it for</label>
+<input type="text" id="t6-use" aria-labelledby="t6-lg t6-use-l">
+</fieldset>
+      </div>
+      <p class="sub" id="inv-status" role="status">Tools listed: 0 &middot; Built into another app or device: 0</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 1 &mdash; evaluate your three most-used tools</h3>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Earns: Evaluation</span>
+      </div>
+      <p><strong>For the three tools you use most, find the answers &mdash; and write down where you found each one.</strong></p>
+      <p>M4L4&rsquo;s four questions: <strong>what is collected, where it&rsquo;s kept, who can see it, and how long it lasts.</strong> For Gemini, Copilot, ChatGPT and Claude, the course page How the tools handle your data has sourced answers. For anything else, check the tool&rsquo;s settings and search its privacy policy. &ldquo;Not sure&rdquo; is an honest answer &mdash; say what you&rsquo;d need to find out.</p>
+      <div class="claims">
+<fieldset class="group">
+<legend id="ea-lg">Tool A</legend>
+<label class="field" id="ea-name-l" for="ea-name">Which tool</label>
+<input type="text" id="ea-name" aria-labelledby="ea-lg ea-name-l">
+<label class="field" id="ea-coll-l" for="ea-coll">What it collects</label>
+<textarea id="ea-coll" rows="2" aria-labelledby="ea-lg ea-coll-l"></textarea>
+<label class="field" id="ea-where-l" for="ea-where">Where it&rsquo;s kept, and who can see it</label>
+<textarea id="ea-where" rows="2" aria-labelledby="ea-lg ea-where-l"></textarea>
+<label class="field" id="ea-train-l" for="ea-train">Does it train on what I type, on my account?</label>
+<select id="ea-train" aria-labelledby="ea-lg ea-train-l"><option value="">&mdash; choose &mdash;</option><option>Yes</option><option>No</option><option>Only if I turn it on</option><option>Unless I turn it off</option><option>Not sure</option></select>
+<label class="field" id="ea-keep-l" for="ea-keep">How long it keeps my data, and what deleting reaches</label>
+<textarea id="ea-keep" rows="2" aria-labelledby="ea-lg ea-keep-l"></textarea>
+<label class="field" id="ea-risk-l" for="ea-risk">My biggest privacy risk with this tool</label>
+<textarea id="ea-risk" rows="2" aria-labelledby="ea-lg ea-risk-l"></textarea>
+<label class="field" id="ea-src-l" for="ea-src">Where I found these answers, and the date</label>
+<textarea id="ea-src" rows="2" aria-labelledby="ea-lg ea-src-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="eb-lg">Tool B</legend>
+<label class="field" id="eb-name-l" for="eb-name">Which tool</label>
+<input type="text" id="eb-name" aria-labelledby="eb-lg eb-name-l">
+<label class="field" id="eb-coll-l" for="eb-coll">What it collects</label>
+<textarea id="eb-coll" rows="2" aria-labelledby="eb-lg eb-coll-l"></textarea>
+<label class="field" id="eb-where-l" for="eb-where">Where it&rsquo;s kept, and who can see it</label>
+<textarea id="eb-where" rows="2" aria-labelledby="eb-lg eb-where-l"></textarea>
+<label class="field" id="eb-train-l" for="eb-train">Does it train on what I type, on my account?</label>
+<select id="eb-train" aria-labelledby="eb-lg eb-train-l"><option value="">&mdash; choose &mdash;</option><option>Yes</option><option>No</option><option>Only if I turn it on</option><option>Unless I turn it off</option><option>Not sure</option></select>
+<label class="field" id="eb-keep-l" for="eb-keep">How long it keeps my data, and what deleting reaches</label>
+<textarea id="eb-keep" rows="2" aria-labelledby="eb-lg eb-keep-l"></textarea>
+<label class="field" id="eb-risk-l" for="eb-risk">My biggest privacy risk with this tool</label>
+<textarea id="eb-risk" rows="2" aria-labelledby="eb-lg eb-risk-l"></textarea>
+<label class="field" id="eb-src-l" for="eb-src">Where I found these answers, and the date</label>
+<textarea id="eb-src" rows="2" aria-labelledby="eb-lg eb-src-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="ec-lg">Tool C</legend>
+<label class="field" id="ec-name-l" for="ec-name">Which tool</label>
+<input type="text" id="ec-name" aria-labelledby="ec-lg ec-name-l">
+<label class="field" id="ec-coll-l" for="ec-coll">What it collects</label>
+<textarea id="ec-coll" rows="2" aria-labelledby="ec-lg ec-coll-l"></textarea>
+<label class="field" id="ec-where-l" for="ec-where">Where it&rsquo;s kept, and who can see it</label>
+<textarea id="ec-where" rows="2" aria-labelledby="ec-lg ec-where-l"></textarea>
+<label class="field" id="ec-train-l" for="ec-train">Does it train on what I type, on my account?</label>
+<select id="ec-train" aria-labelledby="ec-lg ec-train-l"><option value="">&mdash; choose &mdash;</option><option>Yes</option><option>No</option><option>Only if I turn it on</option><option>Unless I turn it off</option><option>Not sure</option></select>
+<label class="field" id="ec-keep-l" for="ec-keep">How long it keeps my data, and what deleting reaches</label>
+<textarea id="ec-keep" rows="2" aria-labelledby="ec-lg ec-keep-l"></textarea>
+<label class="field" id="ec-risk-l" for="ec-risk">My biggest privacy risk with this tool</label>
+<textarea id="ec-risk" rows="2" aria-labelledby="ec-lg ec-risk-l"></textarea>
+<label class="field" id="ec-src-l" for="ec-src">Where I found these answers, and the date</label>
+<textarea id="ec-src" rows="2" aria-labelledby="ec-lg ec-src-l"></textarea>
+</fieldset>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 2 &mdash; one protection step per tool</h3>
+        <span class="badge">20 minutes</span>
+        <span class="badge badge--quiet">Earns: Protection steps</span>
+      </div>
+      <p><strong>Choose one specific step for each of your three tools, and make it checkable.</strong></p>
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>&ldquo;Be careful what I share&rdquo; is advice.</strong> &ldquo;Before I paste anything from work into Tool B, I replace every name with a role&rdquo; is a step. The test: could someone watching you tell whether you&rsquo;d done it?</p>
+      </div>
+      <div class="claims">
+<fieldset class="group">
+<legend id="pa-lg">Step for Tool A</legend>
+<label class="field" id="pa-kind-l" for="pa-kind">Kind of step</label>
+<select id="pa-kind" aria-labelledby="pa-lg pa-kind-l"><option value="">&mdash; choose &mdash;</option><option>Share less</option><option>Take out names and details</option><option>Change a setting</option><option>Use a different account</option><option>Use a different tool for this</option><option>Stop using it for this</option></select>
+<label class="field" id="pa-step-l" for="pa-step">My step</label>
+<textarea id="pa-step" rows="2" aria-labelledby="pa-lg pa-step-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="pb-lg">Step for Tool B</legend>
+<label class="field" id="pb-kind-l" for="pb-kind">Kind of step</label>
+<select id="pb-kind" aria-labelledby="pb-lg pb-kind-l"><option value="">&mdash; choose &mdash;</option><option>Share less</option><option>Take out names and details</option><option>Change a setting</option><option>Use a different account</option><option>Use a different tool for this</option><option>Stop using it for this</option></select>
+<label class="field" id="pb-step-l" for="pb-step">My step</label>
+<textarea id="pb-step" rows="2" aria-labelledby="pb-lg pb-step-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="pc-lg">Step for Tool C</legend>
+<label class="field" id="pc-kind-l" for="pc-kind">Kind of step</label>
+<select id="pc-kind" aria-labelledby="pc-lg pc-kind-l"><option value="">&mdash; choose &mdash;</option><option>Share less</option><option>Take out names and details</option><option>Change a setting</option><option>Use a different account</option><option>Use a different tool for this</option><option>Stop using it for this</option></select>
+<label class="field" id="pc-step-l" for="pc-step">My step</label>
+<textarea id="pc-step" rows="2" aria-labelledby="pc-lg pc-step-l"></textarea>
+</fieldset>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 3 &mdash; the local-model question</h3>
+        <span class="badge">15 minutes</span>
+        <span class="badge badge--quiet">Earns: Local-model judgment</span>
+      </div>
+      <p><strong>Pick one of your own uses and decide whether a model on your own hardware would be worth it.</strong></p>
+      <p>Use M2L5&rsquo;s four questions. If you kept your M2L5 comparison, its two columns are a head start. You don&rsquo;t need to install anything.</p>
+      <label class="field" for="lm-use">The use I&rsquo;m weighing</label>
+      <textarea id="lm-use" rows="2"></textarea>
+      <div class="claims">
+        <div>
+          <label class="field" for="lm-cap">Capability &mdash; what I&rsquo;d give up or keep</label>
+          <textarea id="lm-cap" rows="2"></textarea>
+        </div>
+        <div>
+          <label class="field" for="lm-priv">Privacy &mdash; what would stop leaving my device</label>
+          <textarea id="lm-priv" rows="2"></textarea>
+        </div>
+        <div>
+          <label class="field" for="lm-cost">Cost &mdash; what I&rsquo;d have to pay, in money or effort</label>
+          <textarea id="lm-cost" rows="2"></textarea>
+        </div>
+        <div>
+          <label class="field" for="lm-ctrl">Control &mdash; what changes, or stops changing</label>
+          <textarea id="lm-ctrl" rows="2"></textarea>
+        </div>
+      </div>
+      <label class="field" for="lm-judg">My judgment</label>
+      <select id="lm-judg"><option value="">&mdash; choose &mdash;</option><option>Yes &mdash; worth it for this use</option><option>Not now &mdash; I&rsquo;d reconsider if something changed</option><option>No &mdash; not for this use</option></select>
+      <label class="field" for="lm-why">The reason that decided it</label>
+      <textarea id="lm-why" rows="3"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 4 &mdash; your overall judgment</h3>
+        <span class="badge">10 minutes</span>
+        <span class="badge badge--quiet">Earns: Overall judgment</span>
+      </div>
+      <p><strong>Answer this week&rsquo;s question for your own tools: is the privacy cost worth it &mdash; and where&rsquo;s your line?</strong></p>
+      <p>Reason through at least one of M4L5&rsquo;s lenses &mdash; <strong>harms and benefits</strong>, <strong>rights</strong> or <strong>fairness</strong>. Bring this to Monday&rsquo;s session.</p>
+      <label class="field" for="ov-judg">My judgment</label>
+      <select id="ov-judg"><option value="">&mdash; choose &mdash;</option><option>Worth it, the way I use them now</option><option>Worth it only with the steps above</option><option>Not worth it for some of what I do</option></select>
+      <label class="field" for="ov-lens">The lens I&rsquo;m reasoning through</label>
+      <select id="ov-lens"><option value="">&mdash; choose &mdash;</option><option>Harms and benefits</option><option>Rights</option><option>Fairness</option></select>
+      <label class="field" for="ov-why">My reasoning &mdash; and where I&rsquo;d draw the line</label>
+      <textarea id="ov-why" rows="5"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Closing &mdash; your Module 4 reflection</h3>
+        <span class="badge">20 minutes</span>
+        <span class="badge badge--quiet">Portfolio</span>
+      </div>
+      <p>Looking back across this module &mdash; where bias comes from, what &ldquo;fair&rdquo; can mean, what fixing it can and can&rsquo;t do, what happens to data, and what you can do about your own &mdash; answer the following in 3&ndash;5 sentences:</p>
+      <ol>
+        <li>Which finding from your own work in this module &mdash; the screening, the re-run or this assessment &mdash; surprised you most, and why?</li>
+        <li>Your re-run tested the one fix you control in a prompt, and this assessment tested the protections you control in your own tools. What did each show you about the limits of what one user can do?</li>
+        <li>Name one thing you&rsquo;ll do differently with AI tools after this module, and one problem you think only an organization or a law could fix.</li>
+      </ol>
+      <label class="field" for="reflect">Module 4 reflection (3&ndash;5 sentences)</label>
+      <textarea id="reflect" rows="6"></textarea>
+      <p><button type="button" class="btn" id="build-btn">Build my printable copy</button> <span id="build-status" role="status"></span></p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Before you export</h3>
+      </div>
+      <p>Tick these as you check them. <strong>The ticks aren&rsquo;t saved, sent, or seen by anyone</strong> &mdash; they&rsquo;re here so you can walk the list once without losing your place.</p>
+      <ul>
+        <li><label class="opt"><input type="checkbox"> Inventory: three or more tools, including AI built into other things</label></li>
+        <li><label class="opt"><input type="checkbox"> Three tools evaluated, each answer with where and when</label></li>
+        <li><label class="opt"><input type="checkbox"> One checkable step for each of the three</label></li>
+        <li><label class="opt"><input type="checkbox"> Local-model judgment on the four questions</label></li>
+        <li><label class="opt"><input type="checkbox"> Overall judgment, with a lens and a line</label></li>
+        <li><label class="opt"><input type="checkbox"> Module 4 reflection: 3&ndash;5 sentences answering all three prompts</label></li>
+        <li><label class="opt"><input type="checkbox"> PDF exported and checked</label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to Canvas as <code>M4-Q03-[LastName]-Security-Assessment.pdf</code></label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to your <code>CSC141-portfolio</code> folder as <code>11-m4-security-assessment.pdf</code></label></li>
+      </ul>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Save the same PDF twice, under two names. This is not a mistake.</strong></p>
+        <ul>
+          <li><strong>To hand in on Canvas:</strong> <code>M4-Q03-[LastName]-Security-Assessment.pdf</code></li>
+          <li><strong>In your <code>CSC141-portfolio</code> folder:</strong> <code>11-m4-security-assessment.pdf</code></li>
+        </ul>
+        <p><strong><code>11</code> is a fixed slot</strong>, the same for every student. If you skip an artifact, its number stays empty, and the gap is the point.</p>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Dates for this week.</strong> Your security assessment and your Module 4 reflection are due <strong>Sunday, November 1</strong>, with your bias audit. Our next live session is <strong>Monday, November 2</strong> &mdash; what to bring is in this week&rsquo;s lesson.</p>
+        <p><strong>Canvas is the authority on dates.</strong> If what Canvas says ever differs from what this page says, Canvas is right.</p>
+      </div>
+    </div>
+
+    <div class="export-panel" id="export-panel" hidden>
+      <div class="export-head">
+        <p><strong>CSC 141: AI Literacy</strong> &mdash; M4-Q03, Security Assessment &middot; Portfolio 11</p>
+      </div>
+      <div class="export-meta">
+        <p><strong>Name:</strong> ______________________</p>
+        <p><strong>Date:</strong> <span id="out-date"></span></p>
+      </div>
+      <h3>My AI Tools: A Data-Protection and Security Assessment</h3>
+      <h4>Part 1 &mdash; Inventory</h4>
+      <div class="tbl-out">
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th scope="col">Tool</th><th scope="col">Account</th><th scope="col">What I use it for</th></tr></thead>
+            <tbody id="out-inv"></tbody>
+          </table>
+        </div>
+      </div>
+      <h4>Part 2 &mdash; Evaluation of my three most-used tools</h4>
+      <div id="out-eval"></div>
+      <h4>Part 3 &mdash; Protection steps</h4>
+      <div id="out-steps"></div>
+      <h4>Part 4 &mdash; The local-model question</h4>
+      <dl>
+        <dt>The use I&rsquo;m weighing</dt><dd id="out-lm-use"></dd>
+        <dt>Capability</dt><dd id="out-lm-cap"></dd>
+        <dt>Privacy</dt><dd id="out-lm-priv"></dd>
+        <dt>Cost</dt><dd id="out-lm-cost"></dd>
+        <dt>Control</dt><dd id="out-lm-ctrl"></dd>
+        <dt>My judgment</dt><dd id="out-lm-judg"></dd>
+        <dt>The reason that decided it</dt><dd id="out-lm-why"></dd>
+      </dl>
+      <h4>Part 5 &mdash; Overall judgment</h4>
+      <dl>
+        <dt>My judgment</dt><dd id="out-ov-judg"></dd>
+        <dt>The lens I&rsquo;m reasoning through</dt><dd id="out-ov-lens"></dd>
+        <dt>My reasoning, and where I&rsquo;d draw the line</dt><dd id="out-ov-why"></dd>
+      </dl>
+      <h3>Module 4 Reflection</h3>
+      <p id="out-reflect" class="pre"></p>
+      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+      <p class="no-print"><strong>Two names, one file.</strong> Hand it in on Canvas as <code>M4-Q03-[LastName]-Security-Assessment.pdf</code>, and save it into your <code>CSC141-portfolio</code> folder as <code>11-m4-security-assessment.pdf</code> while it&rsquo;s in front of you.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 4, Studio</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); },
+                                                 function () { done("Couldn't copy — select the text above and copy it manually."); });
+      } else {
+        done("Copying isn't available here — select the text above and copy it manually.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M4-Q03 — nothing persisted, nothing scored, nothing sent. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  var BUILT = "Built into another app or device";
+
+  function readout() {
+    var n = 0, b = 0;
+    for (var i = 1; i <= 6; i++) {
+      if (v("t" + i + "-name")) { n++; if (v("t" + i + "-acct") === BUILT) { b++; } }
+    }
+    $("inv-status").textContent = "Tools listed: " + n + " · Built into another app or device: " + b;
+  }
+  for (var i = 1; i <= 6; i++) {
+    $("t" + i + "-name").addEventListener("input", readout);
+    $("t" + i + "-acct").addEventListener("change", readout);
+  }
+  readout();
+
+  function dl(pairs) {
+    var d = document.createElement("dl");
+    pairs.forEach(function (p) {
+      var dt = document.createElement("dt"); dt.textContent = p[0];
+      var dd = document.createElement("dd"); dd.textContent = p[1] || "(not recorded)";
+      d.appendChild(dt); d.appendChild(dd);
+    });
+    return d;
+  }
+  function block(title, pairs) {
+    var b = document.createElement("div"); b.className = "rec-out";
+    var h = document.createElement("h5"); h.textContent = title; b.appendChild(h);
+    b.appendChild(dl(pairs)); return b;
+  }
+  function none(el, text) { var p = document.createElement("p"); p.textContent = text; el.appendChild(p); }
+
+  $("build-btn").addEventListener("click", function () {
+    var st = $("build-status");
+    if (!v("t1-name") && !v("ea-name")) { st.textContent = " List at least one tool before building the copy."; return; }
+
+    var ib = $("out-inv"); ib.textContent = "";
+    for (var i = 1; i <= 6; i++) {
+      if (!v("t" + i + "-name") && !v("t" + i + "-use")) { continue; }
+      var tr = document.createElement("tr");
+      [v("t" + i + "-name") || "(not named)", v("t" + i + "-acct") || "(not recorded)", v("t" + i + "-use") || "(not recorded)"].forEach(function (x, j) {
+        var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c);
+      });
+      ib.appendChild(tr);
+    }
+    if (!ib.children.length) { var tr0 = document.createElement("tr"); var td0 = document.createElement("td"); td0.colSpan = 3; td0.textContent = "(no tools listed)"; tr0.appendChild(td0); ib.appendChild(tr0); }
+
+    var oe = $("out-eval"); oe.textContent = "";
+    var os = $("out-steps"); os.textContent = "";
+    ["a", "b", "c"].forEach(function (L) {
+      var p = "e" + L, name = v(p + "-name");
+      var any = name || v(p + "-coll") || v(p + "-where") || v(p + "-keep") || v(p + "-risk") || v(p + "-src");
+      var label = "Tool " + L.toUpperCase() + (name ? " — " + name : "");
+      if (any) {
+        oe.appendChild(block(label, [
+          ["What it collects", v(p + "-coll")], ["Where it's kept, and who can see it", v(p + "-where")],
+          ["Does it train on what I type, on my account?", v(p + "-train")],
+          ["How long it keeps my data, and what deleting reaches", v(p + "-keep")],
+          ["My biggest privacy risk with this tool", v(p + "-risk")],
+          ["Where I found these answers, and the date", v(p + "-src")]
+        ]));
+      }
+      var q = "p" + L;
+      if (v(q + "-kind") || v(q + "-step")) {
+        os.appendChild(block("Step for " + label, [["Kind of step", v(q + "-kind")], ["My step", v(q + "-step")]]));
+      }
+    });
+    if (!oe.children.length) { none(oe, "(no tools evaluated)"); }
+    if (!os.children.length) { none(os, "(no steps recorded)"); }
+
+    ["lm-use", "lm-cap", "lm-priv", "lm-cost", "lm-ctrl", "lm-judg", "lm-why", "ov-judg", "ov-lens", "ov-why", "reflect"].forEach(function (id) {
+      $("out-" + id).textContent = v(id) || "(not recorded)";
+    });
+    $("out-date").textContent = new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+    $("export-panel").hidden = false;
+    st.textContent = " Ready below — a printable copy is at the bottom of this page.";
+  });
+})();
+</script>
+
+</body>
+</html>
