@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M4 &mdash; In the News: Topics for Discussion | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1), copied forward from m4l5.html.
+   Page-specific additions are at the end.
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+.banner .lede { color: #fff; margin: var(--s-2) 0 0; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout--verify  { background: var(--c-verify-bg);  border-color: var(--c-verify-bd);  color: var(--c-verify-tx); }
+.callout--try     { background: var(--c-try-bg);     border-color: var(--c-try-bd);     color: var(--c-try-tx); }
+.callout a { color: inherit; }
+
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .4rem .9rem; }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-4); padding: var(--s-3) 0 0; color: var(--c-text-muted); font-size: .9rem; }
+footer p { margin: 0; }
+main { padding-bottom: var(--s-4); }
+details { margin: var(--s-2) 0; }
+details.featured { margin: var(--s-3) 0; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+
+/* ---------- page-specific ---------- */
+.controls { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: var(--s-4) 0 0; }
+
+/* Featured topics: a heavier frame than the other accordions, so the two
+   topics Dave is leading with read as the lead without relying on colour. */
+details.featured { border: 2px solid var(--c-primary); }
+details.featured > summary { font-size: 1.12rem; }
+.tag { display: inline-block; background: var(--c-primary); color: #fff; font-size: .75rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: .1rem .5rem; border-radius: 999px; margin-right: var(--s-2); vertical-align: .1em; }
+.summary-sub { display: block; font-weight: 400; font-size: .95rem; color: var(--c-text-muted); margin-top: var(--s-1); }
+
+.inner h3 { margin-top: var(--s-4); font-size: 1.05rem; }
+.inner h3:first-child { margin-top: var(--s-2); }
+figure { margin: var(--s-3) 0; }
+figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--c-border); border-radius: var(--radius); }
+figure.wide img { width: 100%; max-width: 46rem; }
+figure.phone img { width: 100%; max-width: 18rem; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+
+.split { display: grid; grid-template-columns: minmax(12rem, 18rem) 1fr; gap: var(--s-4); align-items: start; }
+@media (max-width: 44rem) { .split { grid-template-columns: 1fr; } }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: var(--s-3); margin: var(--s-3) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin: 0 0 var(--s-1); font-size: 1rem; color: var(--c-primary-dark); }
+.card p, .card li { max-width: none; font-size: .95rem; }
+.card p { margin: var(--s-2) 0 0; }
+.card .meta { font-size: .85rem; color: var(--c-text-muted); margin-top: var(--s-1); }
+
+.stats { list-style: none; margin: var(--s-3) 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--s-3); }
+.stats li { margin: 0; max-width: none; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); background: var(--c-surface); }
+.stats strong { display: block; font-size: 1.5rem; color: var(--c-primary-dark); line-height: 1.2; }
+
+ol.questions li { padding-left: var(--s-1); }
+
+@media print {
+  body { font-size: 12pt; }
+  .controls { display: none; }
+  details { break-inside: avoid-page; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; word-break: break-all; }
+}
+</style>
+</head>
+<body>
+
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141 &middot; Module 4 &middot; In-class discussion</p>
+    <h1>In the News: Topics for Discussion</h1>
+    <p class="lede">Current stories and tools we&rsquo;ll talk through in class. Open a topic to see the details and the questions we&rsquo;ll discuss.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="controls" aria-label="Topic controls">
+    <button type="button" class="btn btn--secondary" id="open-all">Open all topics</button>
+    <button type="button" class="btn btn--secondary" id="close-all">Close all topics</button>
+  </div>
+
+  <!-- ============================================================
+       FEATURED — the two topics we lead with today
+       ============================================================ -->
+  <section aria-labelledby="featured-h">
+    <div class="section-head">
+      <h2 id="featured-h">Leading off today</h2>
+      <p class="sub">Two stories from this month that connect straight to Module 4: bias and privacy.</p>
+    </div>
+
+    <!-- ---------- BIAS ---------- -->
+    <details class="featured" id="bias">
+      <summary><span class="tag">Bias</span>Forced to pick a candidate, two AI models split along party lines
+        <span class="summary-sub">TechCrunch, October 24, 2026</span></summary>
+      <div class="inner">
+
+        <figure class="wide">
+          <img src="images/AI-model-voting-bias.png"
+               alt="Header of the TechCrunch article. On the left, an illustration of a white humanoid robot dropping a paper labeled Voting Ballot into a red, white and blue box labeled VOTE. On the right, on a green background, the headline: Forced to pick, Grok's AI model chooses Republicans. OpenAI's picks Democrats. Byline: Rebecca Bellan, 8:00 AM PDT, October 24, 2026.">
+          <figcaption>Article header, TechCrunch (illustration credit: Getty Images). Read the full article:
+            <a href="https://techcrunch.com/2026/10/24/forced-to-pick-groks-ai-model-chooses-republicans-openais-picks-democrats/" target="_blank" rel="noopener">&ldquo;Forced to pick, Grok&rsquo;s AI model chooses Republicans. OpenAI&rsquo;s picks Democrats.&rdquo;</a></figcaption>
+        </figure>
+
+        <h3>What the researchers did</h3>
+        <p>Researchers at Convovo, a conversational-AI studio led by Cornell professor Tapan Parikh, sent the same prompt to two models through their developer APIs: xAI&rsquo;s Grok 4.7 and OpenAI&rsquo;s GPT-6.1 Sol. The prompt asked who to vote for in a 2026 midterm race and told the model to name <strong>one</strong> candidate without hedging. They ran it across nearly 500 races.</p>
+
+        <ul class="stats" aria-label="Key findings">
+          <li><strong>92%</strong>Grok&rsquo;s answers that picked the Republican</li>
+          <li><strong>97%</strong>GPT&rsquo;s answers that picked the Democrat</li>
+          <li><strong>&lt;10%</strong>Races where the two models agreed</li>
+        </ul>
+
+        <ul>
+          <li><strong>The lean held even where the district didn&rsquo;t.</strong> GPT picked the Democrat in 57 of 67 heavily Republican districts; Grok picked the Republican in 47 of 72 deep-blue districts.</li>
+          <li><strong>Different sources, different searches.</strong> Grok often cited conservative voter guides and posts on X alongside nonpartisan sites; GPT leaned on Wikipedia, the AP, Axios and Reddit. The two also searched different issues for the same races.</li>
+          <li><strong>Where the lean lives.</strong> With web search turned off (a 30-race follow-up), GPT still mostly picked Democrats; Grok mostly declined to pick. Parikh&rsquo;s reading: GPT&rsquo;s lean is in its <em>weights</em> (training), while Grok&rsquo;s depends on what it <em>retrieves</em>.</li>
+          <li><strong>Input you can&rsquo;t see.</strong> Each Grok API request carried roughly 1,240 extra tokens the researchers didn&rsquo;t write and couldn&rsquo;t view. Parikh suspects hidden instructions.</li>
+        </ul>
+
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p>Read the caveats before drawing conclusions. The test used developer APIs with a prompt that <em>demanded</em> a pick. The consumer ChatGPT and Grok apps refused to choose a candidate (though Parikh says simple jailbreak prompts got similar answers). OpenAI said the setup doesn&rsquo;t reflect how people use ChatGPT; xAI had not responded by publication. Pew found about 8% of Americans use chatbots for election information.</p>
+        </div>
+
+        <h3>Discussion questions</h3>
+        <ol class="questions">
+          <li>Both models leaned &mdash; in opposite directions. Is &ldquo;biased&rdquo; the right word for both, or is something else going on? Which kinds of bias from this module could explain it: training data, retrieval sources, or instructions you can&rsquo;t see?</li>
+          <li>The apps refused; the APIs answered. Which result tells us more about the model, and which tells us more about what a typical user sees?</li>
+          <li>A model that won&rsquo;t pick a candidate can still frame <em>which issues matter</em> or <em>whose positions look strongest</em>. How would you test for that quieter kind of lean?</li>
+          <li>Should an AI ever recommend a candidate? Who should decide &mdash; the company, the user, or the law?</li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ---------- PRIVACY ---------- -->
+    <details class="featured" id="privacy">
+      <summary><span class="tag">Privacy</span>License plate readers in Ukiah &mdash; and the maps that show them
+        <span class="summary-sub">MapQuest&rsquo;s new surveillance layer, Finding Flock, and DeFlock</span></summary>
+      <div class="inner">
+
+        <div class="split">
+          <figure class="phone">
+            <img src="images/license-plate-reading-camera-locations-ukiah.png"
+                 alt="Phone screenshot of the MapQuest app showing Ukiah, California, with the surveillance layer turned on. About twenty eye-shaped camera icons are scattered across town, most along State Street and the main cross streets, with a cluster near Regina Heights and others near the airport and Highway 101. Many icons have a red cone showing which direction the camera faces.">
+            <figcaption>Ukiah in the MapQuest app with the surveillance layer on. Each eye is a reported camera; the red cone shows the direction it faces.</figcaption>
+          </figure>
+          <div>
+            <h3>What an ALPR is</h3>
+            <p>An <strong>automated license plate reader (ALPR)</strong> is a camera that uses computer vision to read every plate that passes, and logs it with a time, a location, and often a photo of the vehicle. One camera is a snapshot. A network of them, searchable later, becomes a record of where a car has been.</p>
+            <p>Flock Safety is the best-known vendor, but it is one of many. Cameras are bought by police departments, cities, and private businesses and neighborhoods.</p>
+
+            <h3>Three ways to see them</h3>
+            <div class="cards">
+              <div class="card">
+                <h4><a href="https://www.mapquest.com/" target="_blank" rel="noopener">MapQuest</a> surveillance layer</h4>
+                <p class="meta">Added October 2026 &middot; in the app</p>
+                <p>In the MapQuest app, open <strong>Map Options</strong> and turn on the surveillance layer (next to traffic and incidents). It shows crowdsourced locations of plate readers and outdoor surveillance cameras from 11 makers.</p>
+              </div>
+              <div class="card">
+                <h4><a href="https://www.findingflock.com/" target="_blank" rel="noopener">Finding Flock</a></h4>
+                <p class="meta">Independent project &middot; view only</p>
+                <p>A U.S. map of reported plate readers built from OpenStreetMap data, with counts by state and city and short explainers. Not affiliated with Flock Safety. It reported 144,793 readers mapped as of October 26, 2026.</p>
+              </div>
+              <div class="card">
+                <h4><a href="https://deflock.org/" target="_blank" rel="noopener">DeFlock</a></h4>
+                <p class="meta">Open-source, volunteer-run &middot; view and add</p>
+                <p>The crowdsourced project behind much of this mapping. View cameras on its map, or add one you&rsquo;ve spotted through the DeFlock mobile app or OpenStreetMap&rsquo;s web editor. Started in 2024 by Will Freeman.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p>Open Finding Flock or the DeFlock map and search an area you know &mdash; your street, your work, the route to campus. Compare it with the Ukiah screenshot above. Are there cameras you pass every day that you had never noticed?</p>
+        </div>
+
+        <div class="callout callout--caution">
+          <span class="label">Caution &mdash; adding cameras is optional</span>
+          <p>Viewing the maps needs no account. <strong>Adding</strong> a camera is entirely up to you and is not part of any assignment. It requires a personal OpenStreetMap account, and OpenStreetMap edits are public: your username and the location of every edit you make are visible to anyone. That is its own small privacy trade-off &mdash; worth weighing given today&rsquo;s topic. If you do map cameras, stay on public property and never do it while driving.</p>
+        </div>
+
+        <h3>Discussion questions</h3>
+        <ol class="questions">
+          <li>Where are the cameras in the Ukiah screenshot concentrated? What do you think decides where they go?</li>
+          <li>One plate photo seems harmless. What changes when thousands of them are stored and searchable? Who should be allowed to search them, and for how long should they be kept?</li>
+          <li>The cameras use AI to read plates. The maps use crowdsourcing to find the cameras. Is mapping surveillance cameras a form of surveillance too?</li>
+          <li>Using Module 4&rsquo;s lenses: what are the harms and benefits, whose rights are involved, and is the burden spread fairly?</li>
+        </ol>
+
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p>All three maps are crowdsourced, so they show <em>reported</em> cameras, not every camera &mdash; and a reported camera may have moved or been removed. Treat the map as a starting point, not a complete inventory.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============================================================
+       MORE TOPICS
+       ============================================================ -->
+  <section aria-labelledby="more-h">
+    <div class="section-head">
+      <h2 id="more-h">More topics for in-class discussion</h2>
+      <p class="sub">We&rsquo;ll pick these up as time allows, today and in later sessions.</p>
+    </div>
+
+    <!-- ---------- PRODUCTIVITY TOOLS ---------- -->
+    <details id="tools">
+      <summary>Some productivity tools worth knowing about</summary>
+      <div class="inner">
+        <p>Special-purpose tools built around a single job. Described by what each was built to do, not ranked.</p>
+        <div class="cards">
+          <div class="card">
+            <h4><a href="https://www.napkin.ai/" target="_blank" rel="noopener">Napkin AI</a></h4>
+            <p>Built to turn your text into visuals &mdash; diagrams and infographic-style graphics &mdash; so you can share an idea quickly.</p>
+          </div>
+          <div class="card">
+            <h4><a href="https://gamma.app/" target="_blank" rel="noopener">Gamma</a></h4>
+            <p>Built for visual communication: presentations, documents and simple web pages, drafted with an AI assistant from a prompt or your notes.</p>
+          </div>
+          <div class="card">
+            <h4>AI built into tools you already use</h4>
+            <p>Many familiar apps &mdash; Canva is one &mdash; now include AI features. You may not need a new tool at all.</p>
+          </div>
+        </div>
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p>These need a personal account, not your college account. Before you paste in anything personal or for a class, check how the tool handles your data &mdash; the same questions from the guide <strong>How the tools handle your data</strong> apply here. Nothing in this course requires you to sign up.</p>
+        </div>
+        <h3>Discussion questions</h3>
+        <ol class="questions">
+          <li><strong>&ldquo;Humanizers.&rdquo;</strong> Some tools promise to rewrite AI text so it reads as human-written. What problem are they really solving &mdash; and for whom? How does that square with owning your work?</li>
+          <li><strong>Website development.</strong> Several tools now draft a whole website from a prompt. What do you still need to know to judge whether the result is any good?</li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ---------- AGENTS ---------- -->
+    <details id="agents">
+      <summary>Agents &mdash; including Hermes</summary>
+      <div class="inner">
+        <p>An AI agent doesn&rsquo;t just answer: it takes steps on your behalf &mdash; opening files, running tools, browsing, sending things. Module 6 goes deeper on agentic systems.</p>
+        <div class="card">
+          <h4>Hermes Agent (Nous Research)</h4>
+          <p>An open-source agent (MIT license) released in 2026. It was built to keep a persistent memory of your projects and to write itself new &ldquo;skills&rdquo; from what you do, and it can run on your own computer or a server you control as well as in a paid hosted version.</p>
+        </div>
+        <h3>Discussion questions</h3>
+        <ol class="questions">
+          <li>An agent that remembers everything about your projects gets more useful over time. What does it also collect?</li>
+          <li>What should an agent be allowed to do without asking you first?</li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ---------- SUSTAINABILITY ---------- -->
+    <details id="sustainability">
+      <summary>Sustainability</summary>
+      <div class="inner">
+        <p>Training and running AI takes data centers, electricity and water. Bigger models and more use mean more of all three.</p>
+        <h3>Discussion questions</h3>
+        <ol class="questions">
+          <li>Should the energy cost of a query change how &mdash; or whether &mdash; you use AI for small tasks?</li>
+          <li>Who should carry the cost: the companies, the communities where data centers are built, or the users?</li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ---------- NEWS SOURCES ---------- -->
+    <details id="news">
+      <summary>Where to follow the latest AI news</summary>
+      <div class="inner">
+        <p>AI changes month to month. Two security-focused sources with AI sections:</p>
+        <ul>
+          <li><a href="https://www.securityweek.com/category/artificial-intelligence/" target="_blank" rel="noopener">SecurityWeek &mdash; Artificial Intelligence</a></li>
+          <li><a href="https://thehackernews.com/search/label/artificial%20intelligence" target="_blank" rel="noopener">The Hacker News &mdash; Artificial Intelligence</a></li>
+        </ul>
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p>Treat a headline the way we treated the TechCrunch story above: who ran the test, how, and what the caveats are &mdash; before you share it.</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- ---------- WHAT NEXT ---------- -->
+    <details id="next">
+      <summary>What next? After this course</summary>
+      <div class="inner">
+        <p>We&rsquo;ll come back to this near the end of the semester. For now, start thinking about it:</p>
+        <ol class="questions">
+          <li>Which tool or habit from this course will you actually keep using?</li>
+          <li>What do you want to learn next &mdash; using AI better, building with it, or securing it?</li>
+          <li>How will you keep up as the tools change?</li>
+        </ol>
+      </div>
+    </details>
+
+    <!-- ---------- OPEN FLOOR ---------- -->
+    <details id="open-floor">
+      <summary>Open floor &mdash; what are you seeing?</summary>
+      <div class="inner">
+        <p>Seen an AI story, tool, or problem this week that we should talk about? Bring it to class or post it in the course discussion.</p>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <p>Articles, tools and figures accurate as of October 26, 2026. AI tools and news change quickly &mdash; check the source before relying on a detail.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var all = function () { return document.querySelectorAll('main details'); };
+  document.getElementById('open-all').addEventListener('click', function () {
+    all().forEach(function (d) { d.open = true; });
+  });
+  document.getElementById('close-all').addEventListener('click', function () {
+    all().forEach(function (d) { d.open = false; });
+  });
+  // Print: CSS cannot open <details>, so open everything and restore afterwards.
+  var saved = [];
+  function openForPrint() { saved = []; all().forEach(function (d) { saved.push(d.open); d.open = true; }); }
+  function restore() { all().forEach(function (d, i) { if (i < saved.length) d.open = saved[i]; }); }
+  window.addEventListener('beforeprint', openForPrint);
+  window.addEventListener('afterprint', restore);
+  if (window.matchMedia) {
+    var mq = window.matchMedia('print');
+    var h = function (e) { if (e.matches) openForPrint(); else restore(); };
+    if (mq.addEventListener) mq.addEventListener('change', h); else if (mq.addListener) mq.addListener(h);
+  }
+})();
+</script>
+</body>
+</html>
