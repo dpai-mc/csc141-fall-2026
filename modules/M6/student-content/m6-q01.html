@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M6-Q01 &mdash; AI Policy Recommendation Brief | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M6-Q01 policy brief only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)              { display: none !important; }
+  main > *:not(#a1)               { display: none !important; }
+  #a1 > *:not(#export-panel)      { display: none !important; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  #export-panel h3, #export-panel h4 { break-after: avoid; page-break-after: avoid; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M6) ---------- */
+dl.memo { display: grid; grid-template-columns: max-content 1fr; gap: var(--s-1) var(--s-3); }
+dl.memo dt { margin: 0; }
+dl.memo dd { margin: 0; }
+@media (max-width: 40rem) { .activity-meta .badge { white-space: normal; } }
+.sl blockquote + p { margin-top: var(--s-2); }
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 6, Studio</p>
+    <h1>M6-Q01 &mdash; AI Policy Recommendation Brief</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What you&rsquo;ll do</a></li>
+      <li><a href="#s3">How it&rsquo;s graded</a></li>
+      <li><a href="#a1">The studio</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What You&rsquo;ll Do</h2>
+      <p class="sub">One AI issue, one decision-maker, one specific recommendation.</p>
+    </div>
+    <details open>
+      <summary>Read this section</summary>
+      <div>
+        <p><strong>Write a short brief recommending one specific action on one AI issue, addressed to someone who has the power to take it.</strong> It&rsquo;s Module 6&rsquo;s first graded artifact, and M6L2&rsquo;s activity. Governance approaches are in M6L1; how decisions get made, and how people influence them, is in M6L2. This page is where you write it.</p>
+        <h3>Choose your starting point</h3>
+        <ul>
+          <li><strong>Your field</strong> &mdash; an AI use in the field you studied in Module 5. Your mini-project&rsquo;s ethical analysis is a natural place to start.</li>
+          <li><strong>Your 10 Things list</strong> &mdash; an item that raises a governance question.</li>
+          <li><strong>A rule from M6L1</strong> &mdash; the law or policy you researched, or another one: should it be adopted, changed or applied somewhere else?</li>
+        </ul>
+        <h3>The four parts</h3>
+        <ul>
+          <li><strong>The problem</strong> &mdash; a specific AI governance issue, who it affects, and evidence.</li>
+          <li><strong>Your recommendation</strong> &mdash; one specific action the decision-maker can take.</li>
+          <li><strong>Why</strong> &mdash; your justification, through an ethical framework from the course.</li>
+          <li><strong>The strongest objection</strong> &mdash; stated fairly, and answered.</li>
+        </ul>
+        <h3>Format &amp; length</h3>
+        <ul>
+          <li><strong>A memo</strong> to a real kind of decision-maker: a city council, a school board, a college, an employer, a professional association, a state legislator. A brief addressed to &ldquo;society&rdquo; has no one to act on it.</li>
+          <li><strong>One to two pages</strong> &mdash; about 400 to 800 words across the four parts. Short is a feature: decision-makers read short.</li>
+        </ul>
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>You can take any side.</strong> AI policy questions are often political. Your brief is graded on its reasoning &mdash; evidence, a clear proposal, an ethical framework applied honestly, and the other side answered &mdash; not on which position you take.</p>
+        </div>
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>Using AI on this brief.</strong> You can use Gemini or another tool to find sources, test your argument or tighten your wording. The recommendation and the reasoning must be yours, every source you cite must be one you&rsquo;ve opened yourself, and the last block asks how you used AI.</p>
+        </div>
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>Address a public body or a kind of organization, not a private person.</strong> &ldquo;The Ukiah City Council&rdquo; or &ldquo;a community college&rsquo;s academic senate&rdquo; is fine; your manager by name isn&rsquo;t. Don&rsquo;t include any private person&rsquo;s information.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>How It&rsquo;s Graded</h2>
+      <p class="sub">50 points, four dimensions.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="table-scroll">
+          <table class="stack-table">
+            <caption>M6-Q01 rubric &mdash; 50 points total</caption>
+            <thead>
+              <tr><th scope="col">Dimension</th><th scope="col">Excellent</th><th scope="col">Adequate</th><th scope="col">Needs work</th><th scope="col">Points</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Problem identification</th><td data-col="Excellent">A specific AI governance issue, who it affects, and at least one piece of evidence from a source you name and date &mdash; addressed to a decision-maker who can act on it.</td><td data-col="Adequate">Clear but broad, the evidence has no source or date, or the audience can&rsquo;t act on it.</td><td data-col="Needs work">Vague, or no evidence.</td><td data-col="Points">10</td></tr>
+              <tr><th scope="row">Policy proposal</th><td data-col="Excellent">One specific action &mdash; who does what &mdash; within your audience&rsquo;s power, with its scope and how you&rsquo;d tell whether it worked.</td><td data-col="Adequate">An action, but vague (&ldquo;regulate AI&rdquo;) or beyond what your audience can do.</td><td data-col="Needs work">No action anyone could take.</td><td data-col="Points">15</td></tr>
+              <tr><th scope="row">Ethical justification</th><td data-col="Excellent">A framework from the course &mdash; one of M4L5&rsquo;s lenses or one of M6L1&rsquo;s approaches &mdash; applied to <em>this</em> proposal with reasons, noting what another lens or approach would say.</td><td data-col="Adequate">A framework named but applied in general terms.</td><td data-col="Needs work">Opinion with no framework.</td><td data-col="Points">15</td></tr>
+              <tr><th scope="row">Counterargument</th><td data-col="Excellent">The strongest objection, stated the way its supporters would state it; a real answer; and the trade-off you accept.</td><td data-col="Adequate">A weak or straw-man objection, or one that isn&rsquo;t answered.</td><td data-col="Needs work">Missing.</td><td data-col="Points">10</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Scored by the instructor and entered in the Canvas gradebook, in the <strong>Module artifacts</strong> category. Your Module 6 reflection is part of your final synthesis, not this brief.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="section-head">
+      <h2>The Studio</h2>
+      <p class="sub">About 90 minutes: an opener, four blocks and a closing note.</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Opener &mdash; your issue and your audience</h3>
+        <span class="badge">10 minutes</span>
+        <span class="badge badge--quiet">Earns: Problem identification</span>
+      </div>
+      <p><strong>Choose your starting point, the decision-maker, and a one-line subject.</strong></p>
+      <div class="claims">
+        <div><label class="field" for="op-start">My starting point</label><select id="op-start"><option value="">&mdash; choose &mdash;</option><option>My field (Module 5)</option><option>My 10 Things list</option><option>A rule from M6L1</option></select></div>
+        <div><label class="field" for="op-to">To &mdash; the decision-maker</label><input type="text" id="op-to"></div>
+        <div><label class="field" for="op-re">Re &mdash; a one-line subject</label><input type="text" id="op-re"></div>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 1 &mdash; the problem</h3>
+        <span class="badge">20 minutes</span>
+        <span class="badge badge--quiet">Earns: Problem identification</span>
+      </div>
+      <p><strong>Say what the problem is, who it affects, and what evidence shows it&rsquo;s real.</strong></p>
+      <p>At least one piece of evidence should come from a source you&rsquo;ve opened yourself &mdash; name it and give its date. Course pages cite their sources; you can use those, too.</p>
+      <label class="field" for="pb-text">The problem (one paragraph)</label>
+      <textarea id="pb-text" rows="5"></textarea>
+      <label class="field" for="pb-src">My evidence &mdash; source and date</label>
+      <textarea id="pb-src" rows="2"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 2 &mdash; your recommendation</h3>
+        <span class="badge">25 minutes</span>
+        <span class="badge badge--quiet">Earns: Policy proposal</span>
+      </div>
+      <p><strong>Recommend one specific action your audience can actually take.</strong></p>
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>&ldquo;AI should be regulated&rdquo; is a wish.</strong> &ldquo;Before the city buys any system that records license plates, the council should require a public hearing and a written policy on how long the data is kept and who can search it&rdquo; is a recommendation. The test: could your audience vote on it, or put it in a policy, next month?</p>
+      </div>
+      <label class="field" for="rec-text">My recommendation &mdash; who should do what</label>
+      <textarea id="rec-text" rows="4"></textarea>
+      <div class="claims">
+        <div><label class="field" for="rec-scope">What it covers &mdash; and what it doesn&rsquo;t</label><textarea id="rec-scope" rows="3"></textarea></div>
+        <div><label class="field" for="rec-know">How we&rsquo;d know it worked</label><textarea id="rec-know" rows="3"></textarea></div>
+      </div>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 3 &mdash; why: your ethical justification</h3>
+        <span class="badge">20 minutes</span>
+        <span class="badge badge--quiet">Earns: Ethical justification</span>
+      </div>
+      <p><strong>Justify your recommendation through one framework from the course, applied to this case.</strong></p>
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Your choices.</strong> One of M4L5&rsquo;s lenses for judging a use &mdash; <strong>harms and benefits</strong>, <strong>rights</strong>, <strong>fairness</strong> &mdash; or one of M6L1&rsquo;s approaches to writing rules &mdash; <strong>risk-based</strong>, <strong>principle-based</strong>, <strong>transparency-based</strong>. A lens works well when your recommendation is about one use; an approach works well when it&rsquo;s about a rule for many.</p>
+      </div>
+      <label class="field" for="why-fw">The framework I&rsquo;m using</label>
+      <select id="why-fw"><option value="">&mdash; choose &mdash;</option><option>Harms and benefits (M4L5)</option><option>Rights (M4L5)</option><option>Fairness (M4L5)</option><option>Risk-based (M6L1)</option><option>Principle-based (M6L1)</option><option>Transparency-based (M6L1)</option></select>
+      <label class="field" for="why-text">My justification (one paragraph) &mdash; including what another lens or approach would say</label>
+      <textarea id="why-text" rows="6"></textarea>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Work block 4 &mdash; the strongest objection</h3>
+        <span class="badge">15 minutes</span>
+        <span class="badge badge--quiet">Earns: Counterargument</span>
+      </div>
+      <p><strong>State the best argument against your recommendation the way its supporters would &mdash; then answer it.</strong></p>
+      <p>If you can&rsquo;t state the other side well enough that someone who holds it would agree with your wording, you haven&rsquo;t found the strongest objection yet. M6L1&rsquo;s federal-versus-state section is a model of stating both sides fairly.</p>
+      <label class="field" for="ca-obj">The strongest objection</label>
+      <textarea id="ca-obj" rows="3"></textarea>
+      <label class="field" for="ca-ans">My answer to it</label>
+      <textarea id="ca-ans" rows="3"></textarea>
+      <label class="field" for="ca-trade">The trade-off I accept</label>
+      <textarea id="ca-trade" rows="2"></textarea>
+      <p class="sub" id="wc-status" role="status">Words in the four parts: 0 &middot; aim for about 400&ndash;800</p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Closing &mdash; your AI-use note</h3>
+        <span class="badge">5 minutes</span>
+      </div>
+      <fieldset class="group">
+        <legend>How I used AI on this brief <span class="sub">(tick all that apply)</span></legend>
+        <label class="opt"><input type="checkbox" name="ai-use" value="I didn't use AI on this brief"> I didn&rsquo;t use AI on this brief</label>
+        <label class="opt"><input type="checkbox" name="ai-use" value="To find sources, which I then opened and checked"> To find sources, which I then opened and checked</label>
+        <label class="opt"><input type="checkbox" name="ai-use" value="To test my argument or find objections"> To test my argument or find objections</label>
+        <label class="opt"><input type="checkbox" name="ai-use" value="To improve my wording"> To improve my wording</label>
+      </fieldset>
+      <label class="field" for="ai-note">My AI-use note &mdash; what I used, for which parts, and what I kept or rejected</label>
+      <textarea id="ai-note" rows="3"></textarea>
+      <p><button type="button" class="btn" id="build-btn">Build my printable copy</button> <span id="build-status" role="status"></span></p>
+    </div>
+
+    <div class="activity">
+      <div class="activity-meta">
+        <h3>Before you export</h3>
+      </div>
+      <p>Tick these as you check them. <strong>The ticks aren&rsquo;t saved, sent, or seen by anyone</strong> &mdash; they&rsquo;re here so you can walk the list once without losing your place.</p>
+      <ul class="checklist">
+        <li><label class="opt"><input type="checkbox"> Addressed to a decision-maker who can act</label></li>
+        <li><label class="opt"><input type="checkbox"> The problem, with a named and dated source</label></li>
+        <li><label class="opt"><input type="checkbox"> One specific action, its scope, and how we&rsquo;d know it worked</label></li>
+        <li><label class="opt"><input type="checkbox"> A framework named and applied to this case</label></li>
+        <li><label class="opt"><input type="checkbox"> The strongest objection, answered, with the trade-off</label></li>
+        <li><label class="opt"><input type="checkbox"> About 400&ndash;800 words; AI-use note included</label></li>
+        <li><label class="opt"><input type="checkbox"> PDF exported and checked</label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to Canvas as <code>M6-Q01-[LastName]-Policy-Brief.pdf</code></label></li>
+        <li><label class="opt"><input type="checkbox"> Saved to your <code>CSC141-portfolio</code> folder as <code>13-m6-policy-brief.pdf</code></label></li>
+      </ul>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Save the same PDF twice, under two names. This is not a mistake.</strong></p>
+        <ul>
+          <li><strong>To hand in on Canvas:</strong> <code>M6-Q01-[LastName]-Policy-Brief.pdf</code></li>
+          <li><strong>In your <code>CSC141-portfolio</code> folder:</strong> <code>13-m6-policy-brief.pdf</code></li>
+        </ul>
+        <p><strong><code>13</code> is a fixed slot</strong>, the same for every student. If you skip an artifact, its number stays empty, and the gap is the point.</p>
+      </div>
+
+      <div class="callout callout--note">
+        <span class="label">Note</span>
+        <p><strong>Dates for this week.</strong> Your policy brief is due <strong>Sunday, December 6</strong>, with your AI Code version 2. Presentations are <strong>Monday, December 7</strong>, and your final portfolio is due <strong>Thursday, December 10</strong>.</p>
+        <p><strong>Canvas is the authority on dates.</strong> If what Canvas says ever differs from what this page says, Canvas is right.</p>
+      </div>
+    </div>
+
+    <div class="export-panel" id="export-panel" hidden>
+      <div class="export-head">
+        <p><strong>CSC 141: AI Literacy</strong> &mdash; M6-Q01, AI Policy Recommendation Brief &middot; Portfolio 13</p>
+      </div>
+      <h3>Policy Brief</h3>
+      <dl class="memo">
+        <dt>To</dt><dd id="out-op-to"></dd>
+        <dt>From</dt><dd>______________________</dd>
+        <dt>Date</dt><dd id="out-date"></dd>
+        <dt>Re</dt><dd id="out-op-re"></dd>
+      </dl>
+      <h4>The problem</h4>
+      <p id="out-pb-text" class="pre"></p>
+      <p class="pre"><strong>Evidence:</strong> <span id="out-pb-src"></span></p>
+      <h4>Recommendation</h4>
+      <p id="out-rec-text" class="pre"></p>
+      <p class="pre"><strong>Scope:</strong> <span id="out-rec-scope"></span></p>
+      <p class="pre"><strong>How we&rsquo;d know it worked:</strong> <span id="out-rec-know"></span></p>
+      <h4>Why</h4>
+      <p class="pre"><strong>Framework:</strong> <span id="out-why-fw"></span></p>
+      <p id="out-why-text" class="pre"></p>
+      <h4>The strongest objection, answered</h4>
+      <p class="pre"><strong>Objection:</strong> <span id="out-ca-obj"></span></p>
+      <p class="pre"><strong>Response:</strong> <span id="out-ca-ans"></span></p>
+      <p class="pre"><strong>The trade-off I accept:</strong> <span id="out-ca-trade"></span></p>
+      <h4>AI-use note</h4>
+      <p class="pre"><strong>Starting point:</strong> <span id="out-op-start"></span></p>
+      <p class="pre"><strong>How I used AI:</strong> <span id="out-ai-use"></span></p>
+      <p id="out-ai-note" class="pre"></p>
+      <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+      <p class="no-print"><strong>Two names, one file.</strong> Hand it in on Canvas as <code>M6-Q01-[LastName]-Policy-Brief.pdf</code>, and save it into your <code>CSC141-portfolio</code> folder as <code>13-m6-policy-brief.pdf</code> while it&rsquo;s in front of you.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 6, Studio</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M6-Q01 — nothing persisted, nothing scored, nothing sent. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  function today() { return new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }
+  function fill(ids) { ids.forEach(function (id) { $("out-" + id).textContent = v(id) || "(not recorded)"; }); }
+  function row(cells) {
+    var tr = document.createElement("tr");
+    cells.forEach(function (x, j) { var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c); });
+    return tr;
+  }
+  function emptyRow(tb, n, text) { var tr = document.createElement("tr"); var td = document.createElement("td"); td.colSpan = n; td.textContent = text; tr.appendChild(td); tb.appendChild(tr); }
+  function show(st, msg) { $("out-date").textContent = today(); $("export-panel").hidden = false; st.textContent = msg; }
+
+  var parts = ["pb-text", "rec-text", "rec-scope", "rec-know", "why-text", "ca-obj", "ca-ans", "ca-trade"];
+  function words() {
+    var n = 0;
+    parts.forEach(function (id) { var t = v(id); if (t) { n += t.split(/\s+/).length; } });
+    $("wc-status").textContent = "Words in the four parts: " + n + " · aim for about 400–800";
+  }
+  parts.forEach(function (id) { $(id).addEventListener("input", words); });
+  words();
+  $("build-btn").addEventListener("click", function () {
+    var st = $("build-status");
+    if (!v("pb-text") && !v("rec-text")) { st.textContent = " Write your problem or your recommendation before building the copy."; return; }
+    fill(["op-to", "op-re", "op-start", "pb-text", "pb-src", "rec-text", "rec-scope", "rec-know", "why-fw", "why-text", "ca-obj", "ca-ans", "ca-trade", "ai-note"]);
+    var uses = [];
+    document.querySelectorAll("input[name=ai-use]:checked").forEach(function (c) { uses.push(c.value); });
+    $("out-ai-use").textContent = uses.length ? uses.join("; ") : "(not recorded)";
+    show(st, " Ready below — a printable copy is at the bottom of this page.");
+  });
+})();
+</script>
+</body>
+</html>

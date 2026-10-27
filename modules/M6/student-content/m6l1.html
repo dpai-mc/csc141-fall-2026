@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M6L1 &mdash; How AI Is Governed Today | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M6L1-A1 one rule checked only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M6) ---------- */
+dl.memo { display: grid; grid-template-columns: max-content 1fr; gap: var(--s-1) var(--s-3); }
+dl.memo dt { margin: 0; }
+dl.memo dd { margin: 0; }
+@media (max-width: 40rem) { .activity-meta .badge { white-space: normal; } }
+.sl blockquote + p { margin-top: var(--s-2); }
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 6, Lesson 1</p>
+    <h1>How AI Is Governed Today</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What governance means</a></li>
+      <li><a href="#s2">Three approaches</a></li>
+      <li><a href="#s3">Where things stand</a></li>
+      <li><a href="#s4">Different fields, different rules</a></li>
+      <li><a href="#s5">The gap</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <div class="callout callout--note">
+    <span class="label">Note</span>
+    <p><strong>This is Thanksgiving week.</strong> This lesson and its activity are the only new work assigned, and the Module 5 quiz is due Tuesday if you haven&rsquo;t taken it. Plan to finish everything Monday or Tuesday &mdash; there is no work over the break.</p>
+  </div>
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What &ldquo;AI Governance&rdquo; Means</h2>
+      <p class="sub">Who sets the rules for AI, and how.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>For five modules you&rsquo;ve looked at AI one use at a time: how it works, how to prompt it, how to check it, where it&rsquo;s biased, what it does with your data, what it means for your job. Module 6 steps back to ask who decides what AI is allowed to do &mdash; and how you can have a say.</p>
+        <p><strong>AI governance.</strong> <em>The frameworks, policies, regulations, and practices that guide the development, deployment, and use of AI systems. Includes government regulation, industry standards, and ethical frameworks.</em></p>
+        <p>Governance happens at several levels at once:</p>
+        <ul>
+          <li><strong>Laws and regulations</strong> &mdash; rules a government can enforce, with penalties.</li>
+          <li><strong>Standards and frameworks</strong> &mdash; guidance that organizations follow voluntarily, often because customers, insurers or courts expect it. The U.S. National Institute of Standards and Technology&rsquo;s <em>AI Risk Management Framework</em> (2023) is a widely used example.</li>
+          <li><strong>Organizational policies</strong> &mdash; the rules an employer, a hospital or a college writes for its own people. A course&rsquo;s rules on AI use for assignments are one.</li>
+          <li><strong>Personal codes</strong> &mdash; the rules you write for yourself. You wrote one in Module 3, and you&rsquo;ll revise it this module.</li>
+        </ul>
+        <p>Why now? Because AI is already making or shaping decisions about people &mdash; who gets screened in for a job (Module 4), what a doctor&rsquo;s note says (Module 5) &mdash; and the rules for those decisions are being written right now, in different places, in different ways.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Three Approaches to Writing the Rules</h2>
+      <p class="sub">Most AI rules lean on one of three ideas.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>In M4L5 you used three lenses to judge one use of AI. Governments and organizations face a bigger version of the same problem: writing rules that will apply to thousands of uses they can&rsquo;t see in advance. That&rsquo;s the job of an ethical framework at scale.</p>
+        <p><strong>Ethical framework (for AI).</strong> <em>A structured set of principles used to evaluate the moral implications of AI development and use. Examples: risk-based frameworks, human-centered design principles, transparency requirements.</em></p>
+        <p>Those three examples are the three approaches you&rsquo;ll see most often:</p>
+        <div class="cards">
+          <div class="card">
+            <h3>Risk-based</h3>
+            <p class="sub">Stricter rules for riskier uses</p>
+            <dl>
+              <dt>The idea</dt><dd>Sort AI uses by how much harm they could do. Ban the worst, regulate the risky heavily, and leave low-risk uses mostly alone.</dd>
+              <dt>Example</dt><dd>The European Union&rsquo;s AI Act: a short list of banned practices, strict requirements for &ldquo;high-risk&rdquo; uses like hiring and credit, and lighter duties for everything else.</dd>
+              <dt>The hard part</dt><dd>Someone has to decide what counts as high-risk &mdash; and uses change faster than the list.</dd>
+            </dl>
+          </div>
+          <div class="card">
+            <h3>Principle-based</h3>
+            <p class="sub">Shared values, applied case by case</p>
+            <dl>
+              <dt>The idea</dt><dd>Agree on broad principles &mdash; human rights, fairness, transparency, safety, accountability &mdash; and expect everyone building or using AI to apply them.</dd>
+              <dt>Example</dt><dd>The OECD AI Principles (2019, updated 2024), backed by 47 governments, and human-centered design principles many companies publish.</dd>
+              <dt>The hard part</dt><dd>Principles are easy to agree on and hard to enforce. They say what to aim for, not what happens if you miss.</dd>
+            </dl>
+          </div>
+          <div class="card">
+            <h3>Transparency-based</h3>
+            <p class="sub">Make it visible, then let people respond</p>
+            <dl>
+              <dt>The idea</dt><dd>Require developers and users of AI to disclose what they&rsquo;re doing &mdash; publish safety plans, report incidents, tell people when AI is involved &mdash; and let the public, courts and markets respond.</dd>
+              <dt>Example</dt><dd>California&rsquo;s SB 53 (2025) requires the largest AI developers to publish safety frameworks and report serious incidents. Colorado&rsquo;s 2026 law requires telling people when AI helps make a major decision about them.</dd>
+              <dt>The hard part</dt><dd>Disclosure only helps if someone reads it and can act on it.</dd>
+            </dl>
+          </div>
+        </div>
+        <p>Real rules mix all three. And the two scales connect: a rule written at scale still ends in individual cases, where M4L5&rsquo;s questions &mdash; harms and benefits, rights, fairness &mdash; are the ones that matter.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Where Things Stand</h2>
+      <p class="sub">The main rules affecting AI in the U.S. and Europe, as of October 2026.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="cards">
+          <div class="card">
+            <h3>European Union</h3>
+            <p>The <strong>EU AI Act</strong> is the most comprehensive AI law so far. Its bans on certain practices have applied since February 2025, and its rules for general-purpose AI models since August 2025. In 2026 the EU delayed its rules for high-risk uses &mdash; to December 2027 for uses like hiring, and August 2028 for AI built into regulated products.</p>
+            <p class="source-line">Gibson Dunn, 2026-05-27; Digital Omnibus in force 2026-07-27.</p>
+          </div>
+          <div class="card">
+            <h3>U.S. federal government</h3>
+            <p>There is no comprehensive federal AI law. A December 2025 executive order directed federal agencies to challenge state AI laws seen as burdensome, and in March 2026 the White House recommended that Congress pass one national framework that would override state laws. <strong>As of October 2026, Congress has not passed it.</strong> A September 2026 order changed the term federal agencies use, from &ldquo;Artificial Intelligence&rdquo; to &ldquo;Super Intelligence,&rdquo; without changing what&rsquo;s covered.</p>
+            <p class="source-line">Executive Order 14365 (2025-12-11); Ropes &amp; Gray, 2026-03-30; Executive Order 14434 (2026-09-29), Wiley, 2026-10-02.</p>
+          </div>
+          <div class="card">
+            <h3>U.S. states</h3>
+            <p>States have passed their own laws. <strong>California&rsquo;s SB 53</strong> (signed September 2025) requires the largest AI developers to publish safety frameworks, report critical safety incidents to the state, and protect employees who report risks. <strong>Colorado</strong> paused enforcement of its 2024 AI law during a federal lawsuit and replaced it with a narrower law, effective January 2027, centered on telling people when AI helped make a major decision about them.</p>
+            <p class="source-line"><em>National Law Review</em>, 2026-07-09; JD Supra, 2026-05-28.</p>
+          </div>
+          <div class="card">
+            <h3>Standards</h3>
+            <p>Voluntary frameworks fill much of the gap. The NIST <em>AI Risk Management Framework</em> asks organizations to govern, map, measure and manage AI risks, and many companies and agencies use it as their reference point &mdash; though nothing requires it.</p>
+            <p class="source-line">NIST, <em>AI RMF 1.0</em>, January 2023.</p>
+          </div>
+        </div>
+
+        <h3>One national rulebook, or room for states?</h3>
+        <p>The biggest open question in U.S. AI policy is whether federal law should override state AI laws. Both sides make serious arguments.</p>
+        <div class="sl">
+          <div>
+            <h4>The case for one national framework</h4>
+            <ul>
+              <li>AI products cross state lines instantly; fifty different rulebooks are expensive to follow and may slow development.</li>
+              <li>Smaller companies can&rsquo;t afford a separate compliance team for every state, which favors the largest firms.</li>
+              <li>National security and international competition, its supporters argue, call for one consistent national approach.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>The case for letting states act</h4>
+            <ul>
+              <li>Congress hasn&rsquo;t passed a comprehensive law, and states are protecting residents in the meantime.</li>
+              <li>States have long served as testing grounds for policy that later goes national.</li>
+              <li>Overriding state laws without a federal replacement, critics argue, would leave some harms with no rule at all.</li>
+            </ul>
+          </div>
+        </div>
+        <p>Which approach is better is exactly the kind of question your policy brief can take a position on &mdash; with evidence, and with the other side&rsquo;s best argument answered.</p>
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>AI law is changing month to month.</strong> Everything in this section is accurate as of October 2026. Before you rely on any of it &mdash; in your policy brief or anywhere else &mdash; check the current status in a dated source.</p>
+        </div>
+        <p class="stamp">Accurate as of 2026-10.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>Different Fields, Different Rules</h2>
+      <p class="sub">The same technology faces very different rules depending on where it&rsquo;s used.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <ul>
+          <li><strong>Healthcare AI</strong> is regulated much like other medical devices. In M5L4 you saw that the U.S. Food and Drug Administration has authorized more than 1,400 AI-enabled devices &mdash; each reviewed before it could be sold. Patient-privacy law applies to the data.</li>
+          <li><strong>Consumer chatbots</strong> face few AI-specific rules in the U.S.; they&rsquo;re governed mostly by general consumer-protection and privacy law, and by each company&rsquo;s own terms &mdash; the terms you read in your Module 4 security assessment.</li>
+          <li><strong>Hiring, lending and housing</strong> fall under existing anti-discrimination law whether or not AI is involved &mdash; the Module 4 screening case is a legal question as well as an ethical one.</li>
+          <li><strong>Autonomous systems</strong> like self-driving vehicles and drones are governed by transportation and aviation regulators, often through permits and testing rules that vary by state or country.</li>
+        </ul>
+        <p>So &ldquo;is AI regulated?&rdquo; has no single answer. The useful question is the one you practiced in M5L4: <em>for this use, in this field, what rules already apply &mdash; and what&rsquo;s missing?</em></p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>The Gap</h2>
+      <p class="sub">The technology moves faster than the rules.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>A new AI capability can reach millions of people in a few months. A law typically takes years to draft, pass and put into effect &mdash; and then it can be delayed, challenged in court or replaced. You&rsquo;ve seen all three in this lesson: the EU delayed its high-risk rules, Colorado&rsquo;s first law was paused by a lawsuit and rewritten, and the U.S. still has no comprehensive federal law.</p>
+        <p>That gap is sometimes called the <strong>pacing problem</strong>. It means that, for now, much of the responsibility for using AI well falls on organizations and individuals &mdash; on the workflows you designed in Module 5 and the Code you&rsquo;re about to revise. It also means public pressure matters: in many places, the rules that exist came from people asking for them, which is where M6L2 picks up.</p>
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Pick one AI tool you used this semester.</strong> What rules apply to it right now &mdash; a law, its company&rsquo;s terms, your college&rsquo;s policy, your own Code? Which of those could you actually enforce?</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M6L1-A1 &mdash; One rule, checked</h2>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Optional export</span>
+      </div>
+      <p><strong>Research one current AI law, regulation or framework, check what the AI tool told you against an official source, and compare its approach with the three in this lesson.</strong></p>
+
+      <h3>Step 1 &mdash; choose one</h3>
+      <p>Choose one of these, or another AI law or policy you&rsquo;re curious about &mdash; a state law, another country&rsquo;s, or a policy at a company or college:</p>
+      <ul>
+        <li>The EU AI Act</li>
+        <li>California&rsquo;s SB 53 (Transparency in Frontier Artificial Intelligence Act)</li>
+        <li>Colorado&rsquo;s SB 26-189 (its 2026 AI law)</li>
+        <li>The NIST AI Risk Management Framework</li>
+        <li>The OECD AI Principles</li>
+      </ul>
+
+      <h3>Step 2 &mdash; ask the tool</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) in a new chat. Copy the prompt, fill in your choice, and send it.</p>
+      <div class="prompt">
+        <pre id="p1">Explain [the law or policy] in plain language for a college student. Tell me: what it covers, who it applies to, one specific requirement it creates, whether it is in effect today and since when, and a link to the official text or an official summary.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+
+      <h3>Step 3 &mdash; check two facts</h3>
+      <p>Pick two specific facts from the answer &mdash; a date, a requirement, who it applies to. Find each in the official source or a dated news report. AI law changes fast, and tools are often out of date about it; an answer that was true last year is one of M3L1&rsquo;s kinds of wrong.</p>
+
+      <h3>Step 4 &mdash; compare</h3>
+      <p>Which of the three approaches does it lean on most &mdash; risk-based, principle-based or transparency-based? And which M4L5 lens does it seem most concerned with?</p>
+
+      <form id="log-form">
+        <div class="claims">
+          <div><label class="field" for="rule">The law or policy</label><input type="text" id="rule"></div>
+          <div><label class="field" for="tool">The tool I used</label><input type="text" id="tool"></div>
+        </div>
+        <div class="claims">
+          <div><label class="field" for="covers">What it covers</label><textarea id="covers" rows="2"></textarea></div>
+          <div><label class="field" for="who">Who it applies to</label><textarea id="who" rows="2"></textarea></div>
+          <div><label class="field" for="req">One specific requirement</label><textarea id="req" rows="2"></textarea></div>
+          <div><label class="field" for="status">In effect? Since when?</label><textarea id="status" rows="2"></textarea></div>
+        </div>
+        <div class="claims">
+        <fieldset class="group">
+          <legend id="c1-lg">Fact 1</legend>
+          <label class="field" id="c1-said-l" for="c1-said">What the tool said</label>
+          <textarea id="c1-said" rows="2" aria-labelledby="c1-lg c1-said-l"></textarea>
+          <label class="field" id="c1-src-l" for="c1-src">What the source said, and the source with its date</label>
+          <textarea id="c1-src" rows="2" aria-labelledby="c1-lg c1-src-l"></textarea>
+          <label class="field" id="c1-kind-l" for="c1-kind">What kind of wrong?</label>
+          <select id="c1-kind" aria-labelledby="c1-lg c1-kind-l"><option value="">&mdash; choose &mdash;</option><option>The source doesn&rsquo;t exist</option><option>A real source that doesn&rsquo;t support the claim</option><option>A claim with no source offered</option><option>Accurate as stated</option></select>
+        </fieldset>
+        <fieldset class="group">
+          <legend id="c2-lg">Fact 2</legend>
+          <label class="field" id="c2-said-l" for="c2-said">What the tool said</label>
+          <textarea id="c2-said" rows="2" aria-labelledby="c2-lg c2-said-l"></textarea>
+          <label class="field" id="c2-src-l" for="c2-src">What the source said, and the source with its date</label>
+          <textarea id="c2-src" rows="2" aria-labelledby="c2-lg c2-src-l"></textarea>
+          <label class="field" id="c2-kind-l" for="c2-kind">What kind of wrong?</label>
+          <select id="c2-kind" aria-labelledby="c2-lg c2-kind-l"><option value="">&mdash; choose &mdash;</option><option>The source doesn&rsquo;t exist</option><option>A real source that doesn&rsquo;t support the claim</option><option>A claim with no source offered</option><option>Accurate as stated</option></select>
+        </fieldset>
+        </div>
+        <div class="claims">
+          <div><label class="field" for="approach">The approach it leans on most</label><select id="approach"><option value="">&mdash; choose &mdash;</option><option>Risk-based</option><option>Principle-based</option><option>Transparency-based</option><option>A real mix</option></select></div>
+          <div><label class="field" for="lens">The M4L5 lens it seems most concerned with</label><select id="lens"><option value="">&mdash; choose &mdash;</option><option>Harms and benefits</option><option>Rights</option><option>Fairness</option></select></div>
+        </div>
+        <label class="field" for="why">Why &mdash; in two or three sentences</label>
+        <textarea id="why" rows="3"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="log-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M6L1, One Rule Checked</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>The law or policy</dt><dd id="out-rule"></dd>
+          <dt>The tool I used</dt><dd id="out-tool"></dd>
+          <dt>What it covers</dt><dd id="out-covers"></dd>
+          <dt>Who it applies to</dt><dd id="out-who"></dd>
+          <dt>One specific requirement</dt><dd id="out-req"></dd>
+          <dt>In effect? Since when?</dt><dd id="out-status"></dd>
+        </dl>
+        <div class="claim-out">
+          <h3>Fact 1</h3>
+          <dl><dt>What the tool said</dt><dd id="out-c1-said"></dd><dt>What the source said</dt><dd id="out-c1-src"></dd><dt>What kind of wrong?</dt><dd id="out-c1-kind"></dd></dl>
+        </div>
+        <div class="claim-out">
+          <h3>Fact 2</h3>
+          <dl><dt>What the tool said</dt><dd id="out-c2-said"></dd><dt>What the source said</dt><dd id="out-c2-src"></dd><dt>What kind of wrong?</dt><dd id="out-c2-kind"></dd></dl>
+        </div>
+        <dl>
+          <dt>The approach it leans on most</dt><dd id="out-approach"></dd>
+          <dt>The M4L5 lens it seems most concerned with</dt><dd id="out-lens"></dd>
+          <dt>Why</dt><dd id="out-why"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>Saving this is optional.</strong> It isn&rsquo;t a portfolio slot and nothing goes to Canvas. If you keep it, it can be the starting point for your policy brief next week. Suggested name: <code>m6l1-one-rule.pdf</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. A law bans a few AI practices outright, sets strict requirements for AI used in hiring and credit, and leaves most other uses alone. Which approach is that?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) Principle-based &mdash; it states shared values for everyone to apply.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) Risk-based &mdash; the rules get stricter as the potential harm grows.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Transparency-based &mdash; it only requires companies to disclose what they do.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) None &mdash; a law that leaves some uses alone isn&rsquo;t governance.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; that&rsquo;s the structure of the EU AI Act: ban the worst, regulate the risky, leave the rest mostly alone.</p></template>
+          <template data-no><p>The answer is B. Sorting uses by potential harm and scaling the rules to match is the risk-based approach.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>2. As of October 2026, what is the status of a single federal law overriding state AI laws in the U.S.?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Congress passed it in 2025, so state AI laws no longer apply.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) The Supreme Court ruled that states may not regulate AI at all.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Every state has agreed to stop passing new AI laws until 2030.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) It has been proposed and pushed for, but Congress hasn&rsquo;t passed it.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. An executive order and White House recommendations have pushed for it; Congress hasn&rsquo;t enacted it, so state laws remain in effect.</p></template>
+          <template data-no><p>The answer is D. There&rsquo;s no such federal law (A), no such ruling (B) and no such agreement (C) &mdash; and this may change, which is why you check a dated source.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>3. What is the &ldquo;pacing problem&rdquo; in AI governance?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) AI changes faster than laws can be written, passed and put into effect.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) AI tools answer questions faster than people are able to read them.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) Governments regulate AI so quickly that companies cannot keep up.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Courses about AI move too fast for students to keep pace with.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly &mdash; which is why so much responsibility still falls on organizations and individuals.</p></template>
+          <template data-no><p>The answer is A. The gap runs the other way from C: the technology moves faster than the rules.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, November 30</h2>
+      <p class="sub">This week&rsquo;s work, and our next live session.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This lesson and its activity are this week&rsquo;s only new work. <strong>The only graded item this week is the Module 5 quiz, due Tuesday, November 24</strong>, and nothing is assigned over the break. Next week is the Module 6 studio, where your policy brief and your AI Code version 2 are due. <strong>Canvas is the authority on dates.</strong></p>
+      <p>For Monday&rsquo;s live session, come ready to talk. The question:</p>
+      <p><strong>Should AI governance be led by governments, industry, or a mix &mdash; and looking at what&rsquo;s coming, which emerging AI development most needs those guardrails?</strong></p>
+      <p>Bring the law or policy you researched for M6L1-A1, and one fact about it the AI tool got wrong or out of date &mdash; if it got any.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 6, Lesson 1</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M6L1-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  function today() { return new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }
+  function fill(ids) { ids.forEach(function (id) { $("out-" + id).textContent = v(id) || "(not recorded)"; }); }
+  function row(cells) {
+    var tr = document.createElement("tr");
+    cells.forEach(function (x, j) { var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c); });
+    return tr;
+  }
+  function emptyRow(tb, n, text) { var tr = document.createElement("tr"); var td = document.createElement("td"); td.colSpan = n; td.textContent = text; tr.appendChild(td); tb.appendChild(tr); }
+  function show(st, msg) { $("out-date").textContent = today(); $("export-panel").hidden = false; st.textContent = msg; }
+
+  $("log-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("log-status");
+    if (!v("rule") && !v("covers")) { st.textContent = " Name the law or policy before building the copy."; return; }
+    fill(["rule","tool","covers","who","req","status","c1-said","c1-src","c1-kind","c2-said","c2-src","c2-kind","approach","lens","why"]);
+    show(st, " Ready below — a printable copy is at the bottom of this activity.");
+  });
+})();
+</script>
+</body>
+</html>

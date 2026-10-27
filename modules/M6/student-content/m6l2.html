@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M6L2 &mdash; Who Decides? Global Rules and Local Voices | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — no export artifact on this page (M3L4 / M4L5 precedent).
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M6) ---------- */
+dl.memo { display: grid; grid-template-columns: max-content 1fr; gap: var(--s-1) var(--s-3); }
+dl.memo dt { margin: 0; }
+dl.memo dd { margin: 0; }
+@media (max-width: 40rem) { .activity-meta .badge { white-space: normal; } }
+.sl blockquote + p { margin-top: var(--s-2); }
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 6, Lesson 2</p>
+    <h1>Who Decides? Global Rules and Local Voices</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">A borderless technology</a></li>
+      <li><a href="#s2">The international layer</a></li>
+      <li><a href="#s3">Where you come in</a></li>
+      <li><a href="#s4">A case close to home</a></li>
+      <li><a href="#s5">This week&rsquo;s studio</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Governing a Technology Without Borders</h2>
+      <p class="sub">Why no single government can write the rules for AI on its own.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>In M6L1 you saw that the EU, the U.S. federal government and individual states are writing different rules. That raises a harder question: what happens when an AI model is trained in one country, run on servers in a second, and used by people in a third?</p>
+        <ul>
+          <li><strong>The product crosses borders; the law doesn&rsquo;t.</strong> A rule in one country binds companies selling there, not the ones selling elsewhere &mdash; though large companies often adopt the strictest market&rsquo;s rules everywhere rather than build different versions.</li>
+          <li><strong>Countries want different things.</strong> Some put individual rights first, some economic growth, some national security or social stability. Those priorities lead to genuinely different rules, not just slower or faster ones.</li>
+          <li><strong>Nobody wants to fall behind.</strong> Each government worries that strict rules will push AI development to countries with looser ones. That pressure pulls toward fewer rules everywhere, and it&rsquo;s why international agreements are hard to reach.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>The International Layer</h2>
+      <p class="sub">Shared principles, one treaty, and a new UN forum.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="cards">
+          <div class="card">
+            <h3>OECD AI Principles</h3>
+            <p>Five shared principles &mdash; inclusive growth and well-being; human rights and democratic values, including fairness and privacy; transparency and explainability; robustness, security and safety; and accountability. Adopted in 2019 and updated in 2024, with 47 adherent governments. <strong>Voluntary:</strong> they guide, they don&rsquo;t bind.</p>
+            <p class="source-line">OECD.AI, accessed 2026-10.</p>
+          </div>
+          <div class="card">
+            <h3>Council of Europe AI treaty</h3>
+            <p>The <em>Framework Convention on Artificial Intelligence</em>, signed in September 2024 by countries including the U.S., the U.K. and the EU, is the first international treaty on AI. It commits signers to keeping AI consistent with human rights, democracy and the rule of law. A treaty binds a country only once that country ratifies it.</p>
+            <p class="source-line">Council of Europe, signed 2024-09-05.</p>
+          </div>
+          <div class="card">
+            <h3>United Nations</h3>
+            <p>In August 2025 the UN General Assembly created two bodies: an <strong>Independent International Scientific Panel on AI</strong>, which gathers evidence on how AI is changing society, and a <strong>Global Dialogue on AI Governance</strong>, where governments discuss what to do about it. The Dialogue first met in Geneva in July 2026. <strong>Neither can make binding rules.</strong></p>
+            <p class="source-line">UN General Assembly resolution A/RES/79/325, 2025-08-26.</p>
+          </div>
+        </div>
+        <p>Notice the pattern: the further up you go, the more agreement there is on principles &mdash; and the less power anyone has to enforce them. Most enforceable AI rules are still national, state or local.</p>
+        <p class="stamp">Accurate as of 2026-10.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Where You Come In</h2>
+      <p class="sub">The closer the decision, the more one person can affect it.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>You can&rsquo;t vote at the UN. But many AI decisions that affect you directly are made much closer to home &mdash; by a city council, a school board, a college, an employer &mdash; and those are decisions ordinary people do change.</p>
+        <ul>
+          <li><strong>Public comment.</strong> City councils, county boards and state agencies must give the public a chance to speak or write before many decisions. Comments become part of the public record, and officials read them.</li>
+          <li><strong>Showing up early.</strong> Agendas are posted before meetings. An item is easiest to change before the vote, not after.</li>
+          <li><strong>Writing to the person who decides.</strong> A short, specific message to the right official &mdash; or to a manager, a dean or a board &mdash; with one clear request. That&rsquo;s what a policy brief is.</li>
+          <li><strong>Organizing.</strong> Professional associations, student government, unions and community groups carry more weight than one voice alone.</li>
+          <li><strong>Voting</strong> for the people who make these decisions, at every level.</li>
+        </ul>
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>A &ldquo;consent calendar&rdquo; is a list of routine items a council approves in one vote, without discussion.</strong> Many purchases appear there. Any council member can usually ask to pull an item off it for separate discussion, and residents can ask a council member to do that &mdash; or speak during public comment.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>A Case Close to Home: Cameras That Read License Plates</h2>
+      <p class="sub">The privacy question from our in-class discussion, decided in council chambers.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>In our in-class discussion of license-plate-reading cameras, you looked at maps showing where they are around Ukiah. Decisions about those cameras are made by city councils &mdash; and in the last year, some of those decisions changed because residents spoke up.</p>
+        <p><strong>Flagstaff, Arizona (December 2025).</strong> After residents raised concerns during public comment &mdash; about how the data could be misused, and whether the cameras had actually reduced crime since they were installed in 2024 &mdash; the city council voted unanimously to end its contract with the camera company. The police chief had described safeguards the department had put in place, and said he couldn&rsquo;t credit the cameras alone for the city&rsquo;s drop in crime but saw them as &ldquo;one piece of the wheel.&rdquo; Other cities heard similar arguments and kept their cameras.</p>
+        <p class="source-line">KJZZ, 2025-12-17.</p>
+        <p><strong>Ukiah, California (December 2025).</strong> The Ukiah City Council approved the purchase of a new mobile license-plate-reader system for parking enforcement &mdash; about $53,000, paid from the city&rsquo;s parking funds, replacing an older system that was wearing out. It was on the consent calendar, approved with other routine items.</p>
+        <p class="source-line">Bay City News via <em>The Mendocino Voice</em>, 2025-12-20.</p>
+        <p>Neither decision is presented here as right or wrong. The point is how they were made. In Flagstaff, people came to the meeting and spoke. In Ukiah, the item passed as routine &mdash; which is how most local technology purchases pass. A resident who wanted to know how long the plate data would be kept, or who could see it, had a place to ask: before or at that meeting.</p>
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Find your own city or county council&rsquo;s agenda page.</strong> Search its recent agendas for &ldquo;camera,&rdquo; &ldquo;license plate,&rdquo; &ldquo;software&rdquo; or &ldquo;AI.&rdquo; Is there a decision coming up that you&rsquo;d want a say in?</p>
+        </div>
+        <p class="stamp">Accurate as of 2026-10.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>This Week&rsquo;s Studio</h2>
+      <p class="sub">Two graded pieces, and getting ready for Monday.</p>
+    </div>
+    <p>Module 6&rsquo;s studio has two graded pieces, each on its own page in this module:</p>
+    <ul>
+      <li><strong>The policy brief</strong> is this lesson&rsquo;s activity: a one- to two-page recommendation to a real kind of decision-maker &mdash; a city council, a college, an employer, a state legislator &mdash; about one AI issue. You&rsquo;ll name the problem, propose a specific action, justify it with an ethical framework, and answer the strongest argument against it. Your Module 5 mini-project, a 10 Things item or the rule you researched in M6L1 can all be starting points.</li>
+      <li><strong>Your Personal AI Code, version 2</strong> is the revision Module 3 promised: you&rsquo;ll go through version 1 line by line and keep, change, remove or add, with a reason for each.</li>
+    </ul>
+    <p>The steps, rubrics and what to hand in are on those pages. Monday is presentation day &mdash; the presentation guide in this module says what to prepare.</p>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>1. What can the UN&rsquo;s Global Dialogue on AI Governance do?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) Fine companies anywhere in the world that break its AI rules.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) Override national AI laws that conflict with its decisions.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Give governments a forum to discuss AI, without making binding rules.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) License which AI models may be released to the public.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. It&rsquo;s a place to talk and build agreement; enforcement stays with national and local governments.</p></template>
+          <template data-no><p>The answer is C. The Dialogue has no power to fine (A), override (B) or license (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>2. A purchase of new camera software is on your city council&rsquo;s consent calendar. What can a resident who has questions do?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Ask a council member to pull it for discussion, or speak during public comment.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) Nothing &mdash; consent calendar items are decided before the meeting starts.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) File a lawsuit, which is the only way to question a city purchase.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Wait until the next election, since councils can&rsquo;t take public input.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Routine items can usually be pulled for discussion, and public comment is open before the vote.</p></template>
+          <template data-no><p>The answer is A. Consent items are voted on at the meeting (B), there are far simpler ways to be heard than a lawsuit (C), and councils take public input at every regular meeting (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>3. Why are international agreements on AI hard to reach?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) Most countries have no interest in artificial intelligence at all.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) AI products can only be sold in the country where they were built.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) International treaties are not allowed to mention technology.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Countries have different priorities and fear falling behind if their rules are stricter.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; different values plus competitive pressure pull countries in different directions.</p></template>
+          <template data-no><p>The answer is D. Countries care a great deal (A), AI products cross borders easily (B), and there is already an AI treaty (C).</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 6, Lesson 2</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+</body>
+</html>

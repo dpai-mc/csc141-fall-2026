@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M6L3 &mdash; The Future of AI and Society | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M6L3-A1 one future only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M6) ---------- */
+dl.memo { display: grid; grid-template-columns: max-content 1fr; gap: var(--s-1) var(--s-3); }
+dl.memo dt { margin: 0; }
+dl.memo dd { margin: 0; }
+@media (max-width: 40rem) { .activity-meta .badge { white-space: normal; } }
+.sl blockquote + p { margin-top: var(--s-2); }
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 6, Lesson 3</p>
+    <h1>The Future of AI and Society</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">What&rsquo;s coming</a></li>
+      <li><a href="#s2">Augment or replace?</a></li>
+      <li><a href="#s3">The costs</a></li>
+      <li><a href="#s4">What you&rsquo;re paying for</a></li>
+      <li><a href="#s5">Thinking in scenarios</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>What&rsquo;s Coming</h2>
+      <p class="sub">Three directions the technology is moving &mdash; described as ideas, not products.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Predictions about AI date quickly, so this section describes directions, not products. Any of them could look different by the time you read this.</p>
+        <div class="cards">
+          <div class="card">
+            <h3>Many kinds of input at once</h3>
+            <p><strong>Multimodal AI.</strong> <em>AI systems that can process and generate multiple types of data (text, images, audio, video) within a single model or workflow.</em></p>
+            <p>You&rsquo;ve already used some of this. The direction is toward tools that see, hear and speak as fluently as they write &mdash; which makes them more useful, and makes deepfakes (M4L4) easier to produce.</p>
+          </div>
+          <div class="card">
+            <h3>AI that acts on its own</h3>
+            <p><strong>Agentic AI.</strong> <em>AI systems designed to autonomously pursue goals, make decisions, and take actions with minimal human direction.</em></p>
+            <p>In M3L1 you met <strong>agentic browsing</strong>: a tool that clicks and fills things in on a web page for you instead of answering questions about it. In M5L2 you met AI as an agent with human oversight. The direction is toward more steps between human checks &mdash; booking, buying, sending, filing. Every question from M5L2 gets harder: who checks, when, and who answers for a mistake made three steps ago?</p>
+          </div>
+          <div class="card">
+            <h3>Learning plus rules</h3>
+            <p>Some researchers are combining the pattern-learning of today&rsquo;s models with explicit rules and logic &mdash; sometimes called <strong>neuro-symbolic AI</strong>. The hope is systems that can explain their reasoning and follow hard constraints. It&rsquo;s mostly a research direction for now.</p>
+          </div>
+        </div>
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>An agent acting for you is acting with your accounts.</strong> When a tool can send email, make purchases or submit forms in your name, a mistake &mdash; or a malicious web page that tricks it &mdash; happens with your identity attached. The more a tool can do on its own, the more the M5L2 questions matter.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Augment or Replace?</h2>
+      <p class="sub">The question from Module 5, at the scale of society &mdash; and of your own mind.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>M5L1 looked at what has happened to jobs so far. Looking forward, forecasts disagree widely, and every one of them is a guess about choices people haven&rsquo;t made yet. Whether AI mostly <strong>augments</strong> people or mostly <strong>replaces</strong> them isn&rsquo;t only a fact about the technology. It depends on how employers design jobs, what schools teach, and what rules governments write &mdash; the subject of this module.</p>
+        <p>The same question applies to your own thinking. A <strong>cognitive prosthetic</strong> is a tool that takes over part of a mental task &mdash; the way a calculator handles arithmetic or a map app handles directions. Used well, it frees your attention for harder work. You&rsquo;ve also seen the cost: M3L2&rsquo;s cognitive offloading, and M5L2&rsquo;s doctors whose skill faded when the tool wasn&rsquo;t there.</p>
+        <p>Further out are technologies that connect to the body directly. Brain&ndash;computer interfaces &mdash; devices that read signals from the brain &mdash; are being tested to help people with paralysis control a computer. They raise new questions that the lenses from M4L5 can start on: who owns the data from your brain, and what consent could mean for it?</p>
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Name one thing you&rsquo;ve stopped doing yourself because a tool does it</strong> &mdash; directions, spelling, arithmetic, remembering phone numbers. Was that a good trade? Would you make the same trade for writing, or for judgment at work?</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>The Costs Nobody Puts on the Price Tag</h2>
+      <p class="sub">Electricity, water and the places data centers are built.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Every AI answer runs on computers in a data center somewhere, and those computers use electricity and, often, water for cooling. According to the International Energy Agency, data centers used about <strong>415 terawatt-hours</strong> of electricity in 2024 &mdash; about 1.5% of all the electricity used worldwide, with the U.S. using the largest share. The IEA projects that will more than double, to around <strong>945 terawatt-hours by 2030</strong>, with AI as the main driver.</p>
+        <p class="source-line">International Energy Agency, <em>Energy and AI</em>, 2025. The 2030 figure is a projection.</p>
+        <p>Those costs land somewhere specific. Communities near new data centers see effects on power prices, water supply and land use &mdash; and decide, through their local governments, whether to approve them. That makes energy a governance question too: who bears the cost of an AI answer, and who gets to decide? Fairness, from M4L5, asks whether the costs fall on the same group every time.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>What Are You Actually Paying For?</h2>
+      <p class="sub">A way to decide &mdash; not a recommendation.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>When this course ends, you&rsquo;ll decide for yourself which AI tools to keep using and whether to pay for any. People currently pay for AI in three main ways:</p>
+        <div class="cards">
+          <div class="card">
+            <h3>A subscription to one company&rsquo;s tool</h3>
+            <p>You get that company&rsquo;s best model and the features around it. You&rsquo;re betting that one company stays good at what you need.</p>
+          </div>
+          <div class="card">
+            <h3>A tool that brings several together</h3>
+            <p>One subscription that sends your questions to several underlying models, or pairs search with generation &mdash; like the answer engines in M3L1. You trade &ldquo;the best of one&rdquo; for access to several, and you may not control which model answers you.</p>
+          </div>
+          <div class="card">
+            <h3>Stacking free tiers</h3>
+            <p>Using several tools&rsquo; free versions and switching when you hit a limit. It costs nothing but attention &mdash; and it&rsquo;s what most people in this course did all semester.</p>
+          </div>
+        </div>
+        <p>None of these is the right answer. Four questions decide which fits you:</p>
+        <ol>
+          <li><strong>How much do you actually use it?</strong> A few times a week and a few hours a day are different problems.</li>
+          <li><strong>Does it matter to you which model answers?</strong> For some tasks it does; for many it doesn&rsquo;t.</li>
+          <li><strong>How much does checking sources matter in your work?</strong> If a lot, a tool that searches and shows sources by design is worth more to you.</li>
+          <li><strong>What would you lose if a tool you rely on changed its free tier tomorrow?</strong> That&rsquo;s your real dependency.</li>
+        </ol>
+        <p>Your answers to these belong in your revised AI Code. For current limits and terms, see the free-tier section of each tool guide &mdash; each has its own &ldquo;accurate as of&rdquo; date. Prices aren&rsquo;t listed here because they change faster than this page can.</p>
+        <p>One more thing you now get to decide for yourself: <strong>your college account.</strong> Your access to Gemini and Copilot through your student account lasts only as long as the college keeps that account open &mdash; check the college&rsquo;s policy for when accounts close after you leave. The protections that come with it (M1L5) end with the account.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s5">
+    <div class="section-head">
+      <h2>Thinking in Scenarios</h2>
+      <p class="sub">Not predicting the future &mdash; preparing for more than one.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Nobody knows how AI will develop, and anyone who sounds certain is guessing. Organizations deal with that uncertainty with <strong>scenario planning</strong>: instead of one prediction, they describe several possible futures and ask what they&rsquo;d do in each.</p>
+        <div class="cards">
+          <div class="card">
+            <h3>Best case</h3>
+            <p>What would have to go right? Who benefits, and how widely?</p>
+          </div>
+          <div class="card">
+            <h3>Worst case</h3>
+            <p>What would have to go wrong? Who is harmed first?</p>
+          </div>
+          <div class="card">
+            <h3>Most likely</h3>
+            <p>Given what you&rsquo;ve seen so far, what&rsquo;s the realistic middle? What evidence is it based on?</p>
+          </div>
+        </div>
+        <p>Then the useful question: <strong>what guardrails would make the best case more likely and the worst case less?</strong> That&rsquo;s where governance and your own choices meet.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M6L3-A1 &mdash; One future, half a page</h2>
+        <span class="badge">20 minutes</span>
+        <span class="badge badge--quiet">Optional export</span>
+      </div>
+      <p><strong>Explore one emerging AI application or change, then write half a page: what changes, who benefits, who&rsquo;s at risk, and what guardrails it needs.</strong></p>
+
+      <h3>Step 1 &mdash; pick a change</h3>
+      <p>An agent that handles some part of your life or work for you; AI in your Module 5 field ten years from now; AI tutors in every classroom; a brain&ndash;computer interface; a new data center in your county &mdash; or your own idea.</p>
+
+      <h3>Step 2 &mdash; explore it</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) in a new chat. Copy the prompt, fill it in, and send it. Treat the answer as a starting point, not an authority &mdash; it&rsquo;s describing a future nobody knows.</p>
+      <div class="prompt">
+        <pre id="p1">Describe three possible futures for [the change] over the next ten years: a best case, a worst case and a most likely case. For each, say who benefits and who is at risk. Keep each to three sentences, and say which parts are based on evidence and which are speculation.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+
+      <h3>Step 3 &mdash; write your own half page</h3>
+      <p>In your own words, not the tool&rsquo;s. Disagree with it where you think it&rsquo;s wrong.</p>
+
+      <form id="log-form">
+        <div class="claims">
+          <div><label class="field" for="change">The change I chose</label><input type="text" id="change"></div>
+          <div><label class="field" for="tool">The tool I used</label><input type="text" id="tool"></div>
+        </div>
+        <div class="claims">
+          <div><label class="field" for="what">What changes</label><textarea id="what" rows="3"></textarea></div>
+          <div><label class="field" for="benefit">Who benefits</label><textarea id="benefit" rows="3"></textarea></div>
+          <div><label class="field" for="risk">Who is at risk</label><textarea id="risk" rows="3"></textarea></div>
+          <div><label class="field" for="guard">The guardrails it needs &mdash; and who would set them</label><textarea id="guard" rows="3"></textarea></div>
+        </div>
+        <label class="field" for="disagree">Where I disagree with the tool&rsquo;s scenarios, and why (optional)</label>
+        <textarea id="disagree" rows="2"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="log-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M6L3, One Future</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>The change I chose</dt><dd id="out-change"></dd>
+          <dt>The tool I used</dt><dd id="out-tool"></dd>
+          <dt>What changes</dt><dd id="out-what"></dd>
+          <dt>Who benefits</dt><dd id="out-benefit"></dd>
+          <dt>Who is at risk</dt><dd id="out-risk"></dd>
+          <dt>The guardrails it needs, and who would set them</dt><dd id="out-guard"></dd>
+          <dt>Where I disagree with the tool</dt><dd id="out-disagree"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>Saving this is optional.</strong> It isn&rsquo;t a portfolio slot and nothing goes to Canvas. It may give you a guideline for your AI Code version 2 or a line for your final synthesis. Suggested name: <code>m6l3-one-future.pdf</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. What makes agentic AI riskier to rely on than an AI tool that only answers questions?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) Agentic tools are always less accurate than tools that only answer questions.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) It takes several actions between human checks, so a mistake can travel further.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Agentic tools can only be used by companies, never by individual people.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) Agentic tools are not allowed to use the internet under current laws.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. More steps between checks means more room for an error &mdash; made with your accounts &mdash; before anyone notices.</p></template>
+          <template data-no><p>The answer is B. The risk is about steps between checks, not accuracy in general (A), who can use them (C) or the law (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>2. You use AI a few times a week, mostly for drafting, and you check every source yourself. Using this lesson&rsquo;s four questions, what&rsquo;s the most reasonable conclusion?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) You should buy the most expensive subscription available, to be safe.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) You should stop using AI, since free tools can&rsquo;t be trusted.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Free tiers may well cover it; what matters is what you&rsquo;d lose if one changed.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Only a tool that combines several models can meet your needs.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. Light use with your own checking points toward free tiers &mdash; and the dependency question tells you what to watch.</p></template>
+          <template data-no><p>The answer is C. The questions don&rsquo;t point to the most expensive option (A), quitting (B) or one particular kind of tool (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>3. Why do scenario planners describe several futures instead of predicting one?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) Because the future is uncertain, and preparing for several is more useful than betting on one.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) Because the best-case scenario is always the one that ends up happening.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) Because AI tools can predict the future accurately if asked three times.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Because governments require every plan to include exactly three scenarios.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. The point isn&rsquo;t to guess right; it&rsquo;s to be ready, and to see which guardrails help in every case.</p></template>
+          <template data-no><p>The answer is A. No scenario is guaranteed (B), AI can&rsquo;t predict the future (C), and no such rule exists (D).</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, December 7</h2>
+      <p class="sub">This week&rsquo;s work, and our last live session.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This week is the Module 6 studio. <strong>Your policy brief and your AI Code version 2 are due at the end of it.</strong> <strong>Canvas is the authority on dates.</strong></p>
+      <p><strong>Monday is presentation day.</strong> If you&rsquo;re presenting your portfolio, the presentation guide in this module has what to prepare: about four to five minutes on your strongest piece of work, the headline of your AI Code, one lesson you learned, and one question from the class. If you already gave a topic presentation earlier in the semester, come ready to listen and ask a good question.</p>
+      <p>Your final portfolio and synthesis are due <strong>Thursday, December 10</strong>.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 6, Lesson 3</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M6L3-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  function today() { return new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }
+  function fill(ids) { ids.forEach(function (id) { $("out-" + id).textContent = v(id) || "(not recorded)"; }); }
+  function row(cells) {
+    var tr = document.createElement("tr");
+    cells.forEach(function (x, j) { var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c); });
+    return tr;
+  }
+  function emptyRow(tb, n, text) { var tr = document.createElement("tr"); var td = document.createElement("td"); td.colSpan = n; td.textContent = text; tr.appendChild(td); tb.appendChild(tr); }
+  function show(st, msg) { $("out-date").textContent = today(); $("export-panel").hidden = false; st.textContent = msg; }
+
+  $("log-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("log-status");
+    if (!v("change") && !v("what")) { st.textContent = " Name the change you chose before building the copy."; return; }
+    fill(["change","tool","what","benefit","risk","guard","disagree"]);
+    show(st, " Ready below — a printable copy is at the bottom of this activity.");
+  });
+})();
+</script>
+</body>
+</html>
