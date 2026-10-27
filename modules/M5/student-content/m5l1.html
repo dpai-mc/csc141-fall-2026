@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M5L1 &mdash; AI and Your Job: Displacement or Transformation? | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M5L1-A1 task sort only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 5, Lesson 1</p>
+    <h1>AI and Your Job: Displacement or Transformation?</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">Two stories</a></li>
+      <li><a href="#s2">Jobs are made of tasks</a></li>
+      <li><a href="#s3">What the evidence shows</a></li>
+      <li><a href="#s4">Your field</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Two Stories About AI and Work</h2>
+      <p class="sub">You&rsquo;ve heard both. The useful question is which one fits a particular job.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Module 4 asked what goes wrong when AI makes decisions about people. Module 5 asks a question closer to home: what does AI mean for the work you do now, or the work you&rsquo;re training for?</p>
+        <p>There are two stories you&rsquo;ll hear about that, and both are told with confidence.</p>
+        <div class="sl">
+          <div>
+            <h3>The displacement story</h3>
+            <p>AI can now write, summarize, translate, answer customers and draft code. Work that people are paid to do will be done by software instead, and the people who did it will lose those jobs. The faster the tools improve, the faster it happens.</p>
+          </div>
+          <div>
+            <h3>The transformation story</h3>
+            <p>AI changes what jobs consist of, the way computers and the internet did. Some tasks disappear, others get faster, and new kinds of work appear. Most people keep their jobs but do them differently &mdash; and the people who learn the tools do best.</p>
+          </div>
+        </div>
+        <p>History gives some support to each. Machines have wiped out whole occupations &mdash; there are very few switchboard operators or typesetters left. But they&rsquo;ve also changed jobs without ending them. When cash machines (ATMs) spread through the 1980s and 1990s, the number of bank tellers in the U.S. didn&rsquo;t fall the way people expected. Each branch needed fewer tellers, so banks opened more branches, and tellers spent less time counting cash and more time with customers (Bessen, <em>Toil and Technology</em>, IMF, 2015).</p>
+        <p>So neither story is simply right. The rest of this lesson gives you a way to decide which one fits a particular job &mdash; including the one you want &mdash; and a look at what the evidence actually shows so far.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Jobs Are Made of Tasks</h2>
+      <p class="sub">A job is rarely automated whole. Tasks are.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>&ldquo;Will AI replace nurses?&rdquo; is almost impossible to answer, because a nurse does dozens of different things in a shift. &ldquo;Could AI draft a nurse&rsquo;s shift-change notes?&rdquo; is a question you can actually think about. That shift &mdash; from the job to the tasks inside it &mdash; is the most useful habit in this module.</p>
+        <p><strong>Task-level analysis (of jobs).</strong> <em>Looking at a job as the separate tasks it&rsquo;s made of, rather than as one thing, and asking about each task whether AI could do it, help with it, or leave it mostly unchanged. A job is rarely automated whole; tasks are.</em></p>
+        <p>For each task, there are three honest answers:</p>
+        <ul>
+          <li><strong>AI could do it.</strong> The tool does the task in the person&rsquo;s place &mdash; sorting routine requests, filling in a standard form, transcribing a recording. That&rsquo;s <strong>automation</strong>.</li>
+          <li><strong>AI could help with it.</strong> The person still does the task and is still responsible for it, but faster or better with the tool &mdash; a first draft to edit, a summary to check, a list of options to choose from.</li>
+          <li><strong>Mostly unchanged.</strong> The task depends on being physically there, on a relationship, or on judgment the tool can&rsquo;t supply &mdash; comforting a patient, inspecting a weld, deciding what to do when the rules don&rsquo;t cover the case.</li>
+        </ul>
+        <p><strong>AI augmentation.</strong> <em>Using AI to help a person do a task better or faster while the person keeps doing it and stays responsible for it &mdash; as opposed to automation, where the AI does the task in the person&rsquo;s place.</em></p>
+        <p>Then ask one more question about every task, whichever bucket it&rsquo;s in: <strong>does it need human judgment?</strong> Judgment is what&rsquo;s needed when the right answer depends on context the tool doesn&rsquo;t have, when a mistake would hurt someone, or when someone has to be accountable for the result. A task can be one AI could help with and still need a person to make the final call &mdash; most of the important ones are.</p>
+        <div class="callout callout--note">
+          <span class="label">Note</span>
+          <p><strong>The mix is what matters.</strong> A job where most tasks are &ldquo;AI could do it&rdquo; is a job likely to shrink. A job where most are &ldquo;AI could help&rdquo; is a job likely to change. Most jobs have some of each, which is why both stories in the last section are partly true.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>What the Evidence Shows So Far</h2>
+      <p class="sub">Real data, real disagreement &mdash; and why both deserve your attention.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Headlines about AI and jobs tend to pick a story first and find a number to fit it. Researchers have been measuring what has actually happened since late 2022, when ChatGPT made generative AI widely available. Here&rsquo;s where the evidence stood as of October 2026.</p>
+        <div class="cards">
+          <div class="card">
+            <h3>A signal among young workers</h3>
+            <p>Using payroll records from millions of U.S. workers, Stanford researchers found that employment for <strong>22- to 25-year-olds</strong> in the jobs most exposed to AI fell about <strong>13%</strong> relative to other workers after late 2022. Older workers in the same jobs held steady or grew. The drop was concentrated in jobs where AI tends to <em>do</em> the task rather than help with it.</p>
+            <p class="source-line">Brynjolfsson, Chandar &amp; Chen, <em>Canaries in the Coal Mine?</em>, Stanford Digital Economy Lab, August 2025.</p>
+          </div>
+          <div class="card">
+            <h3>No sign of a broad shake-up</h3>
+            <p>Looking across the whole economy, Yale&rsquo;s Budget Lab found no clear disruption of the labor market since ChatGPT&rsquo;s release. Researchers at the Federal Reserve Bank of Chicago found that employment in the most AI-exposed occupations actually <strong>grew about 4%</strong> from 2019 to 2024.</p>
+            <p class="source-line">Yale Budget Lab, reported in <em>Fortune</em>, 2026-02-02; Chicago Fed researchers, reported 2026-07-24.</p>
+          </div>
+          <div class="card">
+            <h3>Why the data is hard to read</h3>
+            <p>Hiring for young workers in those same jobs started slowing in 2022, when interest rates rose &mdash; before ChatGPT existed. A 2026 follow-up that controlled for this found the entry-level drop wasn&rsquo;t clear until 2024. And some companies blame AI for layoffs that had other causes &mdash; sometimes called <strong>&ldquo;AI washing.&rdquo;</strong> Of U.S. job cuts announced in the first 11 months of 2025, about 4.5% were attributed to AI.</p>
+            <p class="source-line">Mahoney, McEntarfer &amp; Wahal, Stanford SIEPR policy brief, July 2026; Challenger, Gray &amp; Christmas data via Oxford Economics, reported in <em>Fortune</em>, 2026-02-02.</p>
+          </div>
+          <div class="card">
+            <h3>Projections are not data</h3>
+            <p>The World Economic Forum surveyed more than 1,000 employers, who expect about <strong>170 million</strong> jobs to be created and <strong>92 million</strong> displaced worldwide by 2030 &mdash; changes driven by AI and by other trends together. That&rsquo;s a forecast of what employers <em>expect</em>, not a measurement of what happened.</p>
+            <p class="source-line">World Economic Forum, <em>Future of Jobs Report 2025</em>, 2025-01-08.</p>
+          </div>
+        </div>
+        <p><strong>What to take from it.</strong> So far, the clearest effect is not mass job loss. It&rsquo;s fewer entry-level openings in a handful of AI-exposed jobs &mdash; the jobs where people traditionally learned the work. Experience seems to protect people, which says something about which skills are worth building. And researchers still disagree about how much of that is AI.</p>
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>&ldquo;Exposed&rdquo; doesn&rsquo;t mean &ldquo;doomed.&rdquo;</strong> Studies that rank jobs by how much AI overlaps with their tasks say so themselves: a high score means the work is likely to change, not that the job will disappear (Microsoft Research, <em>Working with AI</em>, July 2025). When you see a list of &ldquo;jobs AI will replace,&rdquo; ask what was measured &mdash; overlap, a forecast, or actual employment.</p>
+        </div>
+        <p class="stamp">Figures accurate as of 2026-10. This is fast-moving research; newer studies may change the picture.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>Applying It to Your Field</h2>
+      <p class="sub">The job you want, one task at a time.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Everything in this module is built around one job: one you have, one you&rsquo;re training for, or one you&rsquo;d like. You&rsquo;ll choose it in this lesson&rsquo;s activity, and it carries through every lesson until the mini-project at the end of Module 5 &mdash; where you propose an AI solution to a real problem in that field.</p>
+        <p>To analyze a job, do it in this order:</p>
+        <ol>
+          <li><strong>List the tasks.</strong> Not the job title &mdash; the things a person actually spends their week doing. An AI tool is good at drafting this list, and that part is fine to hand off.</li>
+          <li><strong>Sort them yourself.</strong> Could AI do it, help with it, or leave it mostly unchanged &mdash; and does it need human judgment? This is where your knowledge of the field matters, and where you shouldn&rsquo;t let a tool decide for you.</li>
+          <li><strong>Then compare.</strong> Ask the tool to sort the same list and look at where you disagree. A disagreement is worth more than an agreement: either you know something about the work the tool doesn&rsquo;t, or it&rsquo;s seeing something you missed.</li>
+        </ol>
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Think about a job you&rsquo;ve actually done</strong> &mdash; even a summer job. Which part of it would you most have liked a tool to help with? Which part could no tool have done? You already know more about task-level analysis than you think.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M5L1-A1 &mdash; Sort a job into its tasks</h2>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Optional export &middot; keep it</span>
+      </div>
+      <p><strong>Choose one job, get its tasks, sort every task yourself, then compare your sort with an AI tool&rsquo;s.</strong></p>
+
+      <h3>Step 1 &mdash; choose your job</h3>
+      <p>The job you&rsquo;re training for, one you have now, or one you&rsquo;d like. <strong>Not sure what field you&rsquo;re headed for? A field you&rsquo;re considering, or a job you&rsquo;ve held, works just as well.</strong> You&rsquo;ll use this same job for the rest of Module 5, so pick one you&rsquo;re curious about.</p>
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p><strong>Describe the job, not your workplace.</strong> &ldquo;Front-desk receptionist at a dental office&rdquo; is all the tool needs. Don&rsquo;t name an employer, a coworker or a customer, and don&rsquo;t paste anything from a real workplace &mdash; for the rest of this module, too.</p>
+      </div>
+
+      <h3>Step 2 &mdash; get the task list</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) in a new chat. Copy the prompt, replace the bracket with your job, and send it.</p>
+      <div class="prompt">
+        <pre id="p1">I'm studying the job of [the job]. List the 8 most important tasks a person in this job does in a typical week. One short line per task. Don't say anything about AI yet.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+      <p>Copy the tasks into the boxes below. If a task on the list is wrong for the job as you know it, fix it or swap it &mdash; you know the work better than the tool does.</p>
+
+      <h3>Step 3 &mdash; sort every task yourself</h3>
+      <p>For each task, choose <strong>AI could do it</strong>, <strong>AI could help with it</strong> or <strong>Mostly unchanged</strong>; tick whether it needs human judgment; and write your reason in a sentence. Leave the last drop-down for Step 4.</p>
+
+      <h3>Step 4 &mdash; then ask the tool</h3>
+      <p><strong>Only after you&rsquo;ve sorted all eight,</strong> send this in the same chat and record the tool&rsquo;s answer for each task in its drop-down.</p>
+      <div class="prompt">
+        <pre id="p2">For each task on your list, say whether AI could do it, could help with it, or would leave it mostly unchanged, with a one-sentence reason. Then name the tasks that most need human judgment.</pre>
+        <button type="button" class="btn btn--secondary" id="cp2" data-copies="p2">Copy prompt</button>
+        <span id="cp2-status" role="status"></span>
+      </div>
+
+      <h3>Step 5 &mdash; look at where you disagree</h3>
+      <p>Pick the disagreement that matters most. Who&rsquo;s right, and what does one of you know that the other doesn&rsquo;t? If you agreed on every task, say which sort you&rsquo;re least sure of, and why.</p>
+
+      <form id="log-form">
+        <div class="claims">
+          <div><label class="field" for="job">The job I chose</label><input type="text" id="job"></div>
+          <div><label class="field" for="why">Why this job (a job I have, one I&rsquo;m training for, one I&rsquo;d like&hellip;)</label><input type="text" id="why"></div>
+          <div><label class="field" for="tool">The tool I used</label><input type="text" id="tool"></div>
+        </div>
+        <div class="claims" id="task-groups">
+<fieldset class="group">
+<legend id="tk1-lg">Task 1</legend>
+<label class="field" id="tk1-task-l" for="tk1-task">The task</label>
+<input type="text" id="tk1-task" aria-labelledby="tk1-lg tk1-task-l">
+<label class="field" id="tk1-mine-l" for="tk1-mine">My sort</label>
+<select id="tk1-mine" aria-labelledby="tk1-lg tk1-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk1-judg" aria-labelledby="tk1-lg tk1-judg-l"> <span id="tk1-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk1-why-l" for="tk1-why">My reason</label>
+<textarea id="tk1-why" rows="2" aria-labelledby="tk1-lg tk1-why-l"></textarea>
+<label class="field" id="tk1-tool-l" for="tk1-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk1-tool" aria-labelledby="tk1-lg tk1-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk2-lg">Task 2</legend>
+<label class="field" id="tk2-task-l" for="tk2-task">The task</label>
+<input type="text" id="tk2-task" aria-labelledby="tk2-lg tk2-task-l">
+<label class="field" id="tk2-mine-l" for="tk2-mine">My sort</label>
+<select id="tk2-mine" aria-labelledby="tk2-lg tk2-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk2-judg" aria-labelledby="tk2-lg tk2-judg-l"> <span id="tk2-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk2-why-l" for="tk2-why">My reason</label>
+<textarea id="tk2-why" rows="2" aria-labelledby="tk2-lg tk2-why-l"></textarea>
+<label class="field" id="tk2-tool-l" for="tk2-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk2-tool" aria-labelledby="tk2-lg tk2-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk3-lg">Task 3</legend>
+<label class="field" id="tk3-task-l" for="tk3-task">The task</label>
+<input type="text" id="tk3-task" aria-labelledby="tk3-lg tk3-task-l">
+<label class="field" id="tk3-mine-l" for="tk3-mine">My sort</label>
+<select id="tk3-mine" aria-labelledby="tk3-lg tk3-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk3-judg" aria-labelledby="tk3-lg tk3-judg-l"> <span id="tk3-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk3-why-l" for="tk3-why">My reason</label>
+<textarea id="tk3-why" rows="2" aria-labelledby="tk3-lg tk3-why-l"></textarea>
+<label class="field" id="tk3-tool-l" for="tk3-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk3-tool" aria-labelledby="tk3-lg tk3-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk4-lg">Task 4</legend>
+<label class="field" id="tk4-task-l" for="tk4-task">The task</label>
+<input type="text" id="tk4-task" aria-labelledby="tk4-lg tk4-task-l">
+<label class="field" id="tk4-mine-l" for="tk4-mine">My sort</label>
+<select id="tk4-mine" aria-labelledby="tk4-lg tk4-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk4-judg" aria-labelledby="tk4-lg tk4-judg-l"> <span id="tk4-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk4-why-l" for="tk4-why">My reason</label>
+<textarea id="tk4-why" rows="2" aria-labelledby="tk4-lg tk4-why-l"></textarea>
+<label class="field" id="tk4-tool-l" for="tk4-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk4-tool" aria-labelledby="tk4-lg tk4-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk5-lg">Task 5</legend>
+<label class="field" id="tk5-task-l" for="tk5-task">The task</label>
+<input type="text" id="tk5-task" aria-labelledby="tk5-lg tk5-task-l">
+<label class="field" id="tk5-mine-l" for="tk5-mine">My sort</label>
+<select id="tk5-mine" aria-labelledby="tk5-lg tk5-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk5-judg" aria-labelledby="tk5-lg tk5-judg-l"> <span id="tk5-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk5-why-l" for="tk5-why">My reason</label>
+<textarea id="tk5-why" rows="2" aria-labelledby="tk5-lg tk5-why-l"></textarea>
+<label class="field" id="tk5-tool-l" for="tk5-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk5-tool" aria-labelledby="tk5-lg tk5-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk6-lg">Task 6</legend>
+<label class="field" id="tk6-task-l" for="tk6-task">The task</label>
+<input type="text" id="tk6-task" aria-labelledby="tk6-lg tk6-task-l">
+<label class="field" id="tk6-mine-l" for="tk6-mine">My sort</label>
+<select id="tk6-mine" aria-labelledby="tk6-lg tk6-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk6-judg" aria-labelledby="tk6-lg tk6-judg-l"> <span id="tk6-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk6-why-l" for="tk6-why">My reason</label>
+<textarea id="tk6-why" rows="2" aria-labelledby="tk6-lg tk6-why-l"></textarea>
+<label class="field" id="tk6-tool-l" for="tk6-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk6-tool" aria-labelledby="tk6-lg tk6-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk7-lg">Task 7</legend>
+<label class="field" id="tk7-task-l" for="tk7-task">The task</label>
+<input type="text" id="tk7-task" aria-labelledby="tk7-lg tk7-task-l">
+<label class="field" id="tk7-mine-l" for="tk7-mine">My sort</label>
+<select id="tk7-mine" aria-labelledby="tk7-lg tk7-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk7-judg" aria-labelledby="tk7-lg tk7-judg-l"> <span id="tk7-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk7-why-l" for="tk7-why">My reason</label>
+<textarea id="tk7-why" rows="2" aria-labelledby="tk7-lg tk7-why-l"></textarea>
+<label class="field" id="tk7-tool-l" for="tk7-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk7-tool" aria-labelledby="tk7-lg tk7-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+<fieldset class="group">
+<legend id="tk8-lg">Task 8</legend>
+<label class="field" id="tk8-task-l" for="tk8-task">The task</label>
+<input type="text" id="tk8-task" aria-labelledby="tk8-lg tk8-task-l">
+<label class="field" id="tk8-mine-l" for="tk8-mine">My sort</label>
+<select id="tk8-mine" aria-labelledby="tk8-lg tk8-mine-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+<label class="opt"><input type="checkbox" id="tk8-judg" aria-labelledby="tk8-lg tk8-judg-l"> <span id="tk8-judg-l">Needs human judgment</span></label>
+<label class="field" id="tk8-why-l" for="tk8-why">My reason</label>
+<textarea id="tk8-why" rows="2" aria-labelledby="tk8-lg tk8-why-l"></textarea>
+<label class="field" id="tk8-tool-l" for="tk8-tool">The tool&rsquo;s sort (Step 4)</label>
+<select id="tk8-tool" aria-labelledby="tk8-lg tk8-tool-l"><option value="">&mdash; choose &mdash;</option><option>AI could do it</option><option>AI could help with it</option><option>Mostly unchanged</option></select>
+</fieldset>
+</div>
+        <p class="sub" id="sort-status" role="status">My sort &mdash; could do it: 0 &middot; could help: 0 &middot; mostly unchanged: 0 &middot; needs judgment: 0 &middot; tool agreed on 0 of 0</p>
+        <label class="field" for="diff">The disagreement that matters most &mdash; who&rsquo;s right, and why</label>
+        <textarea id="diff" rows="4"></textarea>
+        <label class="field" for="ten">10 Things connection: which item on your 10 Things list could become part of this job, or a job like it?</label>
+        <textarea id="ten" rows="2"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="log-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M5L1, Task Sort</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>The job I chose</dt><dd id="out-job"></dd>
+          <dt>Why this job</dt><dd id="out-why"></dd>
+          <dt>The tool I used</dt><dd id="out-tool"></dd>
+        </dl>
+        <div class="tbl-out">
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th scope="col">Task</th><th scope="col">My sort</th><th scope="col">Needs judgment?</th><th scope="col">My reason</th><th scope="col">Tool&rsquo;s sort</th></tr></thead>
+              <tbody id="out-tasks"></tbody>
+            </table>
+          </div>
+        </div>
+        <p id="out-summary"></p>
+        <dl>
+          <dt>The disagreement that matters most</dt><dd id="out-diff"></dd>
+          <dt>10 Things connection</dt><dd id="out-ten"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>Keep this.</strong> It isn&rsquo;t a portfolio slot and nothing goes to Canvas, but your mini-project at the end of Module 5 is built from it. Suggested name: <code>m5l1-task-sort.pdf</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>1. A medical office starts using a tool that drafts each visit summary. The medical assistant still reviews, corrects and signs every summary. What is this?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) Automation &mdash; the tool now does the medical assistant&rsquo;s task.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) Displacement &mdash; the medical assistant&rsquo;s job has been eliminated.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) Augmentation &mdash; the assistant still does the task and owns the result.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) Neither &mdash; a draft doesn&rsquo;t change how the task gets done at all.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. The person still does the task and is responsible for it; the tool makes it faster.</p></template>
+          <template data-no><p>The answer is C. The assistant still reviews, corrects and signs, so the task isn&rsquo;t handed over (A) and nobody lost the job (B) &mdash; but the work did change (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>2. Why does this lesson analyze jobs task by task instead of asking whether a whole job will be replaced?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Jobs are bundles of tasks, and AI usually affects some tasks without affecting others.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) AI tools can only perform one task at a time, so whole jobs are never affected.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Employers are required by law to list every task in a job before using AI.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Task lists are easier for an AI tool to generate than job descriptions are.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. A job is rarely automated whole; looking at tasks shows what&rsquo;s likely to change and what isn&rsquo;t.</p></template>
+          <template data-no><p>The answer is A. It&rsquo;s about how jobs are made, not a limit of the tools (B), a law (C) or what&rsquo;s easy to generate (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>3. A headline says a study proves AI is already wiping out jobs across the economy. Based on the evidence in this lesson, what&rsquo;s the most accurate response?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) It&rsquo;s accurate &mdash; every study since 2022 has found large job losses.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) It&rsquo;s false &mdash; no study has found any employment effect of AI at all.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) It can&rsquo;t be checked, because job data is never published for anyone to read.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Overstated &mdash; the clearest effect so far is on young workers in some jobs, and the cause is debated.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. There&rsquo;s a real signal for entry-level workers in AI-exposed jobs, no sign of broad disruption yet, and genuine debate about timing and cause.</p></template>
+          <template data-no><p>The answer is D. Studies disagree, so A goes too far; the payroll study did find an effect, so B goes too far the other way; and the data is published (C).</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 5, Lesson 1</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M5L1-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  function today() { return new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }
+  function fill(ids) { ids.forEach(function (id) { $("out-" + id).textContent = v(id) || "(not recorded)"; }); }
+  function row(cells) {
+    var tr = document.createElement("tr");
+    cells.forEach(function (x, j) { var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c); });
+    return tr;
+  }
+  function emptyRow(tb, n, text) { var tr = document.createElement("tr"); var td = document.createElement("td"); td.colSpan = n; td.textContent = text; tr.appendChild(td); tb.appendChild(tr); }
+  function show(st, msg) { $("out-date").textContent = today(); $("export-panel").hidden = false; st.textContent = msg; }
+
+  function readout() {
+    var c = { "AI could do it": 0, "AI could help with it": 0, "Mostly unchanged": 0 }, j = 0, agree = 0, both = 0;
+    for (var i = 1; i <= 8; i++) {
+      var m = v("tk" + i + "-mine"), t = v("tk" + i + "-tool");
+      if (m) { c[m]++; }
+      if ($("tk" + i + "-judg").checked) { j++; }
+      if (m && t) { both++; if (m === t) { agree++; } }
+    }
+    $("sort-status").textContent = "My sort — could do it: " + c["AI could do it"] + " · could help: " + c["AI could help with it"] +
+      " · mostly unchanged: " + c["Mostly unchanged"] + " · needs judgment: " + j + " · tool agreed on " + agree + " of " + both;
+  }
+  for (var i = 1; i <= 8; i++) {
+    ["-mine", "-tool"].forEach(function (s) { $("tk" + i + s).addEventListener("change", readout); });
+    $("tk" + i + "-judg").addEventListener("change", readout);
+  }
+  readout();
+  $("log-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("log-status");
+    if (!v("job") && !v("tk1-task")) { st.textContent = " Name your job or enter a task before building the copy."; return; }
+    fill(["job", "why", "tool", "diff", "ten"]);
+    var tb = $("out-tasks"); tb.textContent = "";
+    for (var i = 1; i <= 8; i++) {
+      var p = "tk" + i;
+      if (!v(p + "-task") && !v(p + "-mine")) { continue; }
+      tb.appendChild(row([v(p + "-task") || "(not named)", v(p + "-mine") || "(not sorted)", $(p + "-judg").checked ? "Yes" : "No",
+        v(p + "-why") || "(not recorded)", v(p + "-tool") || "(not recorded)"]));
+    }
+    if (!tb.children.length) { emptyRow(tb, 5, "(no tasks recorded)"); }
+    $("out-summary").textContent = $("sort-status").textContent;
+    show(st, " Ready below — a printable copy is at the bottom of this activity.");
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M5L2 &mdash; Working With AI: Designing the Collaboration | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M5L2-A1 workflow test only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 5, Lesson 2</p>
+    <h1>Working With AI: Designing the Collaboration</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">Three ways to work with AI</a></li>
+      <li><a href="#s2">What the studies found</a></li>
+      <li><a href="#s3">Designing a workflow</a></li>
+      <li><a href="#s4">When it goes wrong</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Three Ways to Work With AI</h2>
+      <p class="sub">The difference is how much the AI does before a person looks at it.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>In M5L1 you sorted a job&rsquo;s tasks into what AI could do, what it could help with, and what stays mostly unchanged. This lesson is about the middle bucket &mdash; the tasks where a person and an AI tool work together &mdash; and how to set that up so it actually helps.</p>
+        <p><strong>Human-AI collaboration.</strong> <em>Work designed so a person and an AI tool each do the parts they&rsquo;re suited for, with the person deciding where the AI is used, checking what it produces, and owning the result.</em></p>
+        <p>Collaboration comes in three common shapes. They differ in how much the AI does before a person looks at it.</p>
+        <div class="cards">
+          <div class="card">
+            <h3>AI as assistant</h3>
+            <p>You ask, it answers, you decide what to use. One request at a time &mdash; draft this email, summarize this article, suggest three headlines. Nothing happens unless you act on it.</p>
+          </div>
+          <div class="card">
+            <h3>AI as co-pilot</h3>
+            <p>The tool works alongside you inside the task, offering suggestions as you go &mdash; completing a line of code, proposing the next sentence, flagging a number that looks off. You accept or reject each one, often in a second.</p>
+          </div>
+          <div class="card">
+            <h3>AI as agent, with oversight</h3>
+            <p>The tool carries out several steps toward a goal on its own &mdash; gathering, sorting, drafting &mdash; and a person reviews the result before anything final happens. Module 6 comes back to AI that acts on its own.</p>
+          </div>
+        </div>
+        <p>Moving from assistant to agent, the AI does more between checks. That can save more time. It also means a mistake can travel further before anyone sees it &mdash; which is why the later sections of this lesson are about where to put the checks.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>What the Studies Found</h2>
+      <p class="sub">Four studies of real people working with AI &mdash; and the lesson in each.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <div class="cards">
+          <div class="card">
+            <h3>The jagged frontier</h3>
+            <p>758 consultants at the Boston Consulting Group were given realistic tasks, some with AI and some without. On tasks the AI handled well, consultants using it finished about 12% more tasks, 25% faster, with about 40% higher-quality work. On a task chosen to fall just <em>outside</em> what the AI did well, 84% of consultants without AI got the right answer &mdash; and only 60&ndash;70% of those using AI did.</p>
+            <p><strong>The lesson:</strong> what AI does well is uneven &mdash; a &ldquo;jagged frontier&rdquo; &mdash; and you can&rsquo;t tell where the edge is from how confident the answer sounds.</p>
+            <p class="source-line">Dell&rsquo;Acqua et al., Harvard Business School working paper, September 2023.</p>
+          </div>
+          <div class="card">
+            <h3>The biggest help goes to beginners</h3>
+            <p>At a company with 5,179 customer-support agents, an AI tool that suggested replies raised the number of problems solved per hour by 14% on average &mdash; and by 34% for newer, less experienced agents. For the most experienced agents, it made little difference.</p>
+            <p><strong>The lesson:</strong> AI can spread what the best workers know to newer ones. It doesn&rsquo;t replace knowing the work &mdash; the experts had already learned what the tool was suggesting.</p>
+            <p class="source-line">Brynjolfsson, Li &amp; Raymond, <em>Quarterly Journal of Economics</em>, 2025.</p>
+          </div>
+          <div class="card">
+            <h3>Feeling faster isn&rsquo;t being faster</h3>
+            <p>Sixteen experienced software developers worked on 246 real tasks in projects they knew well, some with AI coding tools and some without. Before starting, they expected AI to make them about 24% faster. Measured, they were <strong>19% slower</strong> with it &mdash; time went into prompting, waiting and checking.</p>
+            <p><strong>The lesson:</strong> measure, don&rsquo;t assume. The researchers expected results to change as tools improve, and that&rsquo;s the point &mdash; check it for your own work.</p>
+            <p class="source-line">METR, 2025-07-10.</p>
+          </div>
+          <div class="card">
+            <h3>Skills you stop using can fade</h3>
+            <p>At four clinics in Poland, 19 experienced doctors began using an AI tool that highlights growths during colonoscopies. Months later, in procedures done <em>without</em> the tool, their detection rate had dropped from 28.4% to 22.4%.</p>
+            <p><strong>The lesson:</strong> leaning on a tool can wear down the skill you&rsquo;d need when the tool isn&rsquo;t there or is wrong &mdash; M3L2&rsquo;s cognitive offloading, at work. It&rsquo;s one observational study, so the cause isn&rsquo;t proven.</p>
+            <p class="source-line">Budzy&#324; et al., <em>The Lancet Gastroenterology &amp; Hepatology</em>, August 2025.</p>
+          </div>
+        </div>
+        <p class="stamp">Study details accurate as of 2026-10.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Designing a Workflow</h2>
+      <p class="sub">Where the person starts, where the AI helps, and where the person checks and decides.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>A <strong>workflow</strong> is just the order of steps for getting a task done. Designing a human-AI workflow means deciding, step by step, who does what. Most good ones follow the same shape:</p>
+        <ol>
+          <li><strong>A person starts it.</strong> They decide what the task is, what a good result looks like, and what the AI needs to know &mdash; the prompting skills from Module 2.</li>
+          <li><strong>The AI does a step.</strong> Drafting, summarizing, sorting, suggesting &mdash; the parts you sorted as &ldquo;AI could help with it.&rdquo;</li>
+          <li><strong>A person checks.</strong> Against what? A source, a rule, a number they can verify, their own knowledge of the field. A check needs a standard, or it&rsquo;s just a glance.</li>
+          <li><strong>A person decides and owns the result.</strong> Whoever signs, sends or acts on it is accountable for it, whether or not an AI drafted it.</li>
+        </ol>
+        <p>Three questions help you decide where AI belongs in a process:</p>
+        <ul>
+          <li><strong>Which step is slow, repetitive or a blank page?</strong> That&rsquo;s where AI usually helps most.</li>
+          <li><strong>What would a mistake at this step cost, and who would notice it?</strong> The higher the cost, the closer the check needs to be.</li>
+          <li><strong>Is this step inside or outside the frontier?</strong> If you can&rsquo;t tell, test it on examples where you already know the right answer.</li>
+        </ul>
+        <p><strong>Write down what the AI did.</strong> At work, &ldquo;which parts did a tool produce, and who checked them?&rdquo; is a question a manager, a client or a court may ask. A short note &mdash; tool, step, who reviewed &mdash; is the professional version of the disclosure you wrote into your Personal AI Code in Module 3.</p>
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Think of a process you follow often</strong> &mdash; studying for a test, planning a trip, writing a lab report. Where would an AI step save the most time? Where would a mistake be hardest to catch?</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s4">
+    <div class="section-head">
+      <h2>When It Goes Wrong</h2>
+      <p class="sub">Catching errors, knowing when to stop, and knowing who answers for it.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Every workflow with AI in it needs answers to three questions before something goes wrong, not after.</p>
+        <ul>
+          <li><strong>How will errors be caught?</strong> Spot-checking a sample, checking every item above a certain risk, comparing against a source, having a second person look. As you learned in M4L3, people tend to go along with a system&rsquo;s recommendation, especially when they&rsquo;re rushed &mdash; so a check that depends on someone noticing on their own usually isn&rsquo;t one.</li>
+          <li><strong>When does a case go to a person?</strong> This is called <strong>escalation</strong>: the rule for when the AI step is skipped or overruled &mdash; an unusual case, an upset customer, a decision about someone&rsquo;s health, money or rights.</li>
+          <li><strong>Who is accountable?</strong> Follow the chain: who chose the tool, who set up the workflow, who checked the output, who signed it. Somewhere on that chain is a person who answers for the result. &ldquo;The AI did it&rdquo; is not an answer anyone accepts &mdash; not an employer, not a customer, not a court.</li>
+        </ul>
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>A review step that never says no isn&rsquo;t a review.</strong> If the person checking an AI&rsquo;s work doesn&rsquo;t have the time, the information or the authority to reject it, the workflow only looks supervised.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M5L2-A1 &mdash; Design a workflow, then test it</h2>
+        <span class="badge">35 minutes</span>
+        <span class="badge badge--quiet">Optional export &middot; keep it</span>
+      </div>
+      <p><strong>Take one task from your M5L1 job, map a human-AI workflow for it, run it once on an invented example, and critique what happened.</strong></p>
+
+      <h3>Step 1 &mdash; pick the task</h3>
+      <p>Choose a task from your M5L1 sort &mdash; ideally one you marked <strong>AI could help with it</strong>. If you didn&rsquo;t do M5L1, pick any task from the job you&rsquo;d like to have. An item from your 10 Things list works too, if you picture doing it at work.</p>
+
+      <h3>Step 2 &mdash; map the workflow</h3>
+      <p>Write the steps in order &mdash; three to six. For each, say who does it (a person, the AI tool, or both) and how its result gets checked. Somewhere there should be a step where a person checks, and a final step where a person decides.</p>
+
+      <h3>Step 3 &mdash; write an invented example</h3>
+      <p>Make up a realistic example for the task &mdash; a sample customer email, a sample set of notes, a sample request.</p>
+      <div class="callout callout--caution">
+        <span class="label">Caution</span>
+        <p><strong>Invent it. Don&rsquo;t copy it.</strong> Never use a real message, document or record from a workplace, a customer, a patient or a coworker &mdash; not even with the names taken out. An invented example tests the workflow just as well.</p>
+      </div>
+
+      <h3>Step 4 &mdash; run it</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) in a new chat. Copy the prompt, fill in the brackets, and send it. Then do the human steps yourself: check what came back the way your workflow says.</p>
+      <div class="prompt">
+        <pre id="p1">I'm testing a workflow for this task at work: [the task]. You are the AI step in it. Here is what I need you to do: [the AI step from your workflow]. Here is the example input: [your invented example]. Do only that step, then tell me what you assumed and anything you weren't sure about.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+
+      <h3>Step 5 &mdash; critique it</h3>
+      <p>Where did the workflow hold up? Where did it break &mdash; something the AI got wrong that your check would have caught, or one it wouldn&rsquo;t have? What would you change?</p>
+
+      <form id="log-form">
+        <div class="claims">
+          <div><label class="field" for="job">My job (from M5L1)</label><input type="text" id="job"></div>
+          <div><label class="field" for="task">The task</label><input type="text" id="task"></div>
+          <div><label class="field" for="tool">The tool I used</label><input type="text" id="tool"></div>
+        </div>
+        <div id="step-groups">
+<div class="claims">
+<fieldset class="group">
+<legend id="st1-lg">Step 1</legend>
+<label class="field" id="st1-who-l" for="st1-who">Who does it</label>
+<select id="st1-who" aria-labelledby="st1-lg st1-who-l"><option value="">&mdash; choose &mdash;</option><option>A person</option><option>The AI tool</option><option>Both</option></select>
+<label class="field" id="st1-what-l" for="st1-what">What happens</label>
+<textarea id="st1-what" rows="2" aria-labelledby="st1-lg st1-what-l"></textarea>
+<label class="field" id="st1-chk-l" for="st1-chk">How it&rsquo;s checked</label>
+<textarea id="st1-chk" rows="2" aria-labelledby="st1-lg st1-chk-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="st2-lg">Step 2</legend>
+<label class="field" id="st2-who-l" for="st2-who">Who does it</label>
+<select id="st2-who" aria-labelledby="st2-lg st2-who-l"><option value="">&mdash; choose &mdash;</option><option>A person</option><option>The AI tool</option><option>Both</option></select>
+<label class="field" id="st2-what-l" for="st2-what">What happens</label>
+<textarea id="st2-what" rows="2" aria-labelledby="st2-lg st2-what-l"></textarea>
+<label class="field" id="st2-chk-l" for="st2-chk">How it&rsquo;s checked</label>
+<textarea id="st2-chk" rows="2" aria-labelledby="st2-lg st2-chk-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="st3-lg">Step 3</legend>
+<label class="field" id="st3-who-l" for="st3-who">Who does it</label>
+<select id="st3-who" aria-labelledby="st3-lg st3-who-l"><option value="">&mdash; choose &mdash;</option><option>A person</option><option>The AI tool</option><option>Both</option></select>
+<label class="field" id="st3-what-l" for="st3-what">What happens</label>
+<textarea id="st3-what" rows="2" aria-labelledby="st3-lg st3-what-l"></textarea>
+<label class="field" id="st3-chk-l" for="st3-chk">How it&rsquo;s checked</label>
+<textarea id="st3-chk" rows="2" aria-labelledby="st3-lg st3-chk-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="st4-lg">Step 4 <span class="sub">(optional)</span></legend>
+<label class="field" id="st4-who-l" for="st4-who">Who does it</label>
+<select id="st4-who" aria-labelledby="st4-lg st4-who-l"><option value="">&mdash; choose &mdash;</option><option>A person</option><option>The AI tool</option><option>Both</option></select>
+<label class="field" id="st4-what-l" for="st4-what">What happens</label>
+<textarea id="st4-what" rows="2" aria-labelledby="st4-lg st4-what-l"></textarea>
+<label class="field" id="st4-chk-l" for="st4-chk">How it&rsquo;s checked</label>
+<textarea id="st4-chk" rows="2" aria-labelledby="st4-lg st4-chk-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="st5-lg">Step 5 <span class="sub">(optional)</span></legend>
+<label class="field" id="st5-who-l" for="st5-who">Who does it</label>
+<select id="st5-who" aria-labelledby="st5-lg st5-who-l"><option value="">&mdash; choose &mdash;</option><option>A person</option><option>The AI tool</option><option>Both</option></select>
+<label class="field" id="st5-what-l" for="st5-what">What happens</label>
+<textarea id="st5-what" rows="2" aria-labelledby="st5-lg st5-what-l"></textarea>
+<label class="field" id="st5-chk-l" for="st5-chk">How it&rsquo;s checked</label>
+<textarea id="st5-chk" rows="2" aria-labelledby="st5-lg st5-chk-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="st6-lg">Step 6 <span class="sub">(optional)</span></legend>
+<label class="field" id="st6-who-l" for="st6-who">Who does it</label>
+<select id="st6-who" aria-labelledby="st6-lg st6-who-l"><option value="">&mdash; choose &mdash;</option><option>A person</option><option>The AI tool</option><option>Both</option></select>
+<label class="field" id="st6-what-l" for="st6-what">What happens</label>
+<textarea id="st6-what" rows="2" aria-labelledby="st6-lg st6-what-l"></textarea>
+<label class="field" id="st6-chk-l" for="st6-chk">How it&rsquo;s checked</label>
+<textarea id="st6-chk" rows="2" aria-labelledby="st6-lg st6-chk-l"></textarea>
+</fieldset>
+</div>
+</div>
+        <label class="field" for="example">My invented example</label>
+        <textarea id="example" rows="3"></textarea>
+        <label class="field" for="output">What the tool produced (paste it, or the key part)</label>
+        <textarea id="output" rows="5"></textarea>
+        <div class="claims">
+          <div><label class="field" for="held">Where the workflow held up</label><textarea id="held" rows="3"></textarea></div>
+          <div><label class="field" for="broke">Where it broke down, or nearly did</label><textarea id="broke" rows="3"></textarea></div>
+          <div><label class="field" for="change">What I&rsquo;d change</label><textarea id="change" rows="3"></textarea></div>
+        </div>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="log-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M5L2, Workflow Test</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>My job</dt><dd id="out-job"></dd>
+          <dt>The task</dt><dd id="out-task"></dd>
+          <dt>The tool I used</dt><dd id="out-tool"></dd>
+        </dl>
+        <div class="tbl-out">
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th scope="col">Step</th><th scope="col">Who</th><th scope="col">What happens</th><th scope="col">How it&rsquo;s checked</th></tr></thead>
+              <tbody id="out-steps"></tbody>
+            </table>
+          </div>
+        </div>
+        <dl>
+          <dt>My invented example</dt><dd id="out-example"></dd>
+          <dt>What the tool produced</dt><dd id="out-output"></dd>
+          <dt>Where the workflow held up</dt><dd id="out-held"></dd>
+          <dt>Where it broke down, or nearly did</dt><dd id="out-broke"></dd>
+          <dt>What I&rsquo;d change</dt><dd id="out-change"></dd>
+        </dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>Keep this.</strong> It isn&rsquo;t a portfolio slot and nothing goes to Canvas, but your mini-project at the end of Module 5 is built from it. Suggested name: <code>m5l2-workflow-test.pdf</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>1. In the consulting study, why did people using AI do worse on one task than people without it?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) They weren&rsquo;t allowed enough time to read what the AI produced.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) The task fell just outside what the AI did well, and its answer was trusted anyway.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) The AI tool they were given stopped working partway through that task.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) Only the least experienced consultants were given the AI for that task.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; the jagged frontier. The edge of what the AI does well isn&rsquo;t visible from how confident its answer sounds.</p></template>
+          <template data-no><p>The answer is B. The task was designed to sit just outside what the AI handled well; nothing in the study was about time limits (A), outages (C) or who got the tool (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="D">
+          <fieldset>
+            <legend>2. A clinic adds a step where a staff member approves every AI-drafted patient letter. Which situation makes that review step weakest?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) The staff member compares each letter with the patient&rsquo;s chart before approving it.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) The staff member can send any letter back to be rewritten by hand.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Letters about test results always go to a nurse instead of the staff member.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) The staff member approves two hundred letters an hour and can&rsquo;t see the charts.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. No time, no information to check against &mdash; that review step only looks like supervision.</p></template>
+          <template data-no><p>The answer is D. A, B and C are signs of a real check: a standard to compare against, authority to reject, and escalation for higher-risk cases.</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>3. In a human-AI workflow, who is accountable for a mistake in the final result?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) The people in the chain who chose, checked and signed off on the work.</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) Nobody, as long as the mistake came from the AI step rather than a person.</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) Only the company that built the AI tool, since its tool made the error.</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) The AI tool itself, which is why tools now carry their own legal liability.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. Whoever chose the tool, checked the output and signed it answers for the result.</p></template>
+          <template data-no><p>The answer is A. &ldquo;The AI did it&rdquo; doesn&rsquo;t remove responsibility (B); a vendor may share it but doesn&rsquo;t take it all (C); and tools aren&rsquo;t legal persons (D).</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, November 9</h2>
+      <p class="sub">This week&rsquo;s work, and our next live session.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This week&rsquo;s work is this lesson and M5L1, with their two activities. <strong>Nothing graded is due this week.</strong> The Module 5 quiz opens on Monday. <strong>Canvas is the authority on dates.</strong></p>
+      <p>For Monday&rsquo;s live session, come ready to talk. The question:</p>
+      <p><strong>In your own field, is AI more likely to displace workers or transform their roles &mdash; and what evidence supports your view?</strong></p>
+      <p>Bring your M5L1 task sort and your M5L2 workflow &mdash; especially one place where you and the AI tool disagreed.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 5, Lesson 2</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M5L2-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  function today() { return new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }
+  function fill(ids) { ids.forEach(function (id) { $("out-" + id).textContent = v(id) || "(not recorded)"; }); }
+  function row(cells) {
+    var tr = document.createElement("tr");
+    cells.forEach(function (x, j) { var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c); });
+    return tr;
+  }
+  function emptyRow(tb, n, text) { var tr = document.createElement("tr"); var td = document.createElement("td"); td.colSpan = n; td.textContent = text; tr.appendChild(td); tb.appendChild(tr); }
+  function show(st, msg) { $("out-date").textContent = today(); $("export-panel").hidden = false; st.textContent = msg; }
+  function wfRows(prefix, tb) {
+    tb.textContent = "";
+    for (var i = 1; i <= 6; i++) {
+      var p = prefix + i;
+      if (!v(p + "-who") && !v(p + "-what") && !v(p + "-chk")) { continue; }
+      tb.appendChild(row([String(i), v(p + "-who") || "(not recorded)", v(p + "-what") || "(not recorded)", v(p + "-chk") || "(not recorded)"]));
+    }
+    if (!tb.children.length) { emptyRow(tb, 4, "(no steps recorded)"); }
+  }
+
+  $("log-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("log-status");
+    if (!v("task") && !v("st1-what")) { st.textContent = " Name the task or describe a step before building the copy."; return; }
+    fill(["job", "task", "tool", "example", "output", "held", "broke", "change"]);
+    wfRows("st", $("out-steps"));
+    show(st, " Ready below — a printable copy is at the bottom of this activity.");
+  });
+})();
+</script>
+</body>
+</html>

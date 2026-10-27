@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<title>M5L4 &mdash; AI Across Fields: What It&rsquo;s Doing, and How to Judge It | CSC 141</title>
+<style>
+/* ============================================================
+   CSC 141 — SHARED COMPONENT BLOCK (v1)
+   Copied forward from the approved m1l3.html / m1l5.html.
+   ONE ADDITION: --c-verify-* and --c-try-* tokens, taken
+   unchanged from the tool-guide track (data-privacy.html), so the
+   two tracks carry identical values for all four callout types.
+   Lesson-specific additions are at the end of this block.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: only light;
+  --c-bg: #ffffff; --c-text: #1a1a1a; --c-text-muted: #4a4a4a;
+  --c-primary: #1a5276; --c-primary-dark: #0e3a56; --c-ui: #1d6690;
+  --c-border: #b0b8bd; --c-surface: #f4f6f7;
+  --c-note-bg: #d6eaf8;  --c-note-bd: #1a5276;  --c-note-tx: #14304a;
+  --c-caution-bg: #fdebd0; --c-caution-bd: #b9770e; --c-caution-tx: #6b4708;
+  --c-verify-bg: #e8e4f3; --c-verify-bd: #5b3fa8; --c-verify-tx: #33245f;
+  --c-try-bg: #e3f4ea;   --c-try-bd: #1e8449;   --c-try-tx: #11532e;
+  --c-ok-bg: #d5f5e3; --c-ok-tx: #145a32;
+  --c-no-bg: #fadbd8; --c-no-tx: #922b21;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans,
+          Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --measure: 68ch; --page-max: 1200px;
+  --s-1: .25rem; --s-2: .5rem; --s-3: 1rem; --s-4: 1.5rem; --s-5: 2rem; --s-6: 3rem;
+  --radius: 6px;
+}
+
+html { font-size: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+body { font-family: var(--font); color: var(--c-text); background: var(--c-bg); line-height: 1.6; }
+p, li, blockquote, dd { max-width: var(--measure); }
+
+h1, h2, h3, h4 { line-height: 1.25; font-weight: 700; color: var(--c-primary-dark); }
+h1 { font-size: 1.6rem; }
+h2 { font-size: 1.35rem; margin-top: var(--s-6); }
+h3 { font-size: 1.12rem; margin-top: var(--s-5); }
+h4 { font-size: 1rem; margin-top: var(--s-4); }
+p { margin: var(--s-3) 0; }
+ul, ol { margin: var(--s-3) 0 var(--s-3) 1.5rem; }
+li { margin: var(--s-2) 0; }
+
+a { color: var(--c-primary); text-decoration: underline; text-underline-offset: 2px; }
+a:hover, a:focus { color: var(--c-primary-dark); }
+:focus-visible { outline: 3px solid var(--c-primary); outline-offset: 2px; }
+
+.banner { background: var(--c-primary); color: #fff; padding: var(--s-3) var(--s-4); }
+.banner .eyebrow { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; opacity: .95; margin: 0; }
+.banner h1 { color: #fff; margin: var(--s-1) 0 0; max-width: none; }
+
+.wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--s-4); }
+main { padding-bottom: var(--s-6); }
+section { margin-top: var(--s-5); }
+
+.jumpnav { background: var(--c-surface); border-bottom: 1px solid var(--c-border); padding: var(--s-2) 0; }
+.jumpnav ul { list-style: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); }
+.jumpnav li { margin: 0; max-width: none; }
+.jumpnav a { font-size: .9rem; text-decoration: none; border-bottom: 1px solid transparent; }
+.jumpnav a:hover, .jumpnav a:focus { border-bottom-color: var(--c-primary); }
+
+.section-head { border-bottom: 2px solid var(--c-border); padding-bottom: var(--s-2); }
+.section-head h2 { margin-top: 0; }
+.sub { color: var(--c-text-muted); font-size: .95rem; }
+.section-head .sub { margin: var(--s-1) 0 0; }
+
+.callout { border-left: 5px solid; padding: var(--s-3); margin: var(--s-4) 0; border-radius: 0 var(--radius) var(--radius) 0; }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout .label { display: block; font-weight: 700; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: var(--s-1); }
+.callout--note    { background: var(--c-note-bg);    border-color: var(--c-note-bd);    color: var(--c-note-tx); }
+.callout--caution { background: var(--c-caution-bg); border-color: var(--c-caution-bd); color: var(--c-caution-tx); }
+.callout a { color: inherit; }
+
+.table-scroll { overflow-x: auto; margin: var(--s-3) 0; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+caption { text-align: left; font-weight: 700; padding-bottom: var(--s-2); color: var(--c-primary-dark); }
+th, td { border: 1px solid var(--c-border); padding: var(--s-2) var(--s-3); text-align: left; vertical-align: top; }
+th { background: var(--c-surface); }
+td p, td li { max-width: none; }
+
+.activity { border: 2px solid var(--c-primary); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.activity > :first-child { margin-top: 0; }
+.activity-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-3); align-items: baseline; margin-bottom: var(--s-2); }
+.activity-meta h2, .activity-meta h3 { margin: 0; font-size: 1.35rem; }
+.badge { display: inline-block; background: var(--c-primary); color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.badge--quiet { background: var(--c-surface); color: var(--c-primary-dark); border: 1px solid var(--c-border); }
+
+.prompt { margin: var(--s-3) 0; }
+.prompt pre { font-family: var(--mono); font-size: .95rem; white-space: pre-wrap; word-break: break-word; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.btn { font: inherit; font-weight: 600; cursor: pointer; background: var(--c-primary); color: #fff; border: 2px solid var(--c-primary); border-radius: var(--radius); padding: .5rem 1rem; margin-top: var(--s-2); }
+.btn:hover { background: var(--c-primary-dark); border-color: var(--c-primary-dark); }
+.btn--secondary { background: #fff; color: var(--c-primary); }
+.btn--secondary:hover { background: var(--c-surface); color: var(--c-primary-dark); }
+
+.kc { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-4); margin: var(--s-4) 0; }
+.kc fieldset { border: 0; }
+.kc legend { font-weight: 700; margin-bottom: var(--s-2); color: var(--c-primary-dark); }
+.kc .opt { display: block; margin: var(--s-2) 0; max-width: var(--measure); }
+.kc .opt input { margin-right: .5rem; }
+.kc-feedback { margin-top: var(--s-3); padding: var(--s-3); border-radius: var(--radius); }
+.kc-feedback:empty { display: none; }
+.kc-feedback.ok { background: var(--c-ok-bg); color: var(--c-ok-tx); }
+.kc-feedback.no { background: var(--c-no-bg); color: var(--c-no-tx); }
+.kc-feedback p { max-width: none; margin: 0; }
+
+label.field { display: block; font-weight: 600; margin-bottom: var(--s-2); }
+textarea, input[type="text"], select {
+  font: inherit; border: 1px solid var(--c-border); border-radius: var(--radius);
+  padding: var(--s-2); background: #fff; color: var(--c-text);
+}
+textarea, input[type="text"] { width: 100%; max-width: var(--measure); }
+textarea { min-height: 5rem; resize: vertical; }
+
+.export-panel { border: 2px solid var(--c-primary-dark); border-radius: var(--radius); padding: var(--s-4); margin-top: var(--s-4); }
+.export-panel[hidden] { display: none; }
+.export-head { border-bottom: 1px solid var(--c-border); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.export-head p { margin: 0; font-size: .95rem; }
+.export-meta { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); margin-bottom: var(--s-3); font-size: .95rem; }
+
+details { border: 1px solid var(--c-border); border-radius: var(--radius); margin: var(--s-3) 0; }
+summary { cursor: pointer; padding: var(--s-3); font-weight: 600; color: var(--c-primary-dark); }
+summary:hover { background: var(--c-surface); }
+details > *:not(summary) { padding: 0 var(--s-3) var(--s-3); }
+
+.totop { margin-top: var(--s-5); font-size: .9rem; }
+footer { border-top: 1px solid var(--c-border); margin-top: var(--s-6); padding: var(--s-4) 0; color: var(--c-text-muted); font-size: .9rem; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 40rem) { .wrap { padding: 0 var(--s-3); } h1 { font-size: 1.35rem; } .activity, .kc, .export-panel { padding: var(--s-3); } }
+@media (min-width: 100rem) { :root { --measure: 74ch; --page-max: 1400px; } }
+@media (min-width: 160rem) { :root { --measure: 78ch; --page-max: 1600px; } }
+
+
+/* The two remaining approved callout types — SHARED, keep when copying forward. */
+.callout--verify { background: var(--c-verify-bg); border-color: var(--c-verify-bd); color: var(--c-verify-tx); }
+.callout--try    { background: var(--c-try-bg);    border-color: var(--c-try-bd);    color: var(--c-try-tx); }
+
+
+/* ---------- lesson-specific ---------- */
+figure { margin: var(--s-4) 0; }
+figure svg { max-width: 100%; height: auto; display: block; }
+figcaption { font-size: .9rem; color: var(--c-text-muted); margin-top: var(--s-2); max-width: var(--measure); }
+.figure-scroll { overflow-x: auto; }
+.figure-scroll svg { min-width: 44rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--s-3); margin: var(--s-4) 0; }
+.card { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.card h4 { margin-top: 0; font-size: 1.05rem; }
+.card p, .card li { max-width: none; }
+
+
+/* ---------- lesson-specific (M2L4a) ---------- */
+/* Card headings are h3 here, not the shared block's h4: the cards sit directly
+   under a section h2, and h2 -> h4 skips a level. The shared .card h4 rule is
+   left untouched for the pages that already use it. */
+.card h3 { margin-top: 0; font-size: 1.05rem; }
+.card .sub { margin-bottom: 0; }
+code { font-family: var(--mono); font-size: .95em; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 3px; padding: 0 .25em; }
+
+/* ============================================================
+   PRINT — SCOPED EXPORT ARTIFACT (M5L4-A1 two tools only)
+   Hide by DISPLAY down the ancestor chain, never by visibility:
+   blanking the ink leaves the layout boxes in flow and paginates
+   blank pages after the artifact.
+   ============================================================ */
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  body > *:not(main)                   { display: none !important; }
+  main > *:not(#a1)                    { display: none !important; }
+  #a1 > *:not(.activity)               { display: none !important; }
+  #a1 .activity > *:not(#export-panel) { display: none !important; }
+  #a1 .activity                        { border: 0; padding: 0; margin: 0; }
+  #export-panel { display: block !important; border: 0; padding: 0; margin: 0; }
+  #export-panel .no-print { display: none !important; }
+  #export-panel p, #export-panel li { max-width: none; }
+  a[href]::after { content: ""; }
+}
+
+/* ---------- page-specific: stacked comparison table on narrow viewports ---------- */
+@media (max-width: 40rem) {
+  .stack-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .stack-table tr { display: block; border: 1px solid var(--c-border); border-radius: var(--radius); margin-bottom: var(--s-3); }
+  .stack-table th[scope="row"] { display: block; border: 0; background: var(--c-surface); }
+  .stack-table td { display: block; border: 0; border-top: 1px solid var(--c-border); }
+  .stack-table td::before { content: attr(data-col); display: block; font-weight: 700; font-size: .85rem; color: var(--c-text-muted); margin-bottom: var(--s-1); }
+  .stack-table td:empty { display: none; }
+}
+@media print {
+  #export-panel table tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M3, week 7) ---------- */
+/* Strengths/limitations two-column block (STANDARDS §SPA presentation patterns).
+   Visible text headings carry the distinction; stacks on narrow viewports. */
+.sl { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); margin: var(--s-4) 0; }
+.sl > div { border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); }
+.sl h3 { margin-top: 0; font-size: 1.05rem; }
+.sl ul { margin-bottom: 0; }
+.sl li { max-width: none; }
+@media (max-width: 40rem) { .sl { grid-template-columns: 1fr; } }
+.pull { border-left: 5px solid var(--c-primary); padding: var(--s-2) var(--s-3); margin: var(--s-4) 0; font-size: 1.15rem; font-weight: 700; color: var(--c-primary-dark); }
+form select, #a1 select { max-width: 100%; }
+fieldset.group { min-width: 0; border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: var(--s-3) 0; }
+fieldset.group legend { font-weight: 700; padding: 0 var(--s-2); }
+fieldset.group select { width: 100%; max-width: 100%; }
+fieldset.group textarea { max-width: 100%; }
+.claims { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 0 var(--s-3); }
+.claims fieldset.group { margin: var(--s-2) 0; }
+.stamp { font-size: .9rem; color: var(--c-text-muted); }
+.export-panel dl dt { font-weight: 700; margin-top: var(--s-2); }
+.export-panel dl dd { margin: 0 0 var(--s-2) 0; white-space: pre-wrap; }
+@media print {
+  #export-panel .claim-out, #export-panel .case-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+
+/* ---------- lesson-specific (M4, week 9) ---------- */
+.dec-table select { width: 100%; min-width: 9rem; }
+.tally td { white-space: nowrap; }
+.tally td.wide { white-space: normal; }
+.note-under { font-size: .9rem; color: var(--c-text-muted); }
+@media print {
+  #export-panel .metric-out, #export-panel .tbl-out { break-inside: avoid; page-break-inside: avoid; }
+}
+
+/* ---------- lesson-specific (M5) ---------- */
+.card dl { margin: 0; }
+.card dt { font-weight: 700; margin-top: var(--s-2); }
+.card dd { margin: 0; max-width: none; }
+.card .sub { margin: 0 0 var(--s-2); }
+.source-line { font-size: .9rem; color: var(--c-text-muted); }
+.sl h4 { margin-top: 0; font-size: 1.05rem; }
+.sl p { max-width: none; }
+.sl blockquote { font-size: .95rem; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius); padding: var(--s-3); margin: 0; max-width: none; }
+.sl blockquote p { margin: 0; max-width: none; }
+fieldset.group .opt, .checklist .opt { display: block; font-weight: 400; margin: var(--s-1) 0; }
+fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
+.checklist { list-style: none; margin-left: 0; }
+.pre { white-space: pre-wrap; }
+#export-panel h4 { margin-bottom: var(--s-1); font-size: 1rem; }
+#export-panel h5 { margin: var(--s-3) 0 0; font-size: 1rem; color: var(--c-primary-dark); }
+@media print {
+  #export-panel .rec-out, #export-panel tr { break-inside: avoid; page-break-inside: avoid; }
+}
+
+</style>
+</head>
+<body>
+<header class="banner">
+  <div class="wrap">
+    <p class="eyebrow">CSC 141: AI Literacy &mdash; Module 5, Lesson 4</p>
+    <h1>AI Across Fields: What It&rsquo;s Doing, and How to Judge It</h1>
+  </div>
+</header>
+
+<nav class="jumpnav" aria-label="On this page">
+  <div class="wrap">
+    <ul>
+      <li><a href="#s1">Six fields</a></li>
+      <li><a href="#s2">Judging a tool in your field</a></li>
+      <li><a href="#s3">Working across fields</a></li>
+      <li><a href="#a1">Practice</a></li>
+      <li><a href="#kc">Check yourself</a></li>
+      <li><a href="#primer">Before Monday</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="wrap" id="top">
+
+  <section id="s1">
+    <div class="section-head">
+      <h2>Six Fields, Six Real Deployments</h2>
+      <p class="sub">What AI is actually doing in each &mdash; what the evidence says, and the question it raises.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Every field is using AI differently, and the evidence about how well it works is different in each. Here is one real deployment from six fields &mdash; not the most impressive one, but one with evidence you can check. Read your own field&rsquo;s card closely, and at least one from a field far from yours.</p>
+        <div class="cards">
+          <div class="card">
+            <h3>Healthcare</h3>
+            <p class="sub">AI scribes and approved devices</p>
+            <p><strong>What it is.</strong> &ldquo;Ambient scribe&rdquo; tools listen to a doctor&rsquo;s visit and draft the clinical note. Separately, the U.S. Food and Drug Administration lists more than 1,400 AI-enabled medical devices it has authorized, most of them in radiology.</p>
+            <p><strong>The evidence.</strong> In a randomized trial with 238 physicians, one scribe tool cut note-writing time modestly and both tools slightly improved burnout scores &mdash; but doctors reported that the drafts occasionally contained clinically significant errors, most often missing information.</p>
+            <p><strong>The question.</strong> Who catches the error in a note the doctor didn&rsquo;t write, and did the patient agree to being recorded?</p>
+            <p class="source-line"><em>NEJM AI</em>, 2025 (UCLA Health, 2025-11-26); FDA list updated 2026-03-04 (MedTech Dive).</p>
+          </div>
+          <div class="card">
+            <h3>Education</h3>
+            <p class="sub">Helping the tutor, not replacing them</p>
+            <p><strong>What it is.</strong> Tutor CoPilot suggests responses to human tutors during live math tutoring; the tutor chooses, edits or ignores them.</p>
+            <p><strong>The evidence.</strong> In a randomized trial with about 1,000 elementary students, those whose tutors had the tool were 4 percentage points more likely to master a topic &mdash; up to 9 points for students of lower-rated tutors &mdash; at about $20 per tutor per year.</p>
+            <p><strong>The question.</strong> If the tool helps weaker tutors most, does it close a gap &mdash; or make it easier to hire less-trained tutors for the students who most need good ones?</p>
+            <p class="source-line">Wang et al., Stanford National Student Support Accelerator, 2025.</p>
+          </div>
+          <div class="card">
+            <h3>Business</h3>
+            <p class="sub">Customer service, and a reversal</p>
+            <p><strong>What it is.</strong> In early 2024 the payments company Klarna said its AI assistant was doing the work of 700 customer-service employees.</p>
+            <p><strong>The evidence.</strong> By May 2025 its CEO said cost had driven the decision too much and the result was &ldquo;lower quality,&rdquo; and the company began hiring human support staff again.</p>
+            <p><strong>The question.</strong> Who measured &ldquo;the work of 700 people&rdquo; &mdash; and did that measure include whether customers&rsquo; problems were actually solved?</p>
+            <p class="source-line">Klarna, 2024; Bloomberg interview reported by <em>Computing</em>, 2025-05-13.</p>
+          </div>
+          <div class="card">
+            <h3>Arts and design</h3>
+            <p class="sub">Who is the author?</p>
+            <p><strong>What it is.</strong> Image, music and writing generators are now part of many creative workflows, from first sketches to finished work.</p>
+            <p><strong>The evidence.</strong> In January 2025 the U.S. Copyright Office concluded that prompts alone don&rsquo;t make someone the author of what a tool generates. A person&rsquo;s own expression in the work &mdash; their selection, arrangement or changes &mdash; can be protected, decided case by case.</p>
+            <p><strong>The question.</strong> If the generated parts belong to no one, what does that mean for artists who sell their work &mdash; and for the artists whose work trained the tools?</p>
+            <p class="source-line">U.S. Copyright Office, <em>Copyright and Artificial Intelligence, Part 2</em>, 2025-01-29.</p>
+          </div>
+          <div class="card">
+            <h3>Sciences</h3>
+            <p class="sub">Predicting protein structures</p>
+            <p><strong>What it is.</strong> AlphaFold, from Google DeepMind, predicts the 3-D shape of proteins from their sequence &mdash; work that can take a lab months or longer for a single protein.</p>
+            <p><strong>The evidence.</strong> Its team has predicted structures for nearly all of the roughly 200 million known proteins, and two of its creators shared the 2024 Nobel Prize in Chemistry. Its predictions were tested against structures measured in the lab, and researchers still verify the ones they rely on.</p>
+            <p><strong>The question.</strong> When a prediction is right most of the time, how do you know which ones aren&rsquo;t?</p>
+            <p class="source-line">Nobel Prize in Chemistry 2024 (<em>Science News Explores</em>).</p>
+          </div>
+          <div class="card">
+            <h3>Law</h3>
+            <p class="sub">Fabricated citations in court</p>
+            <p><strong>What it is.</strong> Lawyers and people representing themselves use AI tools to research and draft court filings.</p>
+            <p><strong>The evidence.</strong> As of June 2026, one tracking database listed 1,058 U.S. court cases in which a filing contained AI-generated errors such as invented cases or quotes &mdash; about 60% by people representing themselves and 40% by attorneys.</p>
+            <p><strong>The question.</strong> The person who signs a filing is responsible for it. What would a workflow need for that signature to mean something?</p>
+            <p class="source-line">UNC Law Library, June 2026, citing Charlotin&rsquo;s AI hallucination cases database.</p>
+          </div>
+        </div>
+        <p class="stamp">Deployments and figures accurate as of 2026-10.</p>
+      </div>
+    </details>
+  </section>
+
+  <section id="s2">
+    <div class="section-head">
+      <h2>Judging an AI Tool in Your Field</h2>
+      <p class="sub">Four questions that work for any tool, in any field.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Every field has AI tools built for it, and more appear every month. You don&rsquo;t need to know them all. You need a way to judge the one in front of you. Ask four questions:</p>
+        <ol>
+          <li><strong>What problem does it solve?</strong> In one sentence, for whom. If you can&rsquo;t say, neither may the seller.</li>
+          <li><strong>What&rsquo;s the evidence it works?</strong> This is the question that matters most, and the one most often skipped. Sort what you find:
+            <ul>
+              <li><strong>An independent study</strong> &mdash; researchers who don&rsquo;t sell the tool measured it, ideally against people working without it.</li>
+              <li><strong>A news report</strong> &mdash; a journalist describing it, which may rest on the company&rsquo;s own claims.</li>
+              <li><strong>The company&rsquo;s own claims</strong> &mdash; a website, a press release, a customer testimonial.</li>
+              <li><strong>Nothing you can find</strong> &mdash; which is common, and worth saying.</li>
+            </ul>
+          </li>
+          <li><strong>What ethical concerns does it raise?</strong> Use the three lenses from M4L5: who&rsquo;s helped and who&rsquo;s harmed; whose rights are involved, and whether they agreed; and whether the costs fall on the same group every time. Add Module 4&rsquo;s other questions: could it be biased, and what happens to the data it takes in?</li>
+          <li><strong>When it&rsquo;s wrong, who catches it?</strong> M5L2&rsquo;s question. Somebody has to check the output and answer for the result.</li>
+        </ol>
+        <div class="callout callout--verify">
+          <span class="label">Verify</span>
+          <p><strong>A company describing its own tool is not evidence that the tool works.</strong> It may be true, but it&rsquo;s a claim. Look for who measured it, against what, and when. &ldquo;I couldn&rsquo;t find any independent evidence&rdquo; is a real and useful finding.</p>
+        </div>
+        <div class="callout callout--caution">
+          <span class="label">Caution</span>
+          <p><strong>You don&rsquo;t need to sign up for anything.</strong> Researching a tool means reading about it &mdash; what it does, who uses it, what&rsquo;s been measured. Don&rsquo;t create accounts or enter information to try a tool for this course.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="s3">
+    <div class="section-head">
+      <h2>Working Across Fields</h2>
+      <p class="sub">Explaining your field to an AI &mdash; and borrowing from someone else&rsquo;s.</p>
+    </div>
+    <details>
+      <summary>Read this section</summary>
+      <div>
+        <p>Most AI projects bring together people from different fields: someone who knows the work and someone who knows the technology. Whichever side you&rsquo;re on, two skills help.</p>
+        <p><strong>Translating your field into something an AI can use.</strong> A tool doesn&rsquo;t know your field&rsquo;s unwritten rules. To get useful work from it, spell them out: define the terms your field uses differently from everyone else, give an example of a good result and a bad one, and state the constraints &mdash; legal limits, safety rules, what must never happen. That&rsquo;s the prompting from Module 2, applied to the knowledge only you have.</p>
+        <p><strong>Borrowing across fields.</strong> Many of the best uses of AI were first worked out somewhere else. The tutor-support idea from education is a co-pilot for any job where newer workers handle live conversations. The scribe idea from healthcare fits any job where someone writes up a meeting. Look at the six cards above and ask: <em>which of these would work in my field, and what would have to change?</em></p>
+        <div class="callout callout--try">
+          <span class="label">Try this</span>
+          <p><strong>Pick the card furthest from your field.</strong> Write one sentence on how its idea could work in yours. You&rsquo;ll be asked for exactly this on Monday.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="a1">
+    <div class="activity">
+      <div class="activity-meta">
+        <h2>M5L4-A1 &mdash; Two real tools in your field</h2>
+        <span class="badge">30 minutes</span>
+        <span class="badge badge--quiet">Optional export &middot; keep it</span>
+      </div>
+      <p><strong>Find two AI tools or applications used in your field, confirm they&rsquo;re real, and judge each on the four questions.</strong></p>
+
+      <h3>Step 1 &mdash; ask for candidates</h3>
+      <p>Open <strong>Gemini</strong> (or another tool if you prefer) in a new chat. Copy the prompt, fill in your M5L1 job or field, and send it.</p>
+      <div class="prompt">
+        <pre id="p1">I work in (or am studying) [your job or field]. Name four specific AI tools or applications that are actually being used in this field today. For each, give its name, who makes it, what problem it solves, and a link to a source that describes it.</pre>
+        <button type="button" class="btn btn--secondary" id="cp1" data-copies="p1">Copy prompt</button>
+        <span id="cp1-status" role="status"></span>
+      </div>
+
+      <h3>Step 2 &mdash; keep two that are real</h3>
+      <p>Open the sources. Keep two tools you can confirm exist and are used in your field. If one turns out not to exist, or its source doesn&rsquo;t say what the tool claimed, note it &mdash; that&rsquo;s a finding &mdash; and pick another.</p>
+
+      <h3>Step 3 &mdash; judge each one</h3>
+      <p>Answer the four questions for both. For the evidence question, look beyond the company&rsquo;s own website: search for the tool&rsquo;s name with words like &ldquo;study,&rdquo; &ldquo;trial&rdquo; or &ldquo;evaluation.&rdquo;</p>
+
+      <h3>Step 4 &mdash; one to borrow</h3>
+      <p>Optional, for Monday: one AI application from a different field that you&rsquo;d borrow for yours.</p>
+
+      <form id="log-form">
+        <div class="claims">
+          <div><label class="field" for="job">My job or field (from M5L1)</label><input type="text" id="job"></div>
+          <div><label class="field" for="tool">The AI tool I asked</label><input type="text" id="tool"></div>
+        </div>
+        <label class="field" for="dropped">Anything the tool suggested that didn&rsquo;t check out (optional)</label>
+        <textarea id="dropped" rows="2"></textarea>
+        <div class="claims" id="eval-groups">
+<fieldset class="group">
+<legend id="tla-lg">Tool A</legend>
+<label class="field" id="tla-name-l" for="tla-name">Name, and who makes it</label>
+<input type="text" id="tla-name" aria-labelledby="tla-lg tla-name-l">
+<label class="field" id="tla-src-l" for="tla-src">Where I confirmed it exists (site and address)</label>
+<input type="text" id="tla-src" aria-labelledby="tla-lg tla-src-l">
+<label class="field" id="tla-prob-l" for="tla-prob">1. What problem it solves, for whom</label>
+<textarea id="tla-prob" rows="2" aria-labelledby="tla-lg tla-prob-l"></textarea>
+<label class="field" id="tla-ev-l" for="tla-ev">2. The best evidence I found</label>
+<select id="tla-ev" aria-labelledby="tla-lg tla-ev-l"><option value="">&mdash; choose &mdash;</option><option>An independent study</option><option>A news report</option><option>The company&rsquo;s own claims only</option><option>Nothing I could find</option></select>
+<label class="field" id="tla-evn-l" for="tla-evn">What that evidence shows, and its date</label>
+<textarea id="tla-evn" rows="2" aria-labelledby="tla-lg tla-evn-l"></textarea>
+<label class="field" id="tla-eth-l" for="tla-eth">3. Ethical concerns &mdash; and the lens I used</label>
+<textarea id="tla-eth" rows="2" aria-labelledby="tla-lg tla-eth-l"></textarea>
+<label class="field" id="tla-catch-l" for="tla-catch">4. When it&rsquo;s wrong, who catches it?</label>
+<textarea id="tla-catch" rows="2" aria-labelledby="tla-lg tla-catch-l"></textarea>
+</fieldset>
+<fieldset class="group">
+<legend id="tlb-lg">Tool B</legend>
+<label class="field" id="tlb-name-l" for="tlb-name">Name, and who makes it</label>
+<input type="text" id="tlb-name" aria-labelledby="tlb-lg tlb-name-l">
+<label class="field" id="tlb-src-l" for="tlb-src">Where I confirmed it exists (site and address)</label>
+<input type="text" id="tlb-src" aria-labelledby="tlb-lg tlb-src-l">
+<label class="field" id="tlb-prob-l" for="tlb-prob">1. What problem it solves, for whom</label>
+<textarea id="tlb-prob" rows="2" aria-labelledby="tlb-lg tlb-prob-l"></textarea>
+<label class="field" id="tlb-ev-l" for="tlb-ev">2. The best evidence I found</label>
+<select id="tlb-ev" aria-labelledby="tlb-lg tlb-ev-l"><option value="">&mdash; choose &mdash;</option><option>An independent study</option><option>A news report</option><option>The company&rsquo;s own claims only</option><option>Nothing I could find</option></select>
+<label class="field" id="tlb-evn-l" for="tlb-evn">What that evidence shows, and its date</label>
+<textarea id="tlb-evn" rows="2" aria-labelledby="tlb-lg tlb-evn-l"></textarea>
+<label class="field" id="tlb-eth-l" for="tlb-eth">3. Ethical concerns &mdash; and the lens I used</label>
+<textarea id="tlb-eth" rows="2" aria-labelledby="tlb-lg tlb-eth-l"></textarea>
+<label class="field" id="tlb-catch-l" for="tlb-catch">4. When it&rsquo;s wrong, who catches it?</label>
+<textarea id="tlb-catch" rows="2" aria-labelledby="tlb-lg tlb-catch-l"></textarea>
+</fieldset>
+</div>
+        <label class="field" for="borrow">One application from another field I&rsquo;d borrow, and how it would work in mine (optional)</label>
+        <textarea id="borrow" rows="2"></textarea>
+        <button type="submit" class="btn">Build my printable copy</button>
+        <span id="log-status" role="status"></span>
+      </form>
+
+      <div class="export-panel" id="export-panel" hidden>
+        <div class="export-head">
+          <p><strong>CSC 141: AI Literacy</strong> &mdash; M5L4, Two Tools in My Field</p>
+        </div>
+        <div class="export-meta">
+          <p><strong>Name:</strong> ______________________</p>
+          <p><strong>Date:</strong> <span id="out-date"></span></p>
+        </div>
+        <dl>
+          <dt>My job or field</dt><dd id="out-job"></dd>
+          <dt>The AI tool I asked</dt><dd id="out-tool"></dd>
+          <dt>Suggestions that didn&rsquo;t check out</dt><dd id="out-dropped"></dd>
+        </dl>
+        <div id="out-evals"></div>
+        <dl><dt>One application from another field I&rsquo;d borrow</dt><dd id="out-borrow"></dd></dl>
+        <p class="no-print"><button type="button" class="btn" id="print-btn">Save as PDF</button></p>
+        <p class="no-print"><strong>Keep this.</strong> It isn&rsquo;t a portfolio slot and nothing goes to Canvas, but your mini-project at the end of Module 5 is built from it. Suggested name: <code>m5l4-two-tools.pdf</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="kc">
+    <div class="section-head">
+      <h2>Check Yourself</h2>
+      <p class="sub">Not graded, not recorded. Three questions.</p>
+    </div>
+    <details>
+      <summary>Open the three questions</summary>
+      <div>
+        <div class="kc" data-kc data-answer="A">
+          <fieldset>
+            <legend>1. A company&rsquo;s website says its AI tool cuts paperwork time in half for nurses. How should you treat that statement?</legend>
+            <label class="opt"><input type="radio" name="kc1" value="A">A) As a claim to check &mdash; look for who measured it, against what, and when.</label>
+            <label class="opt"><input type="radio" name="kc1" value="B">B) As proof, because companies can only publish claims that have been tested.</label>
+            <label class="opt"><input type="radio" name="kc1" value="C">C) As false, because AI tools never save time in healthcare settings.</label>
+            <label class="opt"><input type="radio" name="kc1" value="D">D) As irrelevant, because only the price of a tool matters when choosing one.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. It may be true, but a vendor&rsquo;s own description is a claim, not evidence.</p></template>
+          <template data-no><p>The answer is A. Companies can publish untested claims (B); the scribe trial found some time savings, so &ldquo;never&rdquo; is wrong (C); and whether it works matters more than price (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>2. What did the U.S. Copyright Office conclude in 2025 about work generated by AI tools?</legend>
+            <label class="opt"><input type="radio" name="kc2" value="A">A) Anyone who writes the prompt automatically owns the copyright in the result.</label>
+            <label class="opt"><input type="radio" name="kc2" value="B">B) The company that makes the AI tool owns the copyright in everything it generates.</label>
+            <label class="opt"><input type="radio" name="kc2" value="C">C) Prompts alone aren&rsquo;t enough; a person&rsquo;s own expression in the work can be protected.</label>
+            <label class="opt"><input type="radio" name="kc2" value="D">D) Any work that used an AI tool at any stage can never be protected by copyright.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Exactly. Human authorship is required; prompts alone don&rsquo;t supply it, but a person&rsquo;s selection, arrangement or changes can, case by case.</p></template>
+          <template data-no><p>The answer is C. Prompts alone don&rsquo;t make you the author (A), the toolmaker isn&rsquo;t the author either (B), and human contributions to AI-assisted work can still be protected (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="B">
+          <fieldset>
+            <legend>3. Which question best checks whether an AI tool in your field is safe to rely on?</legend>
+            <label class="opt"><input type="radio" name="kc3" value="A">A) Is the tool made by one of the largest technology companies?</label>
+            <label class="opt"><input type="radio" name="kc3" value="B">B) When the tool is wrong, who catches the mistake before it reaches someone?</label>
+            <label class="opt"><input type="radio" name="kc3" value="C">C) Does the tool produce its answers faster than a person could?</label>
+            <label class="opt"><input type="radio" name="kc3" value="D">D) Has the tool been mentioned in the news in the last month?</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right. Every tool is sometimes wrong; what makes it safe to rely on is a check that catches it.</p></template>
+          <template data-no><p>The answer is B. Who made it (A), how fast it is (C) and how much press it gets (D) say nothing about what happens when it&rsquo;s wrong.</p></template>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="primer">
+    <div class="section-head">
+      <h2>Before Monday, November 16</h2>
+      <p class="sub">This week&rsquo;s work, and our next live session.</p>
+    </div>
+    <div class="callout callout--note">
+      <span class="label">Note</span>
+      <p>This week&rsquo;s work is this lesson and M5L3, with their two activities. <strong>Nothing graded is due this week</strong>, but the Module 5 quiz is open, and next week is the Module 5 studio, where your mini-project is due. <strong>Canvas is the authority on dates.</strong></p>
+      <p>For Monday&rsquo;s live session, come ready to talk. The question:</p>
+      <p><strong>What does effective human-AI collaboration actually look like in practice &mdash; and which AI application from someone else&rsquo;s field would you borrow for yours?</strong></p>
+      <p>Bring your M5L2 workflow critique, the role you checked in M5L3, and your two tools from M5L4.</p>
+    </div>
+  </section>
+
+  <p class="totop"><a href="#top">&uarr; Back to top</a></p>
+</main>
+
+<footer class="wrap">
+  <p>CSC 141: AI Literacy &mdash; Mendocino College &mdash; Module 5, Lesson 4</p>
+</footer>
+
+<script>
+
+/* ===== SHARED COMPONENT SCRIPT (v1) — copied verbatim from m2l4.html ===== */
+(function () {
+  "use strict";
+
+  document.querySelectorAll("[data-copies]").forEach(function (btn) {
+    var srcId = btn.getAttribute("data-copies");
+    var status = document.getElementById(btn.id + "-status");
+    btn.addEventListener("click", function () {
+      var text = document.getElementById(srcId).textContent;
+      function done(msg) { if (status) { status.textContent = " " + msg; setTimeout(function () { status.textContent = ""; }, 3000); } }
+      /* Legacy copy first: it runs synchronously inside the click, so it works
+         when the page is iframed in Canvas, where the async Clipboard API is
+         blocked (Canvas's iframe has no allow="clipboard-write"). */
+      function legacyCopy(t) {
+        var ta = document.createElement("textarea");
+        ta.value = t;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "-9999px"; ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select(); ta.setSelectionRange(0, t.length);
+        var ok = false;
+        try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        btn.focus();
+        return ok;
+      }
+      var manual = "Couldn't copy — select the text above and copy it manually.";
+      if (legacyCopy(text)) { done("Copied."); }
+      else if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { done("Copied."); }, function () { done(manual); });
+      } else { done(manual); }
+    });
+  });
+
+  document.querySelectorAll("[data-kc]").forEach(function (kc) {
+    var correct = kc.getAttribute("data-answer");
+    var btn = kc.querySelector("[data-check]");
+    var out = kc.querySelector(".kc-feedback");
+    var okTpl = kc.querySelector("template[data-ok]");
+    var noTpl = kc.querySelector("template[data-no]");
+    btn.addEventListener("click", function () {
+      var picked = kc.querySelector("input[type=radio]:checked");
+      out.className = "kc-feedback";
+      out.textContent = "";
+      if (!picked) { out.classList.add("no"); out.innerHTML = "<p>Choose an answer first.</p>"; return; }
+      var right = picked.value === correct;
+      out.classList.add(right ? "ok" : "no");
+      out.appendChild((right ? okTpl : noTpl).content.cloneNode(true));
+      var lead = document.createElement("p");
+      lead.innerHTML = "<strong>" + (right ? "Correct." : "Not quite.") + "</strong>";
+      out.insertBefore(lead, out.firstChild);
+    });
+  });
+
+  /* ===== Jump nav must open the accordion it lands in, or the target is invisible. ===== */
+  function openTarget(hash) {
+    if (!hash || hash === "#top") { return; }
+    var el;
+    try { el = document.querySelector(hash); } catch (e) { return; }
+    if (!el) { return; }
+    var d = el.querySelector("details") || el.closest("details");
+    if (d) { d.open = true; }
+  }
+  document.querySelectorAll(".jumpnav a[href^='#']").forEach(function (a) {
+    a.addEventListener("click", function () { openTarget(a.getAttribute("href")); });
+  });
+  window.addEventListener("hashchange", function () { openTarget(location.hash); });
+  openTarget(location.hash);
+
+  /* ===== A collapsed <details> is display:none, so force every one open before printing. ===== */
+  function openAllForPrint() {
+    document.querySelectorAll("details").forEach(function (d) {
+      if (!d.open) { d.setAttribute("data-was-closed", ""); d.open = true; }
+    });
+  }
+  function restoreAfterPrint() {
+    document.querySelectorAll("details[data-was-closed]").forEach(function (d) {
+      d.open = false; d.removeAttribute("data-was-closed");
+    });
+  }
+  window.addEventListener("beforeprint", openAllForPrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+
+  var printBtn = document.getElementById("print-btn");
+  if (printBtn) { printBtn.addEventListener("click", function () { window.print(); }); }
+})();
+</script>
+<script>
+/* ===== M5L4-A1 — nothing persisted, nothing scored. ===== */
+(function () {
+  "use strict";
+  function $(id) { return document.getElementById(id); }
+  function v(id) { var el = $(id); return el ? el.value.trim() : ""; }
+  function today() { return new Date().toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); }
+  function fill(ids) { ids.forEach(function (id) { $("out-" + id).textContent = v(id) || "(not recorded)"; }); }
+  function row(cells) {
+    var tr = document.createElement("tr");
+    cells.forEach(function (x, j) { var c = document.createElement(j === 0 ? "th" : "td"); if (j === 0) { c.scope = "row"; } c.textContent = x; tr.appendChild(c); });
+    return tr;
+  }
+  function emptyRow(tb, n, text) { var tr = document.createElement("tr"); var td = document.createElement("td"); td.colSpan = n; td.textContent = text; tr.appendChild(td); tb.appendChild(tr); }
+  function show(st, msg) { $("out-date").textContent = today(); $("export-panel").hidden = false; st.textContent = msg; }
+
+  $("log-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var st = $("log-status");
+    if (!v("tla-name") && !v("tlb-name")) { st.textContent = " Name at least one tool before building the copy."; return; }
+    fill(["job", "tool", "dropped", "borrow"]);
+    var box = $("out-evals"); box.textContent = "";
+    ["a", "b"].forEach(function (L) {
+      var p = "tl" + L;
+      if (!v(p + "-name") && !v(p + "-prob")) { return; }
+      var d = document.createElement("div"); d.className = "rec-out";
+      var h = document.createElement("h5"); h.textContent = "Tool " + L.toUpperCase() + " — " + (v(p + "-name") || "(not named)"); d.appendChild(h);
+      var dl = document.createElement("dl");
+      [["Where I confirmed it exists", "-src"], ["What problem it solves, for whom", "-prob"], ["The best evidence I found", "-ev"],
+       ["What that evidence shows, and its date", "-evn"], ["Ethical concerns, and the lens I used", "-eth"], ["When it's wrong, who catches it", "-catch"]].forEach(function (q) {
+        var dt = document.createElement("dt"); dt.textContent = q[0];
+        var dd = document.createElement("dd"); dd.textContent = v(p + q[1]) || "(not recorded)";
+        dl.appendChild(dt); dl.appendChild(dd);
+      });
+      d.appendChild(dl); box.appendChild(d);
+    });
+    show(st, " Ready below — a printable copy is at the bottom of this activity.");
+  });
+})();
+</script>
+</body>
+</html>
