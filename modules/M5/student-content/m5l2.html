@@ -389,12 +389,20 @@ fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
     <details>
       <summary>Read this section</summary>
       <div>
-        <p>Every workflow with AI in it needs answers to three questions before something goes wrong, not after.</p>
+        <p>Every workflow with AI in it needs answers to four questions before something goes wrong, not after.</p>
         <ul>
           <li><strong>How will errors be caught?</strong> Spot-checking a sample, checking every item above a certain risk, comparing against a source, having a second person look. As you learned in M4L3, people tend to go along with a system&rsquo;s recommendation, especially when they&rsquo;re rushed &mdash; so a check that depends on someone noticing on their own usually isn&rsquo;t one.</li>
           <li><strong>When does a case go to a person?</strong> This is called <strong>escalation</strong>: the rule for when the AI step is skipped or overruled &mdash; an unusual case, an upset customer, a decision about someone&rsquo;s health, money or rights.</li>
           <li><strong>Who is accountable?</strong> Follow the chain: who chose the tool, who set up the workflow, who checked the output, who signed it. Somewhere on that chain is a person who answers for the result. &ldquo;The AI did it&rdquo; is not an answer anyone accepts &mdash; not an employer, not a customer, not a court.</li>
+          <li><strong>Does the workplace know the AI step is there?</strong> An AI tool used for work without the employer&rsquo;s approval &mdash; a personal account, a free app, a browser extension &mdash; is called <strong>shadow AI</strong>. If nobody else knows the AI step exists, nobody can check it, nobody can set an escalation rule for it, and whatever was pasted into it has left the workplace.</li>
         </ul>
+        <h3>Shadow AI is the usual case, not the rare one</h3>
+        <p>In a 2025 survey of 1,000 employees and 500 security leaders, <strong>81%</strong> of employees said they use AI tools their employer hasn&rsquo;t approved. So did <strong>88%</strong> of the security leaders &mdash; the people whose job is knowing the risks. And 45% of workers said they find ways around applications their employer blocks.</p>
+        <p class="source-line">UpGuard, <em>The State of Shadow AI</em>, survey of 1,000 employees and 500 security leaders, 2025.</p>
+        <p>It costs something. IBM&rsquo;s yearly study of data breaches found that employees&rsquo; shadow AI was involved in <strong>43%</strong> of the breaches it examined, up from 20% the year before, and those breaches cost more on average.</p>
+        <p class="source-line">IBM, <em>Cost of a Data Breach Report 2026</em>, 602 breaches from March 2025 to February 2026, published July 2026.</p>
+        <p><strong>The lesson:</strong> knowing the rules doesn&rsquo;t stop it &mdash; the people who know the risks best do it too. People reach for an unapproved tool when the approved path is slower or missing. A workflow holds up when the approved tool is easy to reach and good enough to use, so nobody has a reason to go around it.</p>
+        <p class="stamp">Survey and breach figures accurate as of 2026-10.</p>
         <div class="callout callout--caution">
           <span class="label">Caution</span>
           <p><strong>A review step that never says no isn&rsquo;t a review.</strong> If the person checking an AI&rsquo;s work doesn&rsquo;t have the time, the information or the authority to reject it, the workflow only looks supervised.</p>
@@ -550,10 +558,10 @@ fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
   <section id="kc">
     <div class="section-head">
       <h2>Check Yourself</h2>
-      <p class="sub">Not graded, not recorded. Three questions.</p>
+      <p class="sub">Not graded, not recorded. Four questions.</p>
     </div>
     <details>
-      <summary>Open the three questions</summary>
+      <summary>Open the four questions</summary>
       <div>
         <div class="kc" data-kc data-answer="B">
           <fieldset>
@@ -595,6 +603,20 @@ fieldset.group .opt input, .checklist .opt input { margin-right: var(--s-2); }
           <div class="kc-feedback" role="status"></div>
           <template data-ok><p>Right. Whoever chose the tool, checked the output and signed it answers for the result.</p></template>
           <template data-no><p>The answer is A. &ldquo;The AI did it&rdquo; doesn&rsquo;t remove responsibility (B); a vendor may share it but doesn&rsquo;t take it all (C); and tools aren&rsquo;t legal persons (D).</p></template>
+        </div>
+
+        <div class="kc" data-kc data-answer="C">
+          <fieldset>
+            <legend>4. A paralegal&rsquo;s firm has an approved AI tool, but it&rsquo;s slow, so she pastes a client&rsquo;s contract into a free AI app on her phone to summarize it. What is the biggest problem?</legend>
+            <label class="opt"><input type="radio" name="kc4" value="A">A) Free AI apps always give less accurate summaries than the tools firms pay for.</label>
+            <label class="opt"><input type="radio" name="kc4" value="B">B) None, as long as she reads the summary carefully before she relies on any of it.</label>
+            <label class="opt"><input type="radio" name="kc4" value="C">C) The firm can&rsquo;t check a step it never knew about, and the contract has left it.</label>
+            <label class="opt"><input type="radio" name="kc4" value="D">D) The company that makes the free app is now the one accountable for the summary.</label>
+          </fieldset>
+          <button type="button" class="btn btn--secondary" data-check>Check my answer</button>
+          <div class="kc-feedback" role="status"></div>
+          <template data-ok><p>Right &mdash; that&rsquo;s shadow AI. The firm&rsquo;s checks can&rsquo;t cover a step nobody knows about, and the client&rsquo;s contract is now with a company the firm never agreed to share it with.</p></template>
+          <template data-no><p>The answer is C. Her careful reading (B) doesn&rsquo;t bring the contract back or tell the firm what happened; free tools aren&rsquo;t always less accurate (A); and the app maker doesn&rsquo;t take over her accountability (D).</p></template>
         </div>
       </div>
     </details>
