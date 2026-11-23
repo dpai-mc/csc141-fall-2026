@@ -34,7 +34,6 @@
   main { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
   header.hero { padding: 24px 0 8px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
   .kicker { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--accent); font-weight: 700; }
-  .draft { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px dashed var(--muted); border-radius: 999px; color: var(--muted); }
   h1 { font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; margin: 8px 0 12px; letter-spacing: -.01em; }
   h2 { font-size: 24px; margin: 48px 0 12px; }
   h3 { font-size: 17px; margin: 0 0 6px; }
@@ -102,7 +101,7 @@
 <body>
 <main>
   <header class="hero">
-    <div class="kicker">CSC141 AI Literacy · Case study <span class="draft">Draft</span></div>
+    <div class="kicker">CSC141 AI Literacy · Case study</div>
     <h1>How the course agent works</h1>
     <p class="lede">A block diagram of an AI agent built from scratch to review college courses. Click any block to see what it does, or press <strong>Trace one page</strong> to follow a single assignment page from input to finished report.</p>
     <p class="lede sans" style="font-size:15px">Part of a set: <a href="course-agent-development.html">Build → Run → Validate → Repeat</a> · How the course agent works (this page) · <a href="course-agent-toolbox.html">The toolbox: libraries and the .venv</a></p>
@@ -304,16 +303,15 @@
   </section>
 
   <section>
-    <h2>Discussion questions</h2>
+    <h2>Questions to think about</h2>
+    <p>There are no quick answers to these. Keep them in mind as you use AI tools this term.</p>
     <ol class="qs">
-      <li>Look at the color legend. Roughly what share of the diagram is AI, and what share is plain code? Did that surprise you?</li>
-      <li>The privacy gate is plain code, not an instruction to the AI ("please ignore student work"). Why is that the safer design?</li>
-      <li>The agent runs on a local model on two graphics cards. What would change if it used a cloud model instead: cost, speed, quality, privacy?</li>
-      <li>The feedback arrow runs from the instructor back to the course profile. What would happen to this system without it?</li>
+      <li>Most of this "AI agent" is ordinary code, and the model only does the judging. What does that suggest about where the intelligence in an AI system really lives?</li>
+      <li>The privacy rules are built into the code instead of being requested of the AI. What should we let an AI decide, and what should never be left to its judgment?</li>
     </ol>
   </section>
 
-  <footer>Draft, November 2026 · Prof. Dave Pai, Mendocino College · A case study for CSC141 AI Literacy. The diagram is simplified; no student data appears on this page.</footer>
+  <footer>November 2026 · Prof. Dave Pai, Mendocino College · A case study for CSC141 AI Literacy. The diagram is simplified; no student data appears on this page.</footer>
 </main>
 
 <script>

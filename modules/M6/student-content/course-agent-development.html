@@ -31,7 +31,6 @@
   h2 { font-size: 24px; margin: 48px 0 12px; letter-spacing: -.005em; }
   h3 { font-size: 17px; margin: 0 0 6px; }
   p.lede { font-size: 19px; color: var(--muted); max-width: 46em; margin: 0 0 12px; }
-  .draft { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px dashed var(--muted); border-radius: 999px; color: var(--muted); }
   nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; }
   nav.toc a { font-size: 14px; color: var(--ink); text-decoration: none; border: 1px solid var(--line); padding: 4px 12px; border-radius: 999px; background: var(--panel); }
   nav.toc a:hover { border-color: var(--accent); }
@@ -118,13 +117,13 @@
 <body>
 <main>
   <header class="hero">
-    <div class="kicker">CSC141 AI Literacy · Case study <span class="draft">Draft</span></div>
+    <div class="kicker">CSC141 AI Literacy · Case study</div>
     <h1>Building an AI agent from scratch <span class="arrow">—</span><br>Build <span class="arrow">→</span> Run <span class="arrow">→</span> Validate <span class="arrow">→</span> Repeat</h1>
     <p class="lede">Your instructor built a software agent that reads an entire online course the way a student sees it, then checks it against the college's official course outline. This page is about <em>how</em> it was built. Spoiler: nobody wrote it in one go. It came out of a loop that ran again and again for about a week.</p>
     <p class="lede sans" style="font-size:15px">Part of a set: Build → Run → Validate → Repeat (this page) · <a href="course-agent-architecture.html">How the course agent works</a> · <a href="course-agent-toolbox.html">The toolbox: libraries and the .venv</a></p>
     <nav class="toc" aria-label="Sections">
       <a href="#who">Who did what</a><a href="#loop">The loop</a><a href="#story">The real iterations</a>
-      <a href="#lessons">Lessons</a><a href="#limits">Where it still struggles</a><a href="#discuss">Discuss</a><a href="#gloss">Glossary</a>
+      <a href="#lessons">Lessons</a><a href="#limits">Where it still struggles</a><a href="#discuss">Think about</a><a href="#gloss">Glossary</a>
     </nav>
   </header>
 
@@ -259,13 +258,11 @@
   </section>
 
   <section id="discuss">
-    <h2>Discussion questions</h2>
+    <h2>Questions to think about</h2>
+    <p>There are no quick answers to these. Keep them in mind as you use AI tools this term.</p>
     <ol class="qs">
-      <li>The agent uses a <em>local</em> model for anything near student data, and allows a frontier (cloud) model only for course content. What risks does that rule protect against? What does it cost?</li>
-      <li>The answer key with the NAND/NOR error <em>looked</em> completely professional. How would you design a check that catches errors like that without an expert re-doing all the work?</li>
-      <li>Lesson 5 says not to add a rule for every mistake. When <em>is</em> it right to add a rule? Where would you draw the line?</li>
-      <li>Which parts of this loop could an AI do by itself? Which parts should always stay with a person? Why?</li>
-      <li>Think of something you've built, written or fixed. Where did your own build → run → validate → repeat loop show up, and where did you skip the "validate" step?</li>
+      <li>The answer key with the NAND/NOR error looked finished and professional. When an AI's work looks right, what would have to be true for you to trust it without checking?</li>
+      <li>The instructor decided when the loop was good enough to stop. When you work with AI, who decides when the work is done, and how do you know?</li>
     </ol>
   </section>
 
@@ -284,7 +281,7 @@
   </section>
 
   <footer>
-    Draft, November 2026 · Prof. Dave Pai, Mendocino College · A case study for CSC141 AI Literacy. Course details simplified for a general audience; no student data appears on this page.
+    November 2026 · Prof. Dave Pai, Mendocino College · A case study for CSC141 AI Literacy. Course details simplified for a general audience; no student data appears on this page.
   </footer>
 </main>
 

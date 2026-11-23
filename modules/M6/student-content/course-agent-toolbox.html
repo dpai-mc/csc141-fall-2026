@@ -31,7 +31,6 @@
   main { max-width: 1040px; margin: 0 auto; padding: 32px 20px 80px; }
   header.hero { padding: 24px 0 8px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
   .kicker { text-transform: uppercase; letter-spacing: .12em; font-size: 12px; color: var(--accent); font-weight: 700; }
-  .draft { display: inline-block; font-size: 12px; padding: 2px 8px; border: 1px dashed var(--muted); border-radius: 999px; color: var(--muted); }
   h1 { font-size: clamp(28px, 4.5vw, 42px); line-height: 1.15; margin: 8px 0 12px; letter-spacing: -.01em; }
   h2 { font-size: 24px; margin: 48px 0 12px; }
   h3 { font-size: 17px; margin: 0 0 6px; }
@@ -104,13 +103,13 @@
 <body>
 <main>
   <header class="hero">
-    <div class="kicker">CSC141 AI Literacy · Case study <span class="draft">Draft</span></div>
+    <div class="kicker">CSC141 AI Literacy · Case study</div>
     <h1>The agent's toolbox: Python libraries and the <code style="font-size:.8em">.venv</code></h1>
     <p class="lede">Almost nobody builds an AI agent from raw parts. This one is a few thousand lines of Python standing on a handful of well-tested libraries, and each library does one job well. This page shows which library does what, why it was chosen, and how a <strong>virtual environment</strong> keeps them all in one tidy box.</p>
     <p class="lede sans" style="font-size:15px">Part of a set: <a href="course-agent-development.html">Build → Run → Validate → Repeat</a> · <a href="course-agent-architecture.html">How the course agent works</a> · The toolbox (this page)</p>
     <nav class="toc" aria-label="Sections">
       <a href="#stack">The stack</a><a href="#libs">The libraries</a><a href="#pyd">Pydantic AI up close</a>
-      <a href="#venv">The .venv</a><a href="#other">Other tools</a><a href="#lessons">Lessons</a><a href="#discuss">Discuss</a>
+      <a href="#venv">The .venv</a><a href="#other">Other tools</a><a href="#lessons">Lessons</a><a href="#discuss">Think about</a>
     </nav>
   </header>
 
@@ -285,16 +284,15 @@ course-agent = <span class="s">"course_agent.cli:main"</span></pre>
   </section>
 
   <section id="discuss">
-    <h2>Discussion questions</h2>
+    <h2>Questions to think about</h2>
+    <p>There are no quick answers to these. Keep them in mind as you use AI tools this term.</p>
     <ol class="qs">
-      <li>Pydantic AI forces the model's answer into a fixed form. What do you gain? Could anything useful get lost because it doesn't fit the form?</li>
-      <li>Changing one line switches the agent from a local model to a cloud model. Who should be allowed to change that line, and when?</li>
-      <li>Every library is code written by strangers. How would you decide whether a library is trustworthy enough to handle course or student data?</li>
-      <li>Why might an instructor keep the model's instructions in a text file (a "spec") instead of inside the Python code?</li>
+      <li>The agent depends on libraries written by people its builder has never met. How much of the technology you rely on every day do you understand, and what makes you trust the rest?</li>
+      <li>Changing one line swaps a free local model for a paid cloud one. If the model can be replaced so easily, what makes one AI system different from another?</li>
     </ol>
   </section>
 
-  <footer>Draft, November 2026 · Prof. Dave Pai, Mendocino College · A case study for CSC141 AI Literacy. The code samples are simplified for teaching; see the project's own <code>pyproject.toml</code> for exact versions.</footer>
+  <footer>November 2026 · Prof. Dave Pai, Mendocino College · A case study for CSC141 AI Literacy. The code samples are simplified for teaching; see the project's own <code>pyproject.toml</code> for exact versions.</footer>
 </main>
 
 <script>
